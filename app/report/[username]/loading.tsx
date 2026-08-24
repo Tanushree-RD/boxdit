@@ -1,23 +1,8 @@
-import Link from "next/link";
-
-type ReportPageProps = {
-  params: Promise<{ username: string }>;
-};
-
-export default async function ReportPage({ params }: ReportPageProps) {
-  const { username } = await params;
-
-  void username;
-
+export default function Loading() {
   return (
     <main className="flex min-h-screen flex-col bg-[#090909] text-white">
       <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-12 sm:px-6 lg:px-8">
-        <Link
-          href="/"
-          className="mb-8 inline-flex w-fit items-center rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-zinc-200 transition-colors hover:bg-white/10"
-        >
-          ← Back to home
-        </Link>
+        <div className="mb-8 h-10 w-36 animate-pulse rounded-full border border-white/10 bg-white/5" />
 
         <section className="rounded-[32px] border border-white/10 bg-white/5 p-6 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-8">
           <div className="animate-pulse space-y-4">
