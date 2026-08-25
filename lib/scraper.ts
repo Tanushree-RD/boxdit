@@ -216,10 +216,32 @@ export async function getFilms(username: string): Promise<FilmsData> {
       const year = yearMatch ? Number.parseInt(yearMatch[1], 10) : null;
       const cleanName = name.replace(/\s*\(\d{4}\)$/, "").trim();
 
-      const posterUrl =
-        $el.attr("data-poster-url") ||
-        $el.find("img").attr("src") ||
-        null;
+      let posterUrl: string | null = null;
+      const resolvablePath = $el.attr("data-resolvable-poster-path");
+      if (resolvablePath) {
+        try {
+          const parsed = JSON.parse(resolvablePath);
+          const uid = parsed?.postered?.uid;
+          const key = parsed?.cacheBustingKey;
+          if (uid && slug) {
+            const idStr = uid.replace(/\D/g, "");
+            if (idStr) {
+              const parts = idStr.split("").join("/");
+              const v = key ? `?v=${key}` : "";
+              posterUrl = `https://a.ltrbxd.com/resized/film-poster/${parts}/${idStr}-${slug}-0-230-0-345-crop.jpg${v}`;
+            }
+          }
+        } catch {
+          // fallback
+        }
+      }
+
+      if (!posterUrl) {
+        const rawImgSrc = $el.find("img").attr("src");
+        if (rawImgSrc && !rawImgSrc.includes("empty-poster")) {
+          posterUrl = rawImgSrc;
+        }
+      }
 
       if (cleanName || slug) {
         films.push({
