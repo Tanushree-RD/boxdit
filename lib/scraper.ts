@@ -170,33 +170,9 @@ async function fetchEndpoint(url: string, username: string): Promise<string> {
 // --- Individual Parsers ---
 
 /**
- * Parses /films/ endpoint: extracts film history, display name, avatar, and total pages.
+ * Extracts FilmItem[] from a cheerio-loaded Letterboxd films page HTML.
  */
-export async function getFilms(username: string): Promise<FilmsData> {
-  const safeUser = normalizeUsername(username);
-  if (!safeUser) throw new Error("A valid Letterboxd username is required.");
-
-  const url = `https://letterboxd.com/${encodeURIComponent(safeUser)}/films/`;
-  const html = await fetchEndpoint(url, safeUser);
-  const $ = cheerio.load(html);
-
-  // Extract Display Name from title or header
-  const rawTitle = $("title").text();
-  const displayName =
-    normalizeText(
-      rawTitle
-        .replace(/’s films\s*•\s*Letterboxd$/i, "")
-        .replace(/'s films\s*•\s*Letterboxd$/i, "")
-        .replace(/\s*•\s*Letterboxd$/i, "")
-    ) || safeUser;
-
-  // Extract avatar
-  const avatar =
-    $("#header .avatar img, .profile-avatar img, a.avatar img, .avatar img")
-      .first()
-      .attr("src") || null;
-
-  // Extract films from grid
+export function parseFilmsFromHtml($: cheerio.CheerioAPI): FilmItem[] {
   const films: FilmItem[] = [];
   $(".react-component[data-component-class='LazyPoster'], div[data-item-name]").each(
     (_, el) => {
@@ -254,21 +230,260 @@ export async function getFilms(username: string): Promise<FilmsData> {
       }
     }
   );
+  return films;
+}
 
-  // Parse total pages / film count
-  const lastPageNum = parseCount(
+/**
+ * Extracts the total number of pages from a Letterboxd films page.
+ */
+export function parseTotalPages($: cheerio.CheerioAPI): number {
+  const lastPageText = normalizeText(
     $(".paginate-pages li:last-child a, .paginate-pages a").last().text()
   );
-  const totalFilmsCount = lastPageNum > 0 ? lastPageNum * 72 : films.length;
-
-  return {
-    username: safeUser,
-    displayName,
-    avatar,
-    totalFilmsCount,
-    films,
-  };
+  const lastPageNum = parseCount(lastPageText);
+  return lastPageNum > 0 ? lastPageNum : 1;
 }
+
+/**
+ * Deduplicates films by slug, keeping the first occurrence.
+ */
+export function dedupeFilms(films: FilmItem[]): FilmItem[] {
+  const seen = new Set<string>();
+  const result: FilmItem[] = [];
+  for (const film of films) {
+    const key = film.slug || film.name.toLowerCase();
+    if (key && !seen.has(key)) {
+      seen.add(key);
+      result.push(film);
+    }
+  }
+  return result;
+}
+
+/**
+ * Delay helper for retry/pacing.
+ */
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Crawls the complete Letterboxd film catalogue for a given user.
+ * 1. Starts at /{username}/films/
+ * 2. Detects pagination automatically
+ * 3. Continues requesting /films/page/2/, /films/page/3/, etc. until no more pages
+ * 4. Merges every movie into a single array
+ * 5. Removes duplicates
+ * 6. Shows progress in the terminal
+ * 7. Adds retry logic with exponential backoff for transient failures
+ * 8. Returns strongly typed FilmsData
+ */
+export async function getFilms(username: string): Promise<FilmsData> {
+  const safeUser = normalizeUsername(username);
+  if (!safeUser) throw new Error("A valid Letterboxd username is required.");
+
+  console.log("Fetching page 1...");
+
+  // Dynamically load puppeteer-extra with stealth plugin
+  let puppeteer: typeof import("puppeteer-extra").default | null = null;
+  try {
+    const pExtra = await import("puppeteer-extra");
+    const stealth = (await import("puppeteer-extra-plugin-stealth")).default;
+    puppeteer = pExtra.default;
+    puppeteer.use(stealth());
+  } catch {
+    puppeteer = null;
+  }
+
+  // If puppeteer is unavailable, fallback to single-page fetch
+  if (!puppeteer) {
+    const url = `https://letterboxd.com/${encodeURIComponent(safeUser)}/films/`;
+    const html = await fetchEndpoint(url, safeUser);
+    const $ = cheerio.load(html);
+
+    const rawTitle = $("title").text();
+    const displayName =
+      normalizeText(
+        rawTitle
+          .replace(/'s films\s*•\s*Letterboxd$/i, "")
+          .replace(/'s films\s*•\s*Letterboxd$/i, "")
+          .replace(/\s*•\s*Letterboxd$/i, "")
+      ) || safeUser;
+
+    const avatar =
+      $("#header .avatar img, .profile-avatar img, a.avatar img, .avatar img")
+        .first()
+        .attr("src") || null;
+
+    const films = dedupeFilms(parseFilmsFromHtml($));
+    console.log(`Collected ${films.length} movies...`);
+    console.log(`\nFinal movie count: ${films.length}`);
+
+    return {
+      username: safeUser,
+      displayName,
+      avatar,
+      totalFilmsCount: films.length,
+      films,
+    };
+  }
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
+    ],
+  });
+
+  try {
+    const page = await browser.newPage();
+    const startUrl = `https://letterboxd.com/${encodeURIComponent(safeUser)}/films/`;
+
+    let page1Html = "";
+    let page1Loaded = false;
+
+    // Retry logic for initial page load
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const res = await page.goto(startUrl, {
+          waitUntil: "domcontentloaded",
+          timeout: 30000,
+        });
+
+        if (res && (res.status() === 404 || res.status() === 410)) {
+          throw new ProfileNotFoundError(safeUser);
+        }
+
+        page1Html = await page.content();
+        page1Loaded = true;
+        break;
+      } catch (err) {
+        if (err instanceof ProfileNotFoundError) throw err;
+        if (attempt < 3) {
+          await delay(1000 * attempt);
+        } else {
+          throw new ProfileFetchError(
+            `Failed to load page 1 for "${safeUser}": ${err instanceof Error ? err.message : String(err)}`
+          );
+        }
+      }
+    }
+
+    if (!page1Loaded) {
+      throw new ProfileFetchError(`Could not fetch page 1 for "${safeUser}".`);
+    }
+
+    const $1 = cheerio.load(page1Html);
+
+    // Extract Display Name
+    const rawTitle = $1("title").text();
+    const displayName =
+      normalizeText(
+        rawTitle
+          .replace(/'s films\s*•\s*Letterboxd$/i, "")
+          .replace(/'s films\s*•\s*Letterboxd$/i, "")
+          .replace(/\s*•\s*Letterboxd$/i, "")
+      ) || safeUser;
+
+    // Extract Avatar
+    const avatar =
+      $1("#header .avatar img, .profile-avatar img, a.avatar img, .avatar img")
+        .first()
+        .attr("src") || null;
+
+    // Parse Page 1 Films
+    const allFilms: FilmItem[] = [...parseFilmsFromHtml($1)];
+    const totalPages = parseTotalPages($1);
+
+    console.log(`Collected ${allFilms.length} movies...`);
+
+    // Crawl subsequent pages if pagination exists
+    if (totalPages > 1) {
+      for (let pageNum = 2; pageNum <= totalPages; pageNum++) {
+        console.log(`Fetching page ${pageNum}...`);
+
+        let pageHtml: string | null = null;
+
+        // In-browser fetch with retry logic for transient request failures
+        for (let attempt = 1; attempt <= 3; attempt++) {
+          try {
+            const fetchResult = await page.evaluate(
+              async (pNum: number, user: string) => {
+                const response = await fetch(`/${user}/films/page/${pNum}/`, {
+                  headers: {
+                    Accept:
+                      "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                  },
+                });
+                if (!response.ok) {
+                  return { status: response.status, text: "" };
+                }
+                const text = await response.text();
+                return { status: response.status, text };
+              },
+              pageNum,
+              safeUser
+            );
+
+            if (fetchResult.status === 200 && fetchResult.text) {
+              pageHtml = fetchResult.text;
+              break;
+            } else if (attempt < 3) {
+              await delay(800 * attempt);
+            }
+          } catch (err) {
+            if (attempt < 3) {
+              await delay(800 * attempt);
+            }
+          }
+        }
+
+        if (pageHtml) {
+          const $page = cheerio.load(pageHtml);
+          const pageFilms = parseFilmsFromHtml($page);
+
+          if (pageFilms.length === 0) {
+            // No more movies found on this page
+            break;
+          }
+
+          allFilms.push(...pageFilms);
+          console.log(`Collected ${allFilms.length} movies...`);
+        } else {
+          // If page fetch failed after retries, stop pagination gracefully
+          break;
+        }
+
+        // Polite delay between rapid requests
+        if (pageNum < totalPages) {
+          await delay(200);
+        }
+      }
+    }
+
+    // Deduplicate all collected films
+    const dedupedFilms = dedupeFilms(allFilms);
+    console.log(`\nFinal movie count: ${dedupedFilms.length}`);
+
+    return {
+      username: safeUser,
+      displayName,
+      avatar,
+      totalFilmsCount: dedupedFilms.length,
+      films: dedupedFilms,
+    };
+  } finally {
+    await browser.close();
+  }
+}
+
+/**
+ * Backward-compatible alias for getFilms
+ */
+export const getAllFilms = getFilms;
 
 /**
  * Parses /followers/ endpoint: extracts follower users and target user stats.
