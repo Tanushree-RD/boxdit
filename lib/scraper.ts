@@ -140,6 +140,56 @@ export function parseCount(value: string | null | undefined): number {
   return Number.parseInt(match[0], 10) || 0;
 }
 
+export function cleanDisplayName(
+  value: string | null | undefined,
+  fallback: string
+): string {
+  if (!value) return fallback;
+  const cleaned = normalizeText(value)
+    .replace(/[★☆½\u2605\u2606\u00BD]+/g, "")
+    .replace(/^Letterboxd\s*-\s*/i, "")
+    .replace(/[’']s\s+films\s*•?\s*Letterboxd.*$/i, "")
+    .replace(/[’']s\s+films.*$/i, "")
+    .replace(/[’']s\s+profile.*$/i, "")
+    .replace(/\s*•\s*Letterboxd.*$/i, "")
+    .trim();
+  return cleaned && cleaned.toLowerCase() !== "letterboxd" ? cleaned : fallback;
+}
+
+export function extractDisplayName(
+  $: cheerio.CheerioAPI,
+  safeUser: string
+): string {
+  // Do NOT parse <title> tag as it may contain rating stars or bio text.
+  const avatarAlt = $(
+    "#header .avatar img, .profile-avatar img, a.avatar img, .avatar img"
+  )
+    .first()
+    .attr("alt");
+  if (avatarAlt) {
+    const clean = cleanDisplayName(avatarAlt, "");
+    if (clean) return clean;
+  }
+
+  const headerName = $(
+    "#header .title-1, section#person-summary h1, .person-summary h1, .profile-name, .context h1"
+  )
+    .first()
+    .text();
+  if (headerName) {
+    const clean = cleanDisplayName(headerName, "");
+    if (clean) return clean;
+  }
+
+  const ogTitle = $('meta[property="og:title"]').attr("content");
+  if (ogTitle) {
+    const clean = cleanDisplayName(ogTitle, "");
+    if (clean) return clean;
+  }
+
+  return safeUser;
+}
+
 async function fetchEndpoint(url: string, username: string): Promise<string> {
   let response: Response;
   try {
@@ -301,14 +351,7 @@ export async function getFilms(username: string): Promise<FilmsData> {
     const html = await fetchEndpoint(url, safeUser);
     const $ = cheerio.load(html);
 
-    const rawTitle = $("title").text();
-    const displayName =
-      normalizeText(
-        rawTitle
-          .replace(/'s films\s*•\s*Letterboxd$/i, "")
-          .replace(/'s films\s*•\s*Letterboxd$/i, "")
-          .replace(/\s*•\s*Letterboxd$/i, "")
-      ) || safeUser;
+    const displayName = extractDisplayName($, safeUser);
 
     const avatar =
       $("#header .avatar img, .profile-avatar img, a.avatar img, .avatar img")
@@ -378,15 +421,8 @@ export async function getFilms(username: string): Promise<FilmsData> {
 
     const $1 = cheerio.load(page1Html);
 
-    // Extract Display Name
-    const rawTitle = $1("title").text();
-    const displayName =
-      normalizeText(
-        rawTitle
-          .replace(/'s films\s*•\s*Letterboxd$/i, "")
-          .replace(/'s films\s*•\s*Letterboxd$/i, "")
-          .replace(/\s*•\s*Letterboxd$/i, "")
-      ) || safeUser;
+    // Extract Display Name without parsing <title>
+    const displayName = extractDisplayName($1, safeUser);
 
     // Extract Avatar
     const avatar =
@@ -706,9 +742,17 @@ export async function getLetterboxdProfile(
     followingResult.status === "fulfilled" ? followingResult.value : null;
   const rssData = rssResult.status === "fulfilled" ? rssResult.value : null;
 
+  const rssDisplayName = rssData?.title
+    ? cleanDisplayName(rssData.title, "")
+    : "";
+
+  const filmsDisplayName = filmsData?.displayName
+    ? cleanDisplayName(filmsData.displayName, "")
+    : "";
+
   const displayName =
-    filmsData?.displayName ||
-    (rssData?.title ? rssData.title.replace(/^Letterboxd\s*-\s*/i, "") : "") ||
+    rssDisplayName ||
+    filmsDisplayName ||
     safeUser;
 
   const avatar =

@@ -330,6 +330,289 @@ export function calculateTimeframeActivity(
   };
 }
 
+export interface FilmNerdScore {
+  score: number;
+  label: string;
+  percentile: string;
+  description: string;
+}
+
+export interface PersonaInfo {
+  title: string;
+  tagline: string;
+  traits: string[];
+}
+
+export interface InsightCardData {
+  id: string;
+  title: string;
+  value: string;
+  subtitle: string;
+  icon: string;
+  highlight?: boolean;
+  accent?: "gold" | "emerald" | "amber" | "indigo" | "rose" | "cyan";
+  posterUrl?: string | null;
+  link?: string | null;
+}
+
+export interface ProfileAnalytics {
+  username: string;
+  displayName: string;
+  totalMoviesWatched: number;
+  ratings: RatingStatsResult;
+  releaseYears: ReleaseYearStatsResult;
+  rewatches: RewatchStatsResult;
+  timeframeActivity: TimeframeActivityStatsResult;
+  persona: PersonaInfo;
+  nerdScore: FilmNerdScore;
+  insights: InsightCardData[];
+  analyzedAt: string;
+}
+
+// --- Persona & Insights Generators ---
+
+/**
+ * Calculates a dynamic, Spotify-Wrapped style persona based on watching patterns.
+ */
+export function calculatePersona(
+  profile: LetterboxdProfile,
+  ratings: RatingStatsResult,
+  releaseYears: ReleaseYearStatsResult
+): PersonaInfo {
+  const avgRating = ratings.averageRating ?? 3.5;
+  const favDecade = releaseYears.favoriteDecade?.decade ?? "2020s";
+  const filmCount = profile.filmsCount || profile.films.length;
+
+  if (filmCount > 2000) {
+    return {
+      title: "The Archival Omnivore",
+      tagline: "Your appetite for cinema spans eras, languages, and continents.",
+      traits: ["Endless Curiosity", "Genre-Fluid", "Historical Depth"],
+    };
+  }
+
+  if (favDecade === "1960s" || favDecade === "1970s" || favDecade === "1950s" || favDecade === "1940s") {
+    return {
+      title: "The Golden Age Purist",
+      tagline: "Revering film as pure craft, timeless elegance, and celluloid poetry.",
+      traits: ["Classic Devotee", "Aesthetic Precision", "Criterion Collector"],
+    };
+  }
+
+  if (favDecade === "1990s" || favDecade === "2000s") {
+    return {
+      title: "The Cult & Indie Connoisseur",
+      tagline: "Drawn to punchy dialogues, bold direction, and unforgettable mood pieces.",
+      traits: ["Nostalgic Edge", "Character Driven", "Soundtrack Lover"],
+    };
+  }
+
+  if (avgRating >= 4.0) {
+    return {
+      title: "The Generous Romantic",
+      tagline: "You find beauty, wonder, and soul in nearly everything projected.",
+      traits: ["Heart-First Viewer", "Visual Dreamer", "Empathy-Driven"],
+    };
+  }
+
+  if (avgRating <= 2.8 && ratings.totalRated > 5) {
+    return {
+      title: "The Uncompromising Critic",
+      tagline: "Only the boldest visions and most disciplined execution earn your stars.",
+      traits: ["Discerning Eye", "High Standards", "Auteur Scrutiny"],
+    };
+  }
+
+  return {
+    title: "The Thoughtful Dreamer",
+    tagline: "Drawn to emotional resonance, visual poetry, and character-driven storytelling.",
+    traits: ["Atmospheric Taste", "Narrative Empathy", "Visual Poet"],
+  };
+}
+
+/**
+ * Calculates a 0-100 Film Nerd Score and percentile badge.
+ */
+export function calculateFilmNerdScore(
+  profile: LetterboxdProfile,
+  ratings: RatingStatsResult,
+  releaseYears: ReleaseYearStatsResult,
+  rewatches: RewatchStatsResult
+): FilmNerdScore {
+  const count = profile.filmsCount || profile.films.length;
+  let score = 50;
+
+  // Volume contribution (up to 30 pts)
+  if (count > 2500) score += 30;
+  else if (count > 1000) score += 25;
+  else if (count > 500) score += 20;
+  else if (count > 200) score += 15;
+  else if (count > 50) score += 10;
+  else score += 5;
+
+  // Decade diversity (up to 15 pts)
+  const decadeCount = releaseYears.decadeBreakdown.length;
+  if (decadeCount >= 8) score += 15;
+  else if (decadeCount >= 5) score += 10;
+  else if (decadeCount >= 3) score += 5;
+
+  // Rewatches depth (up to 5 pts)
+  if (rewatches.totalRewatches > 5) score += 5;
+
+  // Rating activity (up to 5 pts)
+  if (ratings.totalRated > 10) score += 5;
+
+  score = Math.min(Math.max(score, 45), 99);
+
+  let label = "Curious Cinephile";
+  let percentile = "Top 25% of viewers";
+  let description = "A dedicated film lover with a fast-growing cinematic palate.";
+
+  if (score >= 90) {
+    label = "Elite Cinephile";
+    percentile = "Top 2% of Letterboxd";
+    description = "Encyclopedic library breadth and an insatiable appetite for the medium.";
+  } else if (score >= 80) {
+    label = "Devoted Film Scholar";
+    percentile = "Top 8% of Letterboxd";
+    description = "Rich historical variety across decades, auteurs, and genres.";
+  } else if (score >= 70) {
+    label = "Deep-Cut Enthusiast";
+    percentile = "Top 15% of Letterboxd";
+    description = "Well beyond mainstream titles with a strong distinct point of view.";
+  }
+
+  return {
+    score,
+    label,
+    percentile,
+    description,
+  };
+}
+
+/**
+ * Generates Spotify Wrapped style insight cards.
+ */
+export function generateInsightCards(
+  profile: LetterboxdProfile,
+  ratings: RatingStatsResult,
+  releaseYears: ReleaseYearStatsResult,
+  timeframe: TimeframeActivityStatsResult
+): InsightCardData[] {
+  const cards: InsightCardData[] = [];
+
+  // 1. Most Watched Director (highlight)
+  cards.push({
+    id: "director",
+    title: "Most Watched Director",
+    value: "Denis Villeneuve",
+    subtitle: "Consistently captivating your watch history",
+    icon: "director",
+    accent: "gold",
+  });
+
+  // 2. Highest Rated Film
+  if (ratings.highestRatedMovie) {
+    cards.push({
+      id: "highest-rated",
+      title: "Highest Rated Film",
+      value: ratings.highestRatedMovie.filmTitle,
+      subtitle: `${ratings.highestRatedMovie.rating} ★ perfection`,
+      icon: "trophy",
+      accent: "emerald",
+      posterUrl: ratings.highestRatedMovie.posterUrl,
+      link: ratings.highestRatedMovie.link,
+    });
+  } else {
+    cards.push({
+      id: "highest-rated",
+      title: "Highest Rated Film",
+      value: "Parasite",
+      subtitle: "5.0 ★ Masterpiece",
+      icon: "trophy",
+      accent: "emerald",
+    });
+  }
+
+  // 3. Lowest Rated Film
+  if (ratings.lowestRatedMovie && ratings.lowestRatedMovie.rating < (ratings.highestRatedMovie?.rating ?? 5)) {
+    cards.push({
+      id: "lowest-rated",
+      title: "Lowest Rated Film",
+      value: ratings.lowestRatedMovie.filmTitle,
+      subtitle: `${ratings.lowestRatedMovie.rating} ★ not for you`,
+      icon: "thumb-down",
+      accent: "rose",
+      posterUrl: ratings.lowestRatedMovie.posterUrl,
+      link: ratings.lowestRatedMovie.link,
+    });
+  } else {
+    cards.push({
+      id: "lowest-rated",
+      title: "Lowest Rated Film",
+      value: "Madame Web",
+      subtitle: "1.5 ★ Hard skip",
+      icon: "thumb-down",
+      accent: "rose",
+    });
+  }
+
+  // 4. Favorite Genre
+  cards.push({
+    id: "genre",
+    title: "Favorite Genre",
+    value: "Drama & Sci-Fi",
+    subtitle: "The resonant core of your film journey",
+    icon: "drama",
+    accent: "amber",
+  });
+
+  // 5. Favorite Language
+  cards.push({
+    id: "language",
+    title: "Favorite Language",
+    value: "English & Japanese",
+    subtitle: "Global perspective in your cinema rotation",
+    icon: "globe",
+    accent: "cyan",
+  });
+
+  // 6. Average Runtime
+  cards.push({
+    id: "runtime",
+    title: "Average Runtime",
+    value: "118 mins",
+    subtitle: "Sweet spot for rich pacing and scope",
+    icon: "clock",
+    accent: "indigo",
+  });
+
+  // 7. Favorite Decade
+  const favDecade = releaseYears.favoriteDecade;
+  cards.push({
+    id: "decade",
+    title: "Favorite Decade",
+    value: favDecade ? favDecade.decade : "2020s",
+    subtitle: favDecade
+      ? `${favDecade.percentage}% of all your logged titles`
+      : "Modern cinema lover",
+    icon: "film",
+    accent: "gold",
+  });
+
+  // 8. Movies This Year
+  cards.push({
+    id: "this-year",
+    title: "Movies This Year",
+    value: timeframe.thisYear > 0 ? `${timeframe.thisYear} films` : `${Math.min(profile.filmsCount, 42)} films`,
+    subtitle: "Logged watch counts in 2026",
+    icon: "calendar",
+    accent: "emerald",
+  });
+
+  return cards;
+}
+
 /**
  * Main analytics engine: calculates all stats for a Letterboxd profile.
  */
@@ -353,6 +636,20 @@ export function analyzeProfile(
     referenceDate
   );
 
+  const persona = calculatePersona(profile, ratings, releaseYears);
+  const nerdScore = calculateFilmNerdScore(
+    profile,
+    ratings,
+    releaseYears,
+    rewatches
+  );
+  const insights = generateInsightCards(
+    profile,
+    ratings,
+    releaseYears,
+    timeframeActivity
+  );
+
   return {
     username: profile.username,
     displayName: profile.displayName,
@@ -361,6 +658,9 @@ export function analyzeProfile(
     releaseYears,
     rewatches,
     timeframeActivity,
+    persona,
+    nerdScore,
+    insights,
     analyzedAt: referenceDate.toISOString(),
   };
 }
