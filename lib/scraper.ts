@@ -1,4 +1,9 @@
 import * as cheerio from "cheerio";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import type { Browser, Page } from "puppeteer";
+
+puppeteer.use(StealthPlugin());
 
 // --- Types ---
 
@@ -163,7 +168,6 @@ export function extractDisplayName(
   $: cheerio.CheerioAPI,
   safeUser: string
 ): string {
-  // Do NOT parse <title> tag as it may contain rating stars or bio text.
   const avatarAlt = $(
     "#header .avatar img, .profile-avatar img, a.avatar img, .avatar img"
   )
@@ -193,70 +197,6 @@ export function extractDisplayName(
   return safeUser;
 }
 
-async function fetchEndpoint(url: string, username: string): Promise<string> {
-  let response: Response;
-  try {
-    response = await fetch(url, {
-      headers: REQUEST_HEADERS,
-      redirect: "follow",
-      cache: "no-store",
-    });
-  } catch (err) {
-    throw new ProfileFetchError(
-      `Network error fetching ${url}: ${err instanceof Error ? err.message : String(err)}`
-    );
-  }
-
-  if (response.status === 404 || response.status === 410) {
-    throw new ProfileNotFoundError(username);
-  }
-
-  if (!response.ok) {
-    throw new ProfileFetchError(
-      `Letterboxd endpoint returned status ${response.status} for "${username}" (${url})`
-    );
-  }
-
-  return response.text();
-}
-
-/**
- * Fetches a URL with automatic retry and exponential backoff.
- * Retries up to `maxRetries` times on transient failures (network errors, 5xx).
- * Throws on 404/410 (not retryable) immediately.
- */
-async function fetchWithRetry(
-  url: string,
-  username: string,
-  maxRetries = 3
-): Promise<string> {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      return await fetchEndpoint(url, username);
-    } catch (err) {
-      // Don't retry on "not found" — it's permanent
-      if (err instanceof ProfileNotFoundError) throw err;
-
-      if (attempt < maxRetries) {
-        const backoffMs = 1000 * Math.pow(2, attempt - 1); // 1s, 2s, 4s
-        console.warn(
-          `  ⚠ Attempt ${attempt}/${maxRetries} failed for ${url}, retrying in ${backoffMs}ms...`
-        );
-        await delay(backoffMs);
-      } else {
-        throw err;
-      }
-    }
-  }
-  // Unreachable, but satisfies TypeScript
-  throw new ProfileFetchError(`fetchWithRetry exhausted all retries for ${url}`);
-}
-
-// --- Individual Parsers ---
-
-/**
- * Extracts FilmItem[] from a cheerio-loaded Letterboxd films page HTML.
- */
 export function parseFilmsFromHtml($: cheerio.CheerioAPI): FilmItem[] {
   const films: FilmItem[] = [];
   $(".react-component[data-component-class='LazyPoster'], div[data-item-name]").each(
@@ -318,20 +258,6 @@ export function parseFilmsFromHtml($: cheerio.CheerioAPI): FilmItem[] {
   return films;
 }
 
-/**
- * Extracts the total number of pages from a Letterboxd films page.
- */
-export function parseTotalPages($: cheerio.CheerioAPI): number {
-  const lastPageText = normalizeText(
-    $(".paginate-pages li:last-child a, .paginate-pages a").last().text()
-  );
-  const lastPageNum = parseCount(lastPageText);
-  return lastPageNum > 0 ? lastPageNum : 1;
-}
-
-/**
- * Deduplicates films by slug, keeping the first occurrence.
- */
 export function dedupeFilms(films: FilmItem[]): FilmItem[] {
   const seen = new Set<string>();
   const result: FilmItem[] = [];
@@ -345,110 +271,14 @@ export function dedupeFilms(films: FilmItem[]): FilmItem[] {
   return result;
 }
 
-/**
- * Delay helper for retry/pacing.
- */
 function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/**
- * Crawls the complete Letterboxd film catalogue for a given user.
- * 1. Starts at /{username}/films/
- * 2. Detects pagination automatically
- * 3. Continues requesting /films/page/2/, /films/page/3/, etc. until no more pages
- * 4. Merges every movie into a single array
- * 5. Removes duplicates
- * 6. Shows progress in the terminal
- * 7. Adds retry logic with exponential backoff for transient failures
- * 8. Returns strongly typed FilmsData
- */
-export async function getFilms(username: string): Promise<FilmsData> {
-  const safeUser = normalizeUsername(username);
-  if (!safeUser) throw new Error("A valid Letterboxd username is required.");
+// --- Browser Session Management ---
 
-  // Dynamically load puppeteer-extra with stealth plugin
-  let puppeteer: typeof import("puppeteer-extra").default | null = null;
-  try {
-    const pExtra = await import("puppeteer-extra");
-    const stealth = (await import("puppeteer-extra-plugin-stealth")).default;
-    puppeteer = pExtra.default;
-    puppeteer.use(stealth());
-  } catch {
-    puppeteer = null;
-  }
-
-  // If puppeteer is unavailable, fallback to paginated fetch
-  if (!puppeteer) {
-    console.log("Fetching page 1...");
-
-    const page1Url = `https://letterboxd.com/${encodeURIComponent(safeUser)}/films/`;
-    const page1Html = await fetchWithRetry(page1Url, safeUser);
-    const $1 = cheerio.load(page1Html);
-
-    const displayName = extractDisplayName($1, safeUser);
-
-    const avatar =
-      $1("#header .avatar img, .profile-avatar img, a.avatar img, .avatar img")
-        .first()
-        .attr("src") || null;
-
-    // Parse page 1 films and detect total pages
-    const allFilms: FilmItem[] = [...parseFilmsFromHtml($1)];
-    const totalPages = Math.min(parseTotalPages($1), MAX_PAGES);
-    console.log(`Found ${allFilms.length} movies.`);
-
-    // Crawl subsequent pages
-    if (totalPages > 1) {
-      for (let pageNum = 2; pageNum <= totalPages; pageNum++) {
-        console.log(`\nFetching page ${pageNum}...`);
-
-        try {
-          const pageUrl = `https://letterboxd.com/${encodeURIComponent(safeUser)}/films/page/${pageNum}/`;
-          const pageHtml = await fetchWithRetry(pageUrl, safeUser);
-          const $page = cheerio.load(pageHtml);
-          const pageFilms = parseFilmsFromHtml($page);
-
-          if (pageFilms.length === 0) {
-            // No more movies found — pagination may have changed; stop gracefully
-            console.log("No movies found on this page. Stopping pagination.");
-            break;
-          }
-
-          allFilms.push(...pageFilms);
-          console.log(`Found ${pageFilms.length} movies.`);
-        } catch (err) {
-          // If a single page fails after retries, stop gracefully instead of crashing
-          console.warn(
-            `  ⚠ Could not fetch page ${pageNum} after retries. Stopping pagination. (${err instanceof Error ? err.message : String(err)})`
-          );
-          break;
-        }
-
-        // Polite delay between requests
-        if (pageNum < totalPages) {
-          await delay(200);
-        }
-      }
-    }
-
-    // Deduplicate and return
-    const dedupedFilms = dedupeFilms(allFilms);
-    console.log(`\nFinished.\nTotal movies collected: ${dedupedFilms.length}.`);
-
-    return {
-      username: safeUser,
-      displayName,
-      avatar,
-      totalFilmsCount: dedupedFilms.length,
-      films: dedupedFilms,
-    };
-  }
-
-  // --- Puppeteer path (with stealth plugin) ---
-  console.log("Fetching page 1...");
-
-  const browser = await puppeteer.launch({
+export async function createBrowser(): Promise<Browser> {
+  return await puppeteer.launch({
     headless: true,
     args: [
       "--no-sandbox",
@@ -457,159 +287,200 @@ export async function getFilms(username: string): Promise<FilmsData> {
       "--disable-gpu",
     ],
   });
+}
 
+export async function withBrowserSession<T>(
+  fn: (context: { browser: Browser; page: Page }) => Promise<T>
+): Promise<T> {
+  const browser = await createBrowser();
   try {
     const page = await browser.newPage();
-    const startUrl = `https://letterboxd.com/${encodeURIComponent(safeUser)}/films/`;
-
-    let page1Html = "";
-    let page1Loaded = false;
-
-    // Retry logic for initial page load
-    for (let attempt = 1; attempt <= 3; attempt++) {
-      try {
-        const res = await page.goto(startUrl, {
-          waitUntil: "domcontentloaded",
-          timeout: 30000,
-        });
-
-        if (res && (res.status() === 404 || res.status() === 410)) {
-          throw new ProfileNotFoundError(safeUser);
-        }
-
-        page1Html = await page.content();
-        page1Loaded = true;
-        break;
-      } catch (err) {
-        if (err instanceof ProfileNotFoundError) throw err;
-        if (attempt < 3) {
-          await delay(1000 * attempt);
-        } else {
-          throw new ProfileFetchError(
-            `Failed to load page 1 for "${safeUser}": ${err instanceof Error ? err.message : String(err)}`
-          );
-        }
-      }
-    }
-
-    if (!page1Loaded) {
-      throw new ProfileFetchError(`Could not fetch page 1 for "${safeUser}".`);
-    }
-
-    const $1 = cheerio.load(page1Html);
-
-    // Extract Display Name without parsing <title>
-    const displayName = extractDisplayName($1, safeUser);
-
-    // Extract Avatar
-    const avatar =
-      $1("#header .avatar img, .profile-avatar img, a.avatar img, .avatar img")
-        .first()
-        .attr("src") || null;
-
-    // Parse Page 1 Films
-    const allFilms: FilmItem[] = [...parseFilmsFromHtml($1)];
-    const totalPages = parseTotalPages($1);
-
-    console.log(`Found ${allFilms.length} movies.`);
-
-    // Crawl subsequent pages if pagination exists
-    const cappedPages = Math.min(totalPages, MAX_PAGES);
-    if (cappedPages > 1) {
-      for (let pageNum = 2; pageNum <= cappedPages; pageNum++) {
-        console.log(`\nFetching page ${pageNum}...`);
-
-        let pageHtml: string | null = null;
-
-        // In-browser fetch with retry logic for transient request failures
-        for (let attempt = 1; attempt <= 3; attempt++) {
-          try {
-            const fetchResult = await page.evaluate(
-              async (pNum: number, user: string) => {
-                const response = await fetch(`/${user}/films/page/${pNum}/`, {
-                  headers: {
-                    Accept:
-                      "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-                  },
-                });
-                if (!response.ok) {
-                  return { status: response.status, text: "" };
-                }
-                const text = await response.text();
-                return { status: response.status, text };
-              },
-              pageNum,
-              safeUser
-            );
-
-            if (fetchResult.status === 200 && fetchResult.text) {
-              pageHtml = fetchResult.text;
-              break;
-            } else if (attempt < 3) {
-              await delay(800 * attempt);
-            }
-          } catch (err) {
-            if (attempt < 3) {
-              await delay(800 * attempt);
-            }
-          }
-        }
-
-        if (pageHtml) {
-          const $page = cheerio.load(pageHtml);
-          const pageFilms = parseFilmsFromHtml($page);
-
-          if (pageFilms.length === 0) {
-            // No more movies found on this page
-            break;
-          }
-
-          allFilms.push(...pageFilms);
-          console.log(`Found ${pageFilms.length} movies.`);
-        } else {
-          // If page fetch failed after retries, stop pagination gracefully
-          break;
-        }
-
-        // Polite delay between rapid requests
-        if (pageNum < totalPages) {
-          await delay(200);
-        }
-      }
-    }
-
-    // Deduplicate all collected films
-    const dedupedFilms = dedupeFilms(allFilms);
-    console.log(`\nFinished.\nTotal movies collected: ${dedupedFilms.length}.`);
-
-    return {
-      username: safeUser,
-      displayName,
-      avatar,
-      totalFilmsCount: dedupedFilms.length,
-      films: dedupedFilms,
-    };
+    return await fn({ browser, page });
   } finally {
     await browser.close();
   }
 }
 
-/**
- * Backward-compatible alias for getFilms
- */
-export const getAllFilms = getFilms;
+// --- Modular Scrapers (Reusing Browser Session) ---
 
 /**
- * Parses /followers/ endpoint: extracts follower users and target user stats.
+ * Scrapes all pages of a user's film library using the active browser session.
+ * Automatically paginates until there is no "Older" button.
  */
-export async function getFollowers(username: string): Promise<FollowersData> {
+export async function scrapeFilms(
+  page: Page,
+  username: string
+): Promise<FilmsData> {
   const safeUser = normalizeUsername(username);
   if (!safeUser) throw new Error("A valid Letterboxd username is required.");
 
-  const url = `https://letterboxd.com/${encodeURIComponent(safeUser)}/followers/`;
-  const html = await fetchEndpoint(url, safeUser);
-  const $ = cheerio.load(html);
+  const startUrl = `https://letterboxd.com/${encodeURIComponent(safeUser)}/films/`;
 
+  let page1Loaded = false;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await page.goto(startUrl, {
+        waitUntil: "domcontentloaded",
+        timeout: 30000,
+      });
+
+      if (res && (res.status() === 404 || res.status() === 410)) {
+        throw new ProfileNotFoundError(safeUser);
+      }
+
+      page1Loaded = true;
+      break;
+    } catch (err) {
+      if (err instanceof ProfileNotFoundError) throw err;
+      if (attempt < 3) {
+        await delay(1000 * attempt);
+      } else {
+        throw new ProfileFetchError(
+          `Failed to load films page 1 for "${safeUser}": ${err instanceof Error ? err.message : String(err)}`
+        );
+      }
+    }
+  }
+
+  if (!page1Loaded) {
+    throw new ProfileFetchError(`Could not fetch films page 1 for "${safeUser}".`);
+  }
+
+  const page1Html = await page.content();
+  let $ = cheerio.load(page1Html);
+
+  const displayName = extractDisplayName($, safeUser);
+  const avatar =
+    $("#header .avatar img, .profile-avatar img, a.avatar img, .avatar img")
+      .first()
+      .attr("src") || null;
+
+  const allFilms: FilmItem[] = [];
+  let pageNum = 1;
+
+  // Process Page 1
+  const page1Films = parseFilmsFromHtml($);
+  allFilms.push(...page1Films);
+  console.log(`Page ${pageNum}\n${page1Films.length} movies\n`);
+
+  // Detect initial "Older" pagination link
+  let nextRelHref = $(
+    "a.next, .paginate-nextprev a.next, .paginate-pages a.next"
+  ).attr("href");
+
+  // Automatically paginate until there is no "Older" button
+  while (nextRelHref && pageNum < MAX_PAGES) {
+    pageNum++;
+    const nextUrl = nextRelHref.startsWith("http")
+      ? nextRelHref
+      : `https://letterboxd.com${nextRelHref}`;
+
+    let pageHtml: string | null = null;
+
+    // Use in-page evaluate fetch (inheriting cf_clearance session) with retry
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const fetchResult = await page.evaluate(async (url: string) => {
+          const response = await fetch(url, {
+            headers: {
+              Accept:
+                "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            },
+          });
+          if (!response.ok) {
+            return { status: response.status, text: "" };
+          }
+          const text = await response.text();
+          return { status: response.status, text };
+        }, nextUrl);
+
+        if (fetchResult.status === 200 && fetchResult.text) {
+          pageHtml = fetchResult.text;
+          break;
+        } else if (attempt < 3) {
+          await delay(500 * attempt);
+        }
+      } catch {
+        if (attempt < 3) await delay(500 * attempt);
+      }
+    }
+
+    // Direct page.goto fallback if in-page evaluate failed
+    if (!pageHtml) {
+      try {
+        await page.goto(nextUrl, {
+          waitUntil: "domcontentloaded",
+          timeout: 20000,
+        });
+        pageHtml = await page.content();
+      } catch (err) {
+        console.warn(
+          `Could not load page ${pageNum}, stopping pagination. (${err instanceof Error ? err.message : String(err)})`
+        );
+        break;
+      }
+    }
+
+    $ = cheerio.load(pageHtml);
+    const pageFilms = parseFilmsFromHtml($);
+
+    if (pageFilms.length === 0) {
+      // No more movies found — stop pagination cleanly
+      break;
+    }
+
+    allFilms.push(...pageFilms);
+    console.log(`Page ${pageNum}\n${pageFilms.length} movies\n`);
+
+    // Check if there is another "Older" button on the new page
+    nextRelHref = $(
+      "a.next, .paginate-nextprev a.next, .paginate-pages a.next"
+    ).attr("href");
+
+    await delay(150);
+  }
+
+  const dedupedFilms = dedupeFilms(allFilms);
+  console.log(`Finished\n${dedupedFilms.length} movies collected.\n`);
+
+  return {
+    username: safeUser,
+    displayName,
+    avatar,
+    totalFilmsCount: dedupedFilms.length,
+    films: dedupedFilms,
+  };
+}
+
+/**
+ * Scrapes followers using the browser session.
+ */
+export async function scrapeFollowers(
+  page: Page,
+  username: string
+): Promise<FollowersData> {
+  const safeUser = normalizeUsername(username);
+  const url = `https://letterboxd.com/${encodeURIComponent(safeUser)}/followers/`;
+
+  let html = "";
+  try {
+    const fetchResult = await page.evaluate(async (endpoint: string) => {
+      const res = await fetch(endpoint);
+      return { status: res.status, text: await res.text() };
+    }, url);
+    if (fetchResult.status === 200) {
+      html = fetchResult.text;
+    }
+  } catch {
+    // fallback to page.goto
+  }
+
+  if (!html) {
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 20000 });
+    html = await page.content();
+  }
+
+  const $ = cheerio.load(html);
   const followers: UserSummary[] = [];
 
   $(".person-summary, table.person-table tr").each((_, el) => {
@@ -635,10 +506,8 @@ export async function getFollowers(username: string): Promise<FollowersData> {
     });
   });
 
-  // Target user total followers count
-  const totalFollowers = parseCount(
-    $('a[href*="/followers/"]').first().text()
-  ) || followers.length;
+  const totalFollowers =
+    parseCount($('a[href*="/followers/"]').first().text()) || followers.length;
 
   return {
     username: safeUser,
@@ -648,16 +517,34 @@ export async function getFollowers(username: string): Promise<FollowersData> {
 }
 
 /**
- * Parses /following/ endpoint: extracts followed users and stats.
+ * Scrapes following using the browser session.
  */
-export async function getFollowing(username: string): Promise<FollowingData> {
+export async function scrapeFollowing(
+  page: Page,
+  username: string
+): Promise<FollowingData> {
   const safeUser = normalizeUsername(username);
-  if (!safeUser) throw new Error("A valid Letterboxd username is required.");
-
   const url = `https://letterboxd.com/${encodeURIComponent(safeUser)}/following/`;
-  const html = await fetchEndpoint(url, safeUser);
-  const $ = cheerio.load(html);
 
+  let html = "";
+  try {
+    const fetchResult = await page.evaluate(async (endpoint: string) => {
+      const res = await fetch(endpoint);
+      return { status: res.status, text: await res.text() };
+    }, url);
+    if (fetchResult.status === 200) {
+      html = fetchResult.text;
+    }
+  } catch {
+    // fallback to page.goto
+  }
+
+  if (!html) {
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 20000 });
+    html = await page.content();
+  }
+
+  const $ = cheerio.load(html);
   const following: UserSummary[] = [];
 
   $(".person-summary, table.person-table tr").each((_, el) => {
@@ -683,9 +570,8 @@ export async function getFollowing(username: string): Promise<FollowingData> {
     });
   });
 
-  const totalFollowing = parseCount(
-    $('a[href*="/following/"]').first().text()
-  ) || following.length;
+  const totalFollowing =
+    parseCount($('a[href*="/following/"]').first().text()) || following.length;
 
   return {
     username: safeUser,
@@ -697,12 +583,34 @@ export async function getFollowing(username: string): Promise<FollowingData> {
 /**
  * Parses /rss/ endpoint: extracts activity, reviews, ratings, and film metadata.
  */
-export async function getRSS(username: string): Promise<RSSData> {
+export async function scrapeRSS(username: string): Promise<RSSData> {
   const safeUser = normalizeUsername(username);
   if (!safeUser) throw new Error("A valid Letterboxd username is required.");
 
   const url = `https://letterboxd.com/${encodeURIComponent(safeUser)}/rss/`;
-  const xml = await fetchEndpoint(url, safeUser);
+  let xml = "";
+
+  try {
+    const res = await fetch(url, {
+      headers: REQUEST_HEADERS,
+      redirect: "follow",
+      cache: "no-store",
+    });
+
+    if (res.status === 404 || res.status === 410) {
+      throw new ProfileNotFoundError(safeUser);
+    }
+    if (!res.ok) {
+      throw new ProfileFetchError(`Letterboxd RSS returned status ${res.status}`);
+    }
+    xml = await res.text();
+  } catch (err) {
+    if (err instanceof ProfileNotFoundError) throw err;
+    throw new ProfileFetchError(
+      `Failed to fetch RSS for "${safeUser}": ${err instanceof Error ? err.message : String(err)}`
+    );
+  }
+
   const $ = cheerio.load(xml, { xmlMode: true });
 
   const channelTitle = $("channel > title").text();
@@ -765,11 +673,55 @@ export async function getRSS(username: string): Promise<RSSData> {
   };
 }
 
-// --- Unified Profile Aggregator ---
+// --- Future Endpoint Helpers (Ready for lists, diary, likes, watchlist) ---
+
+export async function scrapeWatchlist(
+  page: Page,
+  username: string
+): Promise<FilmItem[]> {
+  const safeUser = normalizeUsername(username);
+  const url = `https://letterboxd.com/${encodeURIComponent(safeUser)}/watchlist/`;
+  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 20000 });
+  const html = await page.content();
+  return dedupeFilms(parseFilmsFromHtml(cheerio.load(html)));
+}
+
+export async function scrapeLikes(
+  page: Page,
+  username: string
+): Promise<FilmItem[]> {
+  const safeUser = normalizeUsername(username);
+  const url = `https://letterboxd.com/${encodeURIComponent(safeUser)}/likes/films/`;
+  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 20000 });
+  const html = await page.content();
+  return dedupeFilms(parseFilmsFromHtml(cheerio.load(html)));
+}
+
+// --- Standalone & Backward-Compatible Functions ---
+
+export async function getFilms(username: string): Promise<FilmsData> {
+  return await withBrowserSession(({ page }) => scrapeFilms(page, username));
+}
+
+export const getAllFilms = getFilms;
+
+export async function getFollowers(username: string): Promise<FollowersData> {
+  return await withBrowserSession(({ page }) => scrapeFollowers(page, username));
+}
+
+export async function getFollowing(username: string): Promise<FollowingData> {
+  return await withBrowserSession(({ page }) => scrapeFollowing(page, username));
+}
+
+export async function getRSS(username: string): Promise<RSSData> {
+  return await scrapeRSS(username);
+}
+
+// --- Unified Profile Aggregator (Single Browser Session) ---
 
 /**
- * Combines all allowed 200 OK endpoints (/films/, /followers/, /following/, /rss/)
- * into a single unified LetterboxdProfile object without touching the blocked root URL.
+ * Combines all profile data into a single unified LetterboxdProfile object
+ * using a single, cleanly closed browser session.
  */
 export async function getLetterboxdProfile(
   username: string
@@ -777,86 +729,62 @@ export async function getLetterboxdProfile(
   const safeUser = normalizeUsername(username);
   if (!safeUser) throw new Error("A valid Letterboxd username is required.");
 
-  // Fetch all allowed endpoints concurrently
-  const [filmsResult, followersResult, followingResult, rssResult] =
-    await Promise.allSettled([
-      getFilms(safeUser),
-      getFollowers(safeUser),
-      getFollowing(safeUser),
-      getRSS(safeUser),
-    ]);
+  return await withBrowserSession(async ({ page }) => {
+    // 1. Scrape Films & Profile Info (page 1 + all pagination)
+    const filmsData = await scrapeFilms(page, safeUser);
 
-  // If the user does not exist, getFilms or getRSS will reject with ProfileNotFoundError
-  if (
-    filmsResult.status === "rejected" &&
-    filmsResult.reason instanceof ProfileNotFoundError
-  ) {
-    throw filmsResult.reason;
-  }
-  if (
-    rssResult.status === "rejected" &&
-    rssResult.reason instanceof ProfileNotFoundError
-  ) {
-    throw rssResult.reason;
-  }
+    // 2. Concurrently scrape followers, following, and RSS
+    const [followersResult, followingResult, rssResult] =
+      await Promise.allSettled([
+        scrapeFollowers(page, safeUser),
+        scrapeFollowing(page, safeUser),
+        scrapeRSS(safeUser),
+      ]);
 
-  // If all failed, throw error
-  if (
-    filmsResult.status === "rejected" &&
-    rssResult.status === "rejected" &&
-    followersResult.status === "rejected" &&
-    followingResult.status === "rejected"
-  ) {
-    throw new ProfileFetchError(
-      `Could not retrieve Letterboxd profile for "${safeUser}".`
-    );
-  }
+    const followersData =
+      followersResult.status === "fulfilled" ? followersResult.value : null;
+    const followingData =
+      followingResult.status === "fulfilled" ? followingResult.value : null;
+    const rssData = rssResult.status === "fulfilled" ? rssResult.value : null;
 
-  const filmsData =
-    filmsResult.status === "fulfilled" ? filmsResult.value : null;
-  const followersData =
-    followersResult.status === "fulfilled" ? followersResult.value : null;
-  const followingData =
-    followingResult.status === "fulfilled" ? followingResult.value : null;
-  const rssData = rssResult.status === "fulfilled" ? rssResult.value : null;
+    const rssDisplayName = rssData?.title
+      ? cleanDisplayName(rssData.title, "")
+      : "";
 
-  const rssDisplayName = rssData?.title
-    ? cleanDisplayName(rssData.title, "")
-    : "";
+    const filmsDisplayName = filmsData?.displayName
+      ? cleanDisplayName(filmsData.displayName, "")
+      : "";
 
-  const filmsDisplayName = filmsData?.displayName
-    ? cleanDisplayName(filmsData.displayName, "")
-    : "";
+    const displayName =
+      rssDisplayName ||
+      filmsDisplayName ||
+      safeUser;
 
-  const displayName =
-    rssDisplayName ||
-    filmsDisplayName ||
-    safeUser;
+    const avatar =
+      filmsData?.avatar ||
+      (followersData?.followers[0]?.avatar ?? null);
 
-  const avatar =
-    filmsData?.avatar ||
-    (followersData?.followers[0]?.avatar ?? null);
+    const followersCount =
+      followersData?.totalFollowers || followersData?.followers.length || 0;
+    const followingCount =
+      followingData?.totalFollowing || followingData?.following.length || 0;
+    const filmsCount =
+      filmsData?.totalFilmsCount || filmsData?.films.length || 0;
 
-  const followersCount =
-    followersData?.totalFollowers || followersData?.followers.length || 0;
-  const followingCount =
-    followingData?.totalFollowing || followingData?.following.length || 0;
-  const filmsCount =
-    filmsData?.totalFilmsCount || filmsData?.films.length || 0;
-
-  return {
-    username: safeUser,
-    displayName,
-    avatar,
-    bio: null, // Note: bio is only present on the blocked root page
-    followersCount,
-    followingCount,
-    filmsCount,
-    recentActivity: rssData?.entries ?? [],
-    films: filmsData?.films ?? [],
-    followers: followersData?.followers ?? [],
-    following: followingData?.following ?? [],
-  };
+    return {
+      username: safeUser,
+      displayName,
+      avatar,
+      bio: null,
+      followersCount,
+      followingCount,
+      filmsCount,
+      recentActivity: rssData?.entries ?? [],
+      films: filmsData?.films ?? [],
+      followers: followersData?.followers ?? [],
+      following: followingData?.following ?? [],
+    };
+  });
 }
 
 /**
