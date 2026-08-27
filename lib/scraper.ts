@@ -108,6 +108,9 @@ export class ProfileParseError extends Error {
 
 // --- Helpers ---
 
+/** Hard cap on the number of pages to crawl, to prevent infinite loops. */
+const MAX_PAGES = 500;
+
 const REQUEST_HEADERS = {
   "User-Agent":
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
@@ -215,6 +218,38 @@ async function fetchEndpoint(url: string, username: string): Promise<string> {
   }
 
   return response.text();
+}
+
+/**
+ * Fetches a URL with automatic retry and exponential backoff.
+ * Retries up to `maxRetries` times on transient failures (network errors, 5xx).
+ * Throws on 404/410 (not retryable) immediately.
+ */
+async function fetchWithRetry(
+  url: string,
+  username: string,
+  maxRetries = 3
+): Promise<string> {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fetchEndpoint(url, username);
+    } catch (err) {
+      // Don't retry on "not found" — it's permanent
+      if (err instanceof ProfileNotFoundError) throw err;
+
+      if (attempt < maxRetries) {
+        const backoffMs = 1000 * Math.pow(2, attempt - 1); // 1s, 2s, 4s
+        console.warn(
+          `  ⚠ Attempt ${attempt}/${maxRetries} failed for ${url}, retrying in ${backoffMs}ms...`
+        );
+        await delay(backoffMs);
+      } else {
+        throw err;
+      }
+    }
+  }
+  // Unreachable, but satisfies TypeScript
+  throw new ProfileFetchError(`fetchWithRetry exhausted all retries for ${url}`);
 }
 
 // --- Individual Parsers ---
@@ -332,8 +367,6 @@ export async function getFilms(username: string): Promise<FilmsData> {
   const safeUser = normalizeUsername(username);
   if (!safeUser) throw new Error("A valid Letterboxd username is required.");
 
-  console.log("Fetching page 1...");
-
   // Dynamically load puppeteer-extra with stealth plugin
   let puppeteer: typeof import("puppeteer-extra").default | null = null;
   try {
@@ -345,31 +378,75 @@ export async function getFilms(username: string): Promise<FilmsData> {
     puppeteer = null;
   }
 
-  // If puppeteer is unavailable, fallback to single-page fetch
+  // If puppeteer is unavailable, fallback to paginated fetch
   if (!puppeteer) {
-    const url = `https://letterboxd.com/${encodeURIComponent(safeUser)}/films/`;
-    const html = await fetchEndpoint(url, safeUser);
-    const $ = cheerio.load(html);
+    console.log("Fetching page 1...");
 
-    const displayName = extractDisplayName($, safeUser);
+    const page1Url = `https://letterboxd.com/${encodeURIComponent(safeUser)}/films/`;
+    const page1Html = await fetchWithRetry(page1Url, safeUser);
+    const $1 = cheerio.load(page1Html);
+
+    const displayName = extractDisplayName($1, safeUser);
 
     const avatar =
-      $("#header .avatar img, .profile-avatar img, a.avatar img, .avatar img")
+      $1("#header .avatar img, .profile-avatar img, a.avatar img, .avatar img")
         .first()
         .attr("src") || null;
 
-    const films = dedupeFilms(parseFilmsFromHtml($));
-    console.log(`Collected ${films.length} movies...`);
-    console.log(`\nFinal movie count: ${films.length}`);
+    // Parse page 1 films and detect total pages
+    const allFilms: FilmItem[] = [...parseFilmsFromHtml($1)];
+    const totalPages = Math.min(parseTotalPages($1), MAX_PAGES);
+    console.log(`Found ${allFilms.length} movies.`);
+
+    // Crawl subsequent pages
+    if (totalPages > 1) {
+      for (let pageNum = 2; pageNum <= totalPages; pageNum++) {
+        console.log(`\nFetching page ${pageNum}...`);
+
+        try {
+          const pageUrl = `https://letterboxd.com/${encodeURIComponent(safeUser)}/films/page/${pageNum}/`;
+          const pageHtml = await fetchWithRetry(pageUrl, safeUser);
+          const $page = cheerio.load(pageHtml);
+          const pageFilms = parseFilmsFromHtml($page);
+
+          if (pageFilms.length === 0) {
+            // No more movies found — pagination may have changed; stop gracefully
+            console.log("No movies found on this page. Stopping pagination.");
+            break;
+          }
+
+          allFilms.push(...pageFilms);
+          console.log(`Found ${pageFilms.length} movies.`);
+        } catch (err) {
+          // If a single page fails after retries, stop gracefully instead of crashing
+          console.warn(
+            `  ⚠ Could not fetch page ${pageNum} after retries. Stopping pagination. (${err instanceof Error ? err.message : String(err)})`
+          );
+          break;
+        }
+
+        // Polite delay between requests
+        if (pageNum < totalPages) {
+          await delay(200);
+        }
+      }
+    }
+
+    // Deduplicate and return
+    const dedupedFilms = dedupeFilms(allFilms);
+    console.log(`\nFinished.\nTotal movies collected: ${dedupedFilms.length}.`);
 
     return {
       username: safeUser,
       displayName,
       avatar,
-      totalFilmsCount: films.length,
-      films,
+      totalFilmsCount: dedupedFilms.length,
+      films: dedupedFilms,
     };
   }
+
+  // --- Puppeteer path (with stealth plugin) ---
+  console.log("Fetching page 1...");
 
   const browser = await puppeteer.launch({
     headless: true,
@@ -434,12 +511,13 @@ export async function getFilms(username: string): Promise<FilmsData> {
     const allFilms: FilmItem[] = [...parseFilmsFromHtml($1)];
     const totalPages = parseTotalPages($1);
 
-    console.log(`Collected ${allFilms.length} movies...`);
+    console.log(`Found ${allFilms.length} movies.`);
 
     // Crawl subsequent pages if pagination exists
-    if (totalPages > 1) {
-      for (let pageNum = 2; pageNum <= totalPages; pageNum++) {
-        console.log(`Fetching page ${pageNum}...`);
+    const cappedPages = Math.min(totalPages, MAX_PAGES);
+    if (cappedPages > 1) {
+      for (let pageNum = 2; pageNum <= cappedPages; pageNum++) {
+        console.log(`\nFetching page ${pageNum}...`);
 
         let pageHtml: string | null = null;
 
@@ -487,7 +565,7 @@ export async function getFilms(username: string): Promise<FilmsData> {
           }
 
           allFilms.push(...pageFilms);
-          console.log(`Collected ${allFilms.length} movies...`);
+          console.log(`Found ${pageFilms.length} movies.`);
         } else {
           // If page fetch failed after retries, stop pagination gracefully
           break;
@@ -502,7 +580,7 @@ export async function getFilms(username: string): Promise<FilmsData> {
 
     // Deduplicate all collected films
     const dedupedFilms = dedupeFilms(allFilms);
-    console.log(`\nFinal movie count: ${dedupedFilms.length}`);
+    console.log(`\nFinished.\nTotal movies collected: ${dedupedFilms.length}.`);
 
     return {
       username: safeUser,
