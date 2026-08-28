@@ -830,6 +830,21 @@ export function analyzeProfile(
     referenceDate
   );
 
+  // Development logging to verify metrics per user
+  console.log(`\n======================================================`);
+  console.log(`[Analytics for @${profile.username}]`);
+  console.log(`- Total scraped films: ${totalMoviesWatched}`);
+  console.log(`- Total movie metadata fetched: ${movieDetailsList.length}`);
+  console.log(
+    `- Top 10 genres:`,
+    genreStats.breakdown.slice(0, 10).map((g) => `${g.genre} (${g.count})`)
+  );
+  console.log(
+    `- Top 10 actors:`,
+    actorStats.topActors.slice(0, 10).map((a) => `${a.name} (${a.count})`)
+  );
+  console.log(`======================================================\n`);
+
   return {
     username: profile.username,
     displayName: profile.displayName,
@@ -849,7 +864,7 @@ export function analyzeProfile(
 }
 
 /**
- * Asynchronously enriches the scraped films with movie metadata and performs complete analytics.
+ * Asynchronously enriches the full scraped film library with movie metadata and performs complete analytics.
  */
 export async function analyzeProfileAsync(
   profile: LetterboxdProfile,
@@ -866,9 +881,10 @@ export async function analyzeProfileAsync(
     if (slug) allSlugs.push(slug);
   }
 
-  const detailsMap = await getBatchMovieDetails(allSlugs, 12, 60);
+  const detailsMap = await getBatchMovieDetails(allSlugs, 20);
   const movieDetailsList = Array.from(detailsMap.values());
 
   return analyzeProfile(profile, movieDetailsList, referenceDate);
 }
+
 
