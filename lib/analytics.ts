@@ -1,4 +1,5 @@
 import { FilmItem, LetterboxdProfile, RSSEntry } from "./scraper";
+import { MovieDetails, getBatchMovieDetails, normalizeSlug } from "./movie";
 
 // --- Types ---
 
@@ -63,6 +64,63 @@ export interface TimeframeActivityStatsResult {
   thisWeek: number;
 }
 
+export interface ActorStat {
+  name: string;
+  count: number;
+}
+
+export interface ActorStatsResult {
+  favoriteActor: string | null;
+  appearanceCount: number;
+  totalActorsAnalyzed: number;
+  topActors: ActorStat[];
+}
+
+export interface GenreStat {
+  genre: string;
+  count: number;
+  percentage: number;
+}
+
+export interface GenreStatsResult {
+  favoriteGenre: string | null;
+  genreCount: number;
+  breakdown: GenreStat[];
+  totalGenreTags: number;
+}
+
+export interface RuntimeStatsResult {
+  averageRuntimeMinutes: number | null;
+  formattedRuntime: string | null;
+  totalMoviesWithRuntime: number;
+  totalRuntimeMinutes: number;
+}
+
+export interface FilmNerdScore {
+  score: number;
+  label: string;
+  percentile: string;
+  description: string;
+}
+
+export interface PersonaInfo {
+  title: string;
+  tagline: string;
+  traits: string[];
+}
+
+export interface InsightCardData {
+  id: string;
+  title: string;
+  value: string;
+  subtitle: string;
+  icon: string;
+  highlight?: boolean;
+  accent?: "gold" | "emerald" | "amber" | "indigo" | "rose" | "cyan";
+  posterUrl?: string | null;
+  link?: string | null;
+}
+
 export interface ProfileAnalytics {
   username: string;
   displayName: string;
@@ -71,6 +129,12 @@ export interface ProfileAnalytics {
   releaseYears: ReleaseYearStatsResult;
   rewatches: RewatchStatsResult;
   timeframeActivity: TimeframeActivityStatsResult;
+  actorStats: ActorStatsResult;
+  genreStats: GenreStatsResult;
+  runtimeStats: RuntimeStatsResult;
+  persona: PersonaInfo;
+  nerdScore: FilmNerdScore;
+  insights: InsightCardData[];
   analyzedAt: string;
 }
 
@@ -117,7 +181,8 @@ export function parseEntryDate(entry: RSSEntry): Date | null {
 }
 
 /**
- * Calculates rating stats including average, highest/lowest rated films, and 0.5-5.0 distribution.
+ * Calculates rating stats including average, highest/lowest rated films (with tie-break: most recently watched),
+ * and 0.5-5.0 distribution strictly from user ratings.
  */
 export function calculateRatingStats(entries: RSSEntry[]): RatingStatsResult {
   const distribution = createEmptyDistribution();
@@ -137,7 +202,9 @@ export function calculateRatingStats(entries: RSSEntry[]): RatingStatsResult {
 
   let ratingSum = 0;
   let highest: MovieRatingSummary | null = null;
+  let highestDate = -Infinity;
   let lowest: MovieRatingSummary | null = null;
+  let lowestDate = -Infinity;
 
   for (const entry of ratedEntries) {
     const r = entry.rating!;
@@ -158,11 +225,18 @@ export function calculateRatingStats(entries: RSSEntry[]): RatingStatsResult {
       link: entry.link,
     };
 
-    if (!highest || r > highest.rating) {
+    const entryTime = parseEntryDate(entry)?.getTime() ?? 0;
+
+    // Highest rated: highest rating, tie-break with most recent watch date
+    if (!highest || r > highest.rating || (r === highest.rating && entryTime > highestDate)) {
       highest = summary;
+      highestDate = entryTime;
     }
-    if (!lowest || r < lowest.rating) {
+
+    // Lowest rated: lowest rating, tie-break with most recent watch date
+    if (!lowest || r < lowest.rating || (r === lowest.rating && entryTime > lowestDate)) {
       lowest = summary;
+      lowestDate = entryTime;
     }
   }
 
@@ -263,6 +337,128 @@ export function calculateDecadeAndYearStats(
 }
 
 /**
+ * Counts actor appearances across all watched films and returns the most frequent actor.
+ */
+export function calculateActorStats(
+  movieDetailsList: (MovieDetails | null | undefined)[]
+): ActorStatsResult {
+  const actorCounts: Record<string, number> = {};
+  let totalActorsAnalyzed = 0;
+
+  for (const movie of movieDetailsList) {
+    if (!movie || !Array.isArray(movie.cast)) continue;
+    // Count each actor once per movie
+    const seenInMovie = new Set<string>();
+    for (const actor of movie.cast) {
+      const cleanActor = actor?.trim();
+      if (cleanActor && !seenInMovie.has(cleanActor)) {
+        seenInMovie.add(cleanActor);
+        actorCounts[cleanActor] = (actorCounts[cleanActor] || 0) + 1;
+        totalActorsAnalyzed++;
+      }
+    }
+  }
+
+  const topActors: ActorStat[] = Object.entries(actorCounts)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count);
+
+  if (topActors.length === 0) {
+    return {
+      favoriteActor: null,
+      appearanceCount: 0,
+      totalActorsAnalyzed: 0,
+      topActors: [],
+    };
+  }
+
+  return {
+    favoriteActor: topActors[0].name,
+    appearanceCount: topActors[0].count,
+    totalActorsAnalyzed,
+    topActors: topActors.slice(0, 10),
+  };
+}
+
+/**
+ * Counts genre occurrences across all watched films and returns the most frequent genre.
+ */
+export function calculateGenreStats(
+  movieDetailsList: (MovieDetails | null | undefined)[]
+): GenreStatsResult {
+  const genreCounts: Record<string, number> = {};
+  let totalGenreTags = 0;
+
+  for (const movie of movieDetailsList) {
+    if (!movie || !Array.isArray(movie.genres)) continue;
+    for (const genre of movie.genres) {
+      const cleanGenre = genre?.trim();
+      if (cleanGenre) {
+        genreCounts[cleanGenre] = (genreCounts[cleanGenre] || 0) + 1;
+        totalGenreTags++;
+      }
+    }
+  }
+
+  const breakdown: GenreStat[] = Object.entries(genreCounts)
+    .map(([genre, count]) => ({
+      genre,
+      count,
+      percentage: totalGenreTags > 0 ? Number(((count / totalGenreTags) * 100).toFixed(1)) : 0,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  if (breakdown.length === 0) {
+    return {
+      favoriteGenre: null,
+      genreCount: 0,
+      breakdown: [],
+      totalGenreTags: 0,
+    };
+  }
+
+  return {
+    favoriteGenre: breakdown[0].genre,
+    genreCount: breakdown[0].count,
+    breakdown,
+    totalGenreTags,
+  };
+}
+
+/**
+ * Calculates average runtime across all movies with runtime data.
+ */
+export function calculateRuntimeStats(
+  movieDetailsList: (MovieDetails | null | undefined)[]
+): RuntimeStatsResult {
+  const validMovies = movieDetailsList.filter(
+    (m): m is MovieDetails & { runtime: number } =>
+      m != null && typeof m.runtime === "number" && m.runtime > 0
+  );
+
+  if (validMovies.length === 0) {
+    return {
+      averageRuntimeMinutes: null,
+      formattedRuntime: null,
+      totalMoviesWithRuntime: 0,
+      totalRuntimeMinutes: 0,
+    };
+  }
+
+  const totalRuntimeMinutes = validMovies.reduce((sum, m) => sum + m.runtime, 0);
+  const averageRuntimeMinutes = Math.round(totalRuntimeMinutes / validMovies.length);
+
+  const formattedRuntime = `${averageRuntimeMinutes} mins`;
+
+  return {
+    averageRuntimeMinutes,
+    formattedRuntime,
+    totalMoviesWithRuntime: validMovies.length,
+    totalRuntimeMinutes,
+  };
+}
+
+/**
  * Calculates total rewatches and rewatch percentage.
  */
 export function calculateRewatchStats(entries: RSSEntry[]): RewatchStatsResult {
@@ -301,7 +497,7 @@ export function calculateTimeframeActivity(
   const targetYear = referenceDate.getFullYear();
   const targetMonth = referenceDate.getMonth();
 
-  // Calculate 7-day rolling window for "this week"
+  // 7-day rolling window for "this week"
   const oneWeekAgo = new Date(referenceDate.getTime() - 7 * 24 * 60 * 60 * 1000);
 
   for (const entry of entries) {
@@ -330,63 +526,24 @@ export function calculateTimeframeActivity(
   };
 }
 
-export interface FilmNerdScore {
-  score: number;
-  label: string;
-  percentile: string;
-  description: string;
-}
-
-export interface PersonaInfo {
-  title: string;
-  tagline: string;
-  traits: string[];
-}
-
-export interface InsightCardData {
-  id: string;
-  title: string;
-  value: string;
-  subtitle: string;
-  icon: string;
-  highlight?: boolean;
-  accent?: "gold" | "emerald" | "amber" | "indigo" | "rose" | "cyan";
-  posterUrl?: string | null;
-  link?: string | null;
-}
-
-export interface ProfileAnalytics {
-  username: string;
-  displayName: string;
-  totalMoviesWatched: number;
-  ratings: RatingStatsResult;
-  releaseYears: ReleaseYearStatsResult;
-  rewatches: RewatchStatsResult;
-  timeframeActivity: TimeframeActivityStatsResult;
-  persona: PersonaInfo;
-  nerdScore: FilmNerdScore;
-  insights: InsightCardData[];
-  analyzedAt: string;
-}
-
-// --- Persona & Insights Generators ---
-
 /**
- * Calculates a dynamic, Spotify-Wrapped style persona based on watching patterns.
+ * Calculates a dynamic, Spotify-Wrapped style persona based on real watching patterns.
  */
 export function calculatePersona(
   profile: LetterboxdProfile,
   ratings: RatingStatsResult,
-  releaseYears: ReleaseYearStatsResult
+  releaseYears: ReleaseYearStatsResult,
+  genreStats?: GenreStatsResult
 ): PersonaInfo {
   const avgRating = ratings.averageRating ?? 3.5;
   const favDecade = releaseYears.favoriteDecade?.decade ?? "2020s";
+  const favGenre = genreStats?.favoriteGenre?.toLowerCase() ?? "";
   const filmCount = profile.filmsCount || profile.films.length;
 
-  if (filmCount > 2000) {
+  if (filmCount > 1500) {
     return {
       title: "The Archival Omnivore",
-      tagline: "Your appetite for cinema spans eras, languages, and continents.",
+      tagline: "Your cinematic appetite spans eras, languages, and continents without pause.",
       traits: ["Endless Curiosity", "Genre-Fluid", "Historical Depth"],
     };
   }
@@ -399,6 +556,22 @@ export function calculatePersona(
     };
   }
 
+  if (favGenre.includes("horror") || favGenre.includes("thriller")) {
+    return {
+      title: "The Midnight Provocateur",
+      tagline: "Drawn to spine-chilling suspense, atmospheric dread, and high-tension thrills.",
+      traits: ["Adrenaline Driven", "Atmospheric Eye", "Dark Aesthetic"],
+    };
+  }
+
+  if (favGenre.includes("sci-fi") || favGenre.includes("science fiction") || favGenre.includes("fantasy")) {
+    return {
+      title: "The Visionary Worldbuilder",
+      tagline: "Enthralled by sweeping cosmology, speculative futures, and mind-bending concepts.",
+      traits: ["Cosmic Scope", "Conceptual Thinker", "Imaginative"],
+    };
+  }
+
   if (favDecade === "1990s" || favDecade === "2000s") {
     return {
       title: "The Cult & Indie Connoisseur",
@@ -407,7 +580,7 @@ export function calculatePersona(
     };
   }
 
-  if (avgRating >= 4.0) {
+  if (avgRating >= 4.0 && ratings.totalRated >= 3) {
     return {
       title: "The Generous Romantic",
       tagline: "You find beauty, wonder, and soul in nearly everything projected.",
@@ -415,7 +588,7 @@ export function calculatePersona(
     };
   }
 
-  if (avgRating <= 2.8 && ratings.totalRated > 5) {
+  if (avgRating <= 2.8 && ratings.totalRated >= 3) {
     return {
       title: "The Uncompromising Critic",
       tagline: "Only the boldest visions and most disciplined execution earn your stars.",
@@ -424,20 +597,21 @@ export function calculatePersona(
   }
 
   return {
-    title: "The Thoughtful Dreamer",
+    title: "The Thoughtful Cinephile",
     tagline: "Drawn to emotional resonance, visual poetry, and character-driven storytelling.",
     traits: ["Atmospheric Taste", "Narrative Empathy", "Visual Poet"],
   };
 }
 
 /**
- * Calculates a 0-100 Film Nerd Score and percentile badge.
+ * Calculates a 0-100 Film Nerd Score and percentile badge based on real data.
  */
 export function calculateFilmNerdScore(
   profile: LetterboxdProfile,
   ratings: RatingStatsResult,
   releaseYears: ReleaseYearStatsResult,
-  rewatches: RewatchStatsResult
+  rewatches: RewatchStatsResult,
+  genreStats?: GenreStatsResult
 ): FilmNerdScore {
   const count = profile.filmsCount || profile.films.length;
   let score = 50;
@@ -456,13 +630,18 @@ export function calculateFilmNerdScore(
   else if (decadeCount >= 5) score += 10;
   else if (decadeCount >= 3) score += 5;
 
+  // Genre breadth (up to 10 pts)
+  const genreCount = genreStats?.breakdown.length ?? 0;
+  if (genreCount >= 10) score += 10;
+  else if (genreCount >= 5) score += 6;
+
   // Rewatches depth (up to 5 pts)
   if (rewatches.totalRewatches > 5) score += 5;
 
   // Rating activity (up to 5 pts)
   if (ratings.totalRated > 10) score += 5;
 
-  score = Math.min(Math.max(score, 45), 99);
+  score = Math.min(Math.max(score, 40), 99);
 
   let label = "Curious Cinephile";
   let percentile = "Top 25% of viewers";
@@ -491,33 +670,28 @@ export function calculateFilmNerdScore(
 }
 
 /**
- * Generates Spotify Wrapped style insight cards.
+ * Generates the 4 Deep Dive Cards strictly from scraped data:
+ * 1. Highest Rated Film (tie-break: most recently watched)
+ * 2. Lowest Rated Film (tie-break: most recently watched)
+ * 3. Movies Watched This Year (diary entries in current year)
+ * 4. Average Runtime (average across all movies with runtime data)
  */
-export function generateInsightCards(
-  profile: LetterboxdProfile,
+export function generateDeepDiveCards(
   ratings: RatingStatsResult,
-  releaseYears: ReleaseYearStatsResult,
-  timeframe: TimeframeActivityStatsResult
+  timeframe: TimeframeActivityStatsResult,
+  runtimeStats: RuntimeStatsResult,
+  referenceDate: Date = new Date()
 ): InsightCardData[] {
   const cards: InsightCardData[] = [];
+  const currentYear = referenceDate.getFullYear();
 
-  // 1. Most Watched Director (highlight)
-  cards.push({
-    id: "director",
-    title: "Most Watched Director",
-    value: "Denis Villeneuve",
-    subtitle: "Consistently captivating your watch history",
-    icon: "director",
-    accent: "gold",
-  });
-
-  // 2. Highest Rated Film
+  // 1. Highest Rated Film
   if (ratings.highestRatedMovie) {
     cards.push({
       id: "highest-rated",
       title: "Highest Rated Film",
       value: ratings.highestRatedMovie.filmTitle,
-      subtitle: `${ratings.highestRatedMovie.rating} ★ perfection`,
+      subtitle: `${ratings.highestRatedMovie.rating.toFixed(1)} ★ highest rated`,
       icon: "trophy",
       accent: "emerald",
       posterUrl: ratings.highestRatedMovie.posterUrl,
@@ -527,20 +701,20 @@ export function generateInsightCards(
     cards.push({
       id: "highest-rated",
       title: "Highest Rated Film",
-      value: "Parasite",
-      subtitle: "5.0 ★ Masterpiece",
+      value: "Not enough data",
+      subtitle: "No rated films in activity",
       icon: "trophy",
       accent: "emerald",
     });
   }
 
-  // 3. Lowest Rated Film
-  if (ratings.lowestRatedMovie && ratings.lowestRatedMovie.rating < (ratings.highestRatedMovie?.rating ?? 5)) {
+  // 2. Lowest Rated Film
+  if (ratings.lowestRatedMovie) {
     cards.push({
       id: "lowest-rated",
       title: "Lowest Rated Film",
       value: ratings.lowestRatedMovie.filmTitle,
-      subtitle: `${ratings.lowestRatedMovie.rating} ★ not for you`,
+      subtitle: `${ratings.lowestRatedMovie.rating.toFixed(1)} ★ lowest rated`,
       icon: "thumb-down",
       accent: "rose",
       posterUrl: ratings.lowestRatedMovie.posterUrl,
@@ -550,74 +724,75 @@ export function generateInsightCards(
     cards.push({
       id: "lowest-rated",
       title: "Lowest Rated Film",
-      value: "Madame Web",
-      subtitle: "1.5 ★ Hard skip",
+      value: "Not enough data",
+      subtitle: "No rated films in activity",
       icon: "thumb-down",
       accent: "rose",
     });
   }
 
-  // 4. Favorite Genre
-  cards.push({
-    id: "genre",
-    title: "Favorite Genre",
-    value: "Drama & Sci-Fi",
-    subtitle: "The resonant core of your film journey",
-    icon: "drama",
-    accent: "amber",
-  });
-
-  // 5. Favorite Language
-  cards.push({
-    id: "language",
-    title: "Favorite Language",
-    value: "English & Japanese",
-    subtitle: "Global perspective in your cinema rotation",
-    icon: "globe",
-    accent: "cyan",
-  });
-
-  // 6. Average Runtime
-  cards.push({
-    id: "runtime",
-    title: "Average Runtime",
-    value: "118 mins",
-    subtitle: "Sweet spot for rich pacing and scope",
-    icon: "clock",
-    accent: "indigo",
-  });
-
-  // 7. Favorite Decade
-  const favDecade = releaseYears.favoriteDecade;
-  cards.push({
-    id: "decade",
-    title: "Favorite Decade",
-    value: favDecade ? favDecade.decade : "2020s",
-    subtitle: favDecade
-      ? `${favDecade.percentage}% of all your logged titles`
-      : "Modern cinema lover",
-    icon: "film",
-    accent: "gold",
-  });
-
-  // 8. Movies This Year
+  // 3. Movies Watched This Year
   cards.push({
     id: "this-year",
-    title: "Movies This Year",
-    value: timeframe.thisYear > 0 ? `${timeframe.thisYear} films` : `${Math.min(profile.filmsCount, 42)} films`,
-    subtitle: "Logged watch counts in 2026",
+    title: "Movies Watched This Year",
+    value: `${timeframe.thisYear} films`,
+    subtitle: `Logged in ${currentYear}`,
     icon: "calendar",
     accent: "emerald",
   });
 
+  // 4. Average Runtime
+  if (runtimeStats.averageRuntimeMinutes !== null && runtimeStats.totalMoviesWithRuntime > 0) {
+    cards.push({
+      id: "runtime",
+      title: "Average Runtime",
+      value: runtimeStats.formattedRuntime || `${runtimeStats.averageRuntimeMinutes} mins`,
+      subtitle: `Across ${runtimeStats.totalMoviesWithRuntime} films with runtime`,
+      icon: "clock",
+      accent: "indigo",
+    });
+  } else {
+    cards.push({
+      id: "runtime",
+      title: "Average Runtime",
+      value: "Not enough data",
+      subtitle: "No runtime data available",
+      icon: "clock",
+      accent: "indigo",
+    });
+  }
+
   return cards;
 }
+
+// Backward compatibility alias for generateInsightCards
+export const generateInsightCards = (
+  _profile: LetterboxdProfile,
+  ratings: RatingStatsResult,
+  _releaseYears: ReleaseYearStatsResult,
+  timeframe: TimeframeActivityStatsResult,
+  runtimeStats?: RuntimeStatsResult,
+  referenceDate: Date = new Date()
+): InsightCardData[] => {
+  return generateDeepDiveCards(
+    ratings,
+    timeframe,
+    runtimeStats || {
+      averageRuntimeMinutes: null,
+      formattedRuntime: null,
+      totalMoviesWithRuntime: 0,
+      totalRuntimeMinutes: 0,
+    },
+    referenceDate
+  );
+};
 
 /**
  * Main analytics engine: calculates all stats for a Letterboxd profile.
  */
 export function analyzeProfile(
   profile: LetterboxdProfile,
+  movieDetailsList: (MovieDetails | null | undefined)[] = [],
   referenceDate: Date = new Date()
 ): ProfileAnalytics {
   const totalMoviesWatched =
@@ -636,18 +811,23 @@ export function analyzeProfile(
     referenceDate
   );
 
-  const persona = calculatePersona(profile, ratings, releaseYears);
+  const actorStats = calculateActorStats(movieDetailsList);
+  const genreStats = calculateGenreStats(movieDetailsList);
+  const runtimeStats = calculateRuntimeStats(movieDetailsList);
+
+  const persona = calculatePersona(profile, ratings, releaseYears, genreStats);
   const nerdScore = calculateFilmNerdScore(
     profile,
     ratings,
     releaseYears,
-    rewatches
+    rewatches,
+    genreStats
   );
-  const insights = generateInsightCards(
-    profile,
+  const insights = generateDeepDiveCards(
     ratings,
-    releaseYears,
-    timeframeActivity
+    timeframeActivity,
+    runtimeStats,
+    referenceDate
   );
 
   return {
@@ -658,9 +838,37 @@ export function analyzeProfile(
     releaseYears,
     rewatches,
     timeframeActivity,
+    actorStats,
+    genreStats,
+    runtimeStats,
     persona,
     nerdScore,
     insights,
     analyzedAt: referenceDate.toISOString(),
   };
 }
+
+/**
+ * Asynchronously enriches the scraped films with movie metadata and performs complete analytics.
+ */
+export async function analyzeProfileAsync(
+  profile: LetterboxdProfile,
+  referenceDate: Date = new Date()
+): Promise<ProfileAnalytics> {
+  const allSlugs: string[] = [];
+
+  for (const f of profile.films) {
+    if (f.slug) allSlugs.push(f.slug);
+  }
+
+  for (const e of profile.recentActivity) {
+    const slug = normalizeSlug(e.link);
+    if (slug) allSlugs.push(slug);
+  }
+
+  const detailsMap = await getBatchMovieDetails(allSlugs, 12, 60);
+  const movieDetailsList = Array.from(detailsMap.values());
+
+  return analyzeProfile(profile, movieDetailsList, referenceDate);
+}
+

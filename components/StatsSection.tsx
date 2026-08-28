@@ -1,12 +1,18 @@
-import { FilmNerdScore, RatingStatsResult, ReleaseYearStatsResult } from "@/lib/analytics";
+import {
+  ActorStatsResult,
+  FilmNerdScore,
+  GenreStatsResult,
+  RatingStatsResult,
+  ReleaseYearStatsResult,
+} from "@/lib/analytics";
 
 interface StatsSectionProps {
   totalMovies: number;
   ratings: RatingStatsResult;
   releaseYears: ReleaseYearStatsResult;
   nerdScore: FilmNerdScore;
-  favoriteGenre?: string;
-  favoriteDirector?: string;
+  genreStats?: GenreStatsResult;
+  actorStats?: ActorStatsResult;
 }
 
 function formatCount(value: number): string {
@@ -24,20 +30,31 @@ export function StatsSection({
   ratings,
   releaseYears,
   nerdScore,
-  favoriteGenre = "Drama & Sci-Fi",
-  favoriteDirector = "Denis Villeneuve",
+  genreStats,
+  actorStats,
 }: StatsSectionProps) {
-  const avgRatingText = ratings.averageRating
-    ? `${ratings.averageRating.toFixed(2)} ★`
-    : "3.85 ★";
+  const avgRatingText =
+    ratings.averageRating !== null && ratings.totalRated > 0
+      ? `${ratings.averageRating.toFixed(2)} ★`
+      : "Not enough data";
 
   const favoriteDecadeText = releaseYears.favoriteDecade
     ? releaseYears.favoriteDecade.decade
-    : "2020s";
+    : "Not enough data";
 
   const decadePercentageText = releaseYears.favoriteDecade
-    ? `${releaseYears.favoriteDecade.percentage}% of all watched`
-    : "Core viewing era";
+    ? `${releaseYears.favoriteDecade.percentage}% of watched films`
+    : "No release years recorded";
+
+  const favoriteGenreText = genreStats?.favoriteGenre || "Not enough data";
+  const genreSubtext = genreStats?.favoriteGenre
+    ? `${genreStats.genreCount} films in library`
+    : "No genre data available";
+
+  const favoriteActorText = actorStats?.favoriteActor || "Not enough data";
+  const actorSubtext = actorStats?.favoriteActor
+    ? `${actorStats.appearanceCount} appearances in watched films`
+    : "No cast data available";
 
   const cards = [
     {
@@ -52,11 +69,23 @@ export function StatsSection({
     {
       label: "Average Rating",
       value: avgRatingText,
-      subtext: ratings.totalRated > 0 ? `Across ${ratings.totalRated} rated films` : "Letterboxd weighted score",
+      subtext:
+        ratings.totalRated > 0
+          ? `Across ${ratings.totalRated} rated films`
+          : "No user ratings logged",
       icon: "⭐",
       gradient: "from-amber-400/10 via-yellow-500/5 to-transparent",
       accentBorder: "group-hover:border-yellow-400/40",
       accentText: "text-yellow-300",
+    },
+    {
+      label: "Favorite Genre",
+      value: favoriteGenreText,
+      subtext: genreSubtext,
+      icon: "🎭",
+      gradient: "from-rose-500/10 via-pink-500/5 to-transparent",
+      accentBorder: "group-hover:border-rose-400/40",
+      accentText: "text-rose-300",
     },
     {
       label: "Favorite Decade",
@@ -68,32 +97,24 @@ export function StatsSection({
       accentText: "text-indigo-300",
     },
     {
-      label: "Favorite Genre",
-      value: favoriteGenre,
-      subtext: "Most recurring thematic focus",
-      icon: "🎭",
-      gradient: "from-rose-500/10 via-pink-500/5 to-transparent",
-      accentBorder: "group-hover:border-rose-400/40",
-      accentText: "text-rose-300",
-    },
-    {
-      label: "Favorite Director",
-      value: favoriteDirector,
-      subtext: "Top recurring auteur signature",
-      icon: "🍿",
-      gradient: "from-emerald-500/10 via-teal-500/5 to-transparent",
-      accentBorder: "group-hover:border-emerald-400/40",
-      accentText: "text-emerald-300",
-    },
-    {
       label: "Film Nerd Score",
       value: `${nerdScore.score}/100`,
       subtext: nerdScore.percentile,
       icon: "📈",
       gradient: "from-amber-500/15 via-orange-500/5 to-transparent",
       accentBorder: "group-hover:border-amber-400/50",
-      accentText: "text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-100",
+      accentText:
+        "text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-100",
       badge: nerdScore.label,
+    },
+    {
+      label: "Favorite Actor",
+      value: favoriteActorText,
+      subtext: actorSubtext,
+      icon: "🌟",
+      gradient: "from-emerald-500/10 via-teal-500/5 to-transparent",
+      accentBorder: "group-hover:border-emerald-400/40",
+      accentText: "text-emerald-300",
     },
   ];
 
@@ -130,10 +151,16 @@ export function StatsSection({
             </div>
 
             <div className="mt-4">
-              <p className={`text-3xl sm:text-4xl font-extrabold tracking-tight ${card.accentText} truncate`}>
+              <p
+                title={card.value}
+                className={`text-3xl sm:text-4xl font-extrabold tracking-tight ${card.accentText} truncate`}
+              >
                 {card.value}
               </p>
-              <p className="mt-1.5 text-xs text-zinc-400 leading-relaxed truncate">
+              <p
+                title={card.subtext}
+                className="mt-1.5 text-xs text-zinc-400 leading-relaxed truncate"
+              >
                 {card.subtext}
               </p>
             </div>
@@ -149,3 +176,4 @@ export function StatsSection({
     </section>
   );
 }
+

@@ -5,7 +5,7 @@ import {
   ProfileFetchError,
   ProfileNotFoundError,
 } from "@/lib/scraper";
-import { analyzeProfile } from "@/lib/analytics";
+import { analyzeProfileAsync } from "@/lib/analytics";
 import { ProfileHero } from "@/components/ProfileHero";
 import { StatsSection } from "@/components/StatsSection";
 import { InsightsSection } from "@/components/InsightsSection";
@@ -87,8 +87,8 @@ export default async function ReportPage({ params }: ReportPageProps) {
     );
   }
 
-  // Calculate full Spotify Wrapped style analytics
-  const analytics = analyzeProfile(profile);
+  // Calculate full Spotify Wrapped style analytics with real movie metadata
+  const analytics = await analyzeProfileAsync(profile);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#070707] text-white selection:bg-amber-400 selection:text-black">
@@ -129,18 +129,20 @@ export default async function ReportPage({ params }: ReportPageProps) {
             nerdScore={analytics.nerdScore}
             totalMovies={analytics.totalMoviesWatched}
             avgRating={analytics.ratings.averageRating}
-            favoriteDecade={analytics.releaseYears.favoriteDecade?.decade ?? "2020s"}
+            favoriteDecade={analytics.releaseYears.favoriteDecade?.decade ?? "Not enough data"}
           />
 
-          {/* 2. Core 6 Stats Cards */}
+          {/* 2. Core 6 Hero Stats Cards */}
           <StatsSection
             totalMovies={analytics.totalMoviesWatched}
             ratings={analytics.ratings}
             releaseYears={analytics.releaseYears}
             nerdScore={analytics.nerdScore}
+            genreStats={analytics.genreStats}
+            actorStats={analytics.actorStats}
           />
 
-          {/* 3. Deep-Dive Insights Cards (8 Cards) */}
+          {/* 3. Deep-Dive Insights Cards (4 Cards) */}
           <InsightsSection insights={analytics.insights} />
 
           {/* 4. Recent Diary & Activity */}

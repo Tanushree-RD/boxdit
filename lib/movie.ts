@@ -127,6 +127,9 @@ function extractJsonLd($: cheerio.CheerioAPI): JsonLdMovie | null {
   return result;
 }
 
+// In-memory global cache for movie details across requests
+const movieDetailsCache = new Map<string, MovieDetails>();
+
 // --- Main Movie Scraper ---
 
 /**
@@ -140,6 +143,10 @@ export async function getMovieDetails(
   const safeSlug = normalizeSlug(slug);
   if (!safeSlug) {
     throw new Error("A valid Letterboxd film slug is required.");
+  }
+
+  if (movieDetailsCache.has(safeSlug)) {
+    return movieDetailsCache.get(safeSlug)!;
   }
 
   const url = `https://letterboxd.com/film/${encodeURIComponent(safeSlug)}/`;
@@ -407,7 +414,7 @@ export async function getMovieDetails(
     }
   }
 
-  return {
+  const result: MovieDetails = {
     slug: safeSlug,
     title,
     releaseYear,
@@ -422,4 +429,51 @@ export async function getMovieDetails(
     posterUrl,
     backdropUrl,
   };
+
+  movieDetailsCache.set(safeSlug, result);
+  return result;
 }
+
+/**
+ * Batch retrieves MovieDetails for a list of slugs with controlled concurrency.
+ * Uses in-memory caching to avoid redundant network calls.
+ */
+export async function getBatchMovieDetails(
+  slugs: string[],
+  concurrency = 12,
+  maxFetch = 60
+): Promise<Map<string, MovieDetails>> {
+  const result = new Map<string, MovieDetails>();
+  const uniqueSlugs = Array.from(
+    new Set(slugs.map((s) => normalizeSlug(s)).filter(Boolean))
+  );
+
+  const toFetch: string[] = [];
+  for (const slug of uniqueSlugs) {
+    if (movieDetailsCache.has(slug)) {
+      result.set(slug, movieDetailsCache.get(slug)!);
+    } else {
+      toFetch.push(slug);
+    }
+  }
+
+  const limitedFetch = toFetch.slice(0, Math.max(0, maxFetch - result.size));
+
+  for (let i = 0; i < limitedFetch.length; i += concurrency) {
+    const chunk = limitedFetch.slice(i, i + concurrency);
+    const chunkResults = await Promise.allSettled(
+      chunk.map((slug) => getMovieDetails(slug))
+    );
+
+    for (let j = 0; j < chunk.length; j++) {
+      const res = chunkResults[j];
+      const slug = chunk[j];
+      if (res.status === "fulfilled" && res.value) {
+        result.set(slug, res.value);
+      }
+    }
+  }
+
+  return result;
+}
+

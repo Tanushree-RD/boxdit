@@ -34,7 +34,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
           </p>
         </div>
         <span className="hidden sm:inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-400">
-          8 insights
+          {insights.length} insights
         </span>
       </div>
 
@@ -71,10 +71,16 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                 )}
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-lg sm:text-xl font-bold text-white group-hover:text-amber-200 transition-colors truncate">
+                  <p
+                    title={item.value}
+                    className="text-lg sm:text-xl font-bold text-white group-hover:text-amber-200 transition-colors truncate"
+                  >
                     {item.value}
                   </p>
-                  <p className="mt-0.5 text-xs text-zinc-400 leading-snug line-clamp-2">
+                  <p
+                    title={item.subtitle}
+                    className="mt-0.5 text-xs text-zinc-400 leading-snug line-clamp-2"
+                  >
                     {item.subtitle}
                   </p>
                 </div>
@@ -103,3 +109,4 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
     </section>
   );
 }
+

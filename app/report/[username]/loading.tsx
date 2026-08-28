@@ -56,11 +56,11 @@ export default function ReportLoading() {
             </div>
           </div>
 
-          {/* 3. Deep-Dive Insights Skeleton (8 cards) */}
+          {/* 3. Deep-Dive Insights Skeleton (4 cards) */}
           <div className="space-y-4">
             <div className="h-4 w-36 rounded bg-white/10 animate-pulse" />
             <div className="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
                   className="rounded-[26px] border border-white/10 bg-white/[0.02] p-5 backdrop-blur-xl animate-pulse space-y-3"
