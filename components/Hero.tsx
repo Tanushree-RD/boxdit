@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { InteractiveTitle } from "./InteractiveTitle";
 import { UsernameForm } from "./UsernameForm";
 
 const containerVariants = {
@@ -9,78 +10,91 @@ const containerVariants = {
     opacity: 1,
     transition: {
       staggerChildren: 0.15,
-      delayChildren: 0.2,
+      delayChildren: 0.1,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 25 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
   },
 };
 
 export function Hero() {
   return (
-    <section className="relative mx-auto flex w-full max-w-[1400px] flex-col items-center justify-center px-5 pt-20 pb-20 text-center sm:px-8 lg:px-12 lg:pt-32">
-      {/* Cinematic background glow */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-1/4 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,_rgba(245,176,0,0.08),_transparent_70%)] blur-3xl" />
-        <div className="absolute left-1/3 top-1/2 h-[300px] w-[300px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(255,200,87,0.04),_transparent_70%)] blur-3xl" />
-      </div>
-
+    <section className="relative flex min-h-[92vh] w-full flex-col items-center justify-center px-5 pt-28 pb-16 text-center sm:px-8 lg:px-12">
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="flex flex-col items-center"
+        className="relative z-10 flex w-full max-w-5xl flex-col items-center"
       >
-        {/* Badge */}
+        {/* Cinematic Badge */}
         <motion.div variants={itemVariants}>
-          <div className="mb-10 inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-white/[0.02] px-4 py-2 text-[11px] font-medium tracking-[0.24em] text-zinc-400 uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#F5B000] animate-pulse" />
+          <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/[0.1] bg-white/[0.03] px-4 py-2 text-[11px] font-semibold tracking-[0.28em] text-zinc-300 uppercase backdrop-blur-xl shadow-[0_0_20px_rgba(255,159,28,0.08)]">
+            <span className="h-2 w-2 rounded-full bg-[#FF9F1C] animate-pulse" />
             Movie taste, decoded
           </div>
         </motion.div>
 
-        {/* Main title */}
-        <motion.div variants={itemVariants} className="relative">
-          <div className="absolute inset-0 -z-10 flex items-center justify-center">
-            <div className="h-[200px] w-[400px] rounded-full bg-[#F5B000]/[0.06] blur-[100px]" />
-          </div>
-          <h1 className="text-[72px] font-black tracking-[0.18em] text-white sm:text-[96px] lg:text-[128px] leading-[0.9]">
-            BOXDIT
-          </h1>
+        {/* Large Interactive BOXDIT Title with particle emitter */}
+        <motion.div variants={itemVariants} className="w-full">
+          <InteractiveTitle />
         </motion.div>
 
-        {/* Subtitle */}
+        {/* Subtitle / Pitch */}
         <motion.p
           variants={itemVariants}
-          className="mt-6 text-xl font-light text-zinc-300 sm:text-2xl lg:text-3xl"
+          className="mx-auto max-w-2xl text-lg font-normal leading-relaxed text-zinc-300 sm:text-xl md:text-2xl mt-2"
         >
-          Your{" "}
-          <span className="text-gold-gradient font-semibold">
-            Letterboxd Wrapped
-          </span>
+          Turn your Letterboxd profile into a{" "}
+          <span className="font-semibold text-brand-gradient">
+            cinematic wrap
+          </span>{" "}
+          powered by real data and AI.
         </motion.p>
 
-        {/* Description */}
-        <motion.p
-          variants={itemVariants}
-          className="mt-5 max-w-xl text-[15px] leading-relaxed text-zinc-500"
-        >
-          Discover your movie taste through beautiful statistics, AI insights,
-          and shareable cards. Just enter your Letterboxd username to get
-          started.
-        </motion.p>
-
-        {/* Search bar */}
-        <motion.div variants={itemVariants} className="mt-12 w-full max-w-2xl">
+        {/* Search / Username Input Component */}
+        <motion.div variants={itemVariants} className="mt-10 w-full">
           <UsernameForm />
         </motion.div>
+      </motion.div>
+
+      {/* Bouncing Scroll Cue */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.2, duration: 0.8 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-zinc-500 hover:text-zinc-300 transition-colors"
+      >
+        <a href="#features" className="flex flex-col items-center gap-1.5 group">
+          <span className="text-[10px] font-mono tracking-[0.2em] uppercase text-zinc-500 group-hover:text-zinc-300 transition-colors">
+            Scroll to explore
+          </span>
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            className="flex h-7 w-7 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.02]"
+          >
+            <svg
+              className="h-3.5 w-3.5 text-zinc-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              />
+            </svg>
+          </motion.div>
+        </a>
       </motion.div>
     </section>
   );
