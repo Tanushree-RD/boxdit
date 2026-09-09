@@ -1,10 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { TiltCard } from "./TiltCard";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 20 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
@@ -18,134 +17,134 @@ const fadeUp = {
 
 export function WrapShowcase() {
   return (
-    <section className="relative mx-auto max-w-[1200px] px-5 py-20 sm:px-8 lg:px-12">
-      {/* Ambient background light behind showcase */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[450px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,_rgba(59,130,246,0.12),_transparent_70%)] blur-[120px]" />
-
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
-        className="mb-12 text-center"
-      >
-        <motion.div
-          variants={fadeUp}
-          custom={0}
-          className="inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-white/[0.02] px-4 py-1.5 text-[11px] font-semibold tracking-[0.25em] text-[#3B82F6] uppercase"
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-[#3B82F6] animate-pulse" />
-          The Final Artifact
-        </motion.div>
-        <motion.h2
-          variants={fadeUp}
-          custom={1}
-          className="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-4xl"
-        >
-          A wrap that feels like an art piece
-        </motion.h2>
-      </motion.div>
-
-      {/* Interactive 3D Showcase Card */}
+    <section id="showcase" className="relative mx-auto max-w-6xl px-6 py-24 sm:px-8 sm:py-32">
+      {/* Section Header */}
       <motion.div
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-60px" }}
+        className="mb-14"
+      >
+        <motion.p
+          variants={fadeUp}
+          custom={0}
+          className="text-[11px] font-mono tracking-[0.24em] text-zinc-500 uppercase"
+        >
+          02 // Artifact
+        </motion.p>
+        <motion.h2
+          variants={fadeUp}
+          custom={1}
+          className="mt-3 text-3xl font-light tracking-[-0.03em] text-white sm:text-4xl md:text-5xl"
+        >
+          The cinematic ledger.
+        </motion.h2>
+      </motion.div>
+
+      {/* Editorial Exhibition Specimen Card */}
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
         variants={fadeUp}
         custom={2}
-        className="mx-auto max-w-3xl"
+        className="mx-auto overflow-hidden rounded-[22px] border border-white/[0.08] bg-[#0c0c0e]/80 p-6 sm:p-10 backdrop-blur-md shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
       >
-        <TiltCard
-          maxTilt={6}
-          glowColor="rgba(59, 130, 246, 0.25)"
-          borderColor="border-white/[0.12] hover:border-[#3B82F6]/50"
-          className="p-8 sm:p-10 shadow-[0_25px_80px_rgba(0,0,0,0.6)]"
-        >
-          {/* Header of Preview Wrap */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/[0.1] bg-gradient-to-tr from-[#FF9F1C]/20 via-[#3B82F6]/20 to-[#22C55E]/20 text-white font-black text-sm">
-                🎬
+        {/* Specimen Header */}
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06] pb-6">
+          <div className="flex items-center gap-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.03] text-xs font-mono text-zinc-300">
+              01
+            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-white">@alex_cinema</span>
+                <span className="rounded-full border border-white/[0.1] bg-white/[0.04] px-2 py-0.5 text-[10px] font-mono text-zinc-400">
+                  ANNUAL DOSSIER
+                </span>
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h4 className="text-base font-bold text-white">@alex_cinema</h4>
-                  <span className="rounded-full bg-[#22C55E]/10 border border-[#22C55E]/20 px-2 py-0.5 text-[10px] font-mono text-[#22C55E]">
-                    PRO VERIFIED
-                  </span>
-                </div>
-                <p className="text-[12px] text-zinc-400 font-mono">2024 - 2025 Cinematic Ledger</p>
-              </div>
-            </div>
-
-            <div className="text-right">
-              <span className="text-[11px] font-mono text-zinc-500 uppercase">Total Logged</span>
-              <div className="text-xl font-black text-brand-gradient">248 Films</div>
+              <p className="text-xs font-mono text-zinc-500 mt-0.5">2024 Viewing Index</p>
             </div>
           </div>
 
-          {/* Core Wrap Content Grid */}
-          <div className="mt-8 grid gap-6 sm:grid-cols-2">
-            {/* Left: Persona & Director */}
-            <div className="space-y-4">
-              <div className="rounded-2xl border border-white/[0.06] bg-black/40 p-5">
-                <span className="text-[10px] font-mono tracking-widest text-[#FF9F1C] uppercase font-bold">
-                  Cinematic Persona
-                </span>
-                <h5 className="mt-1 text-lg font-extrabold text-white">
-                  The Sci-Fi Visionary
-                </h5>
-                <p className="mt-1.5 text-[13px] leading-relaxed text-zinc-400">
-                  Top 2% in speculative fiction, cerebral world-building, and existential runtime devotion.
-                </p>
-              </div>
+          <div className="text-right">
+            <span className="text-[10px] font-mono uppercase text-zinc-500">Logged Volumes</span>
+            <div className="text-xl font-light tracking-tight text-white">248 Films</div>
+          </div>
+        </div>
 
-              <div className="rounded-2xl border border-white/[0.06] bg-black/40 p-5">
-                <span className="text-[10px] font-mono tracking-widest text-[#3B82F6] uppercase font-bold">
-                  Top Director Chemistry
+        {/* Specimen Content Columns */}
+        <div className="mt-8 grid gap-6 md:grid-cols-12">
+          {/* Persona & Archetype (5 cols) */}
+          <div className="flex flex-col justify-between rounded-xl border border-white/[0.05] bg-[#111114]/50 p-6 md:col-span-5">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#FF8000]" />
+                <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
+                  Archetype Identified
                 </span>
-                <div className="mt-2 flex items-center justify-between">
-                  <span className="text-[15px] font-bold text-white">Denis Villeneuve</span>
-                  <span className="font-mono text-xs text-[#3B82F6] font-semibold">9.8/10 Synergy</span>
-                </div>
-                <div className="mt-1 text-[12px] text-zinc-400">
-                  Watched 7 films · Avg 4.6★
-                </div>
               </div>
+              <h4 className="mt-3 text-2xl font-light tracking-tight text-white">
+                The Atmospheric Futurist
+              </h4>
+              <p className="mt-3 text-[13px] font-light leading-relaxed text-zinc-400">
+                Heavy predilection for speculative fiction, high-contrast cinematography, and slow existential pacing. Top 2% in runtime commitment.
+              </p>
             </div>
 
-            {/* Right: Four Favorite Movies Showcase */}
-            <div className="rounded-2xl border border-white/[0.06] bg-black/40 p-5 flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-mono tracking-widest text-[#22C55E] uppercase font-bold">
-                  Hall of Fame (4 Favorites)
+            <div className="mt-8 border-t border-white/[0.05] pt-4">
+              <span className="text-[10px] font-mono text-zinc-500 uppercase">Key Allegiance</span>
+              <div className="mt-1 flex items-center justify-between text-sm">
+                <span className="font-normal text-zinc-200">Denis Villeneuve</span>
+                <span className="font-mono text-xs text-zinc-400">4.6★ avg</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Film Four Favorites (7 cols) */}
+          <div className="flex flex-col justify-between rounded-xl border border-white/[0.05] bg-[#111114]/50 p-6 md:col-span-7">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
+                  Pinnacle Four
                 </span>
-                <div className="mt-3 grid grid-cols-4 gap-2">
-                  {[
-                    { title: "Blade Runner 2049", year: "2017", bg: "from-amber-700/60 to-orange-950/80" },
-                    { title: "Arrival", year: "2016", bg: "from-blue-700/60 to-slate-950/80" },
-                    { title: "Interstellar", year: "2014", bg: "from-cyan-700/60 to-indigo-950/80" },
-                    { title: "Dune: Part Two", year: "2024", bg: "from-emerald-700/60 to-green-950/80" },
-                  ].map((film) => (
-                    <div
-                      key={film.title}
-                      className={`group/film relative aspect-[2/3] overflow-hidden rounded-xl border border-white/[0.1] bg-gradient-to-b ${film.bg} p-2 flex flex-col justify-end transition-transform duration-200 hover:scale-105`}
-                    >
-                      <div className="text-[10px] font-bold text-white line-clamp-2 leading-tight">
+                <span className="text-[10px] font-mono text-zinc-500">CANONICAL SELECTION</span>
+              </div>
+
+              {/* Minimal Four Film Rectangles */}
+              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {[
+                  { title: "Blade Runner 2049", year: "2017", dir: "Villeneuve" },
+                  { title: "Arrival", year: "2016", dir: "Villeneuve" },
+                  { title: "Interstellar", year: "2014", dir: "Nolan" },
+                  { title: "Dune: Part Two", year: "2024", dir: "Villeneuve" },
+                ].map((film) => (
+                  <div
+                    key={film.title}
+                    className="group/film flex aspect-[2/3] flex-col justify-between rounded-lg border border-white/[0.08] bg-[#141418] p-3 transition-colors duration-200 hover:border-white/[0.2]"
+                  >
+                    <span className="font-mono text-[10px] text-zinc-600 group-hover/film:text-zinc-400">
+                      {film.year}
+                    </span>
+                    <div>
+                      <p className="text-xs font-normal leading-tight text-white line-clamp-2">
                         {film.title}
-                      </div>
-                      <span className="text-[9px] font-mono text-zinc-400">{film.year}</span>
+                      </p>
+                      <p className="mt-1 text-[10px] font-mono text-zinc-500">
+                        {film.dir}
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mt-4 flex items-center justify-between border-t border-white/[0.06] pt-3 text-[11px] text-zinc-400 font-mono">
-                <span>VIBE: MELANCHOLIC & CEREBRAL</span>
-                <span className="text-[#22C55E] font-bold">MATCH: 98%</span>
+                  </div>
+                ))}
               </div>
             </div>
+
+            <div className="mt-6 flex items-center justify-between border-t border-white/[0.05] pt-4 font-mono text-[11px] text-zinc-500">
+              <span>GENRE CONGRUENCE</span>
+              <span className="text-zinc-300">SCI-FI 44% · DRAMA 32%</span>
+            </div>
           </div>
-        </TiltCard>
+        </div>
       </motion.div>
     </section>
   );

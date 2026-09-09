@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BOXDIT | Your Letterboxd Wrapped",
+  title: "BOXDIT — Your Letterboxd, beautifully understood",
   description:
-    "Discover your movie taste through beautiful statistics, AI insights, and shareable cards.",
+    "A quiet, rigorous lens on your cinematic taste. Real statistics, thoughtful insights, and editorial artifacts.",
 };
 
 export default function RootLayout({
@@ -28,7 +28,9 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-[#070707] text-white">{children}</body>
+      <body className="min-h-full bg-[#080808] text-[#EDEDED] font-sans">
+        {children}
+      </body>
     </html>
   );
 }

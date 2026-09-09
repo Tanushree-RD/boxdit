@@ -63,6 +63,111 @@ interface Particle {
   maxLife: number;
 }
 
+const drawParticleShape = (
+  ctx: CanvasRenderingContext2D,
+  type: string,
+  s: number,
+  _color: string
+) => {
+  switch (type) {
+    case "reel": {
+      ctx.beginPath();
+      ctx.arc(0, 0, s, 0, Math.PI * 2);
+      ctx.stroke();
+      for (let i = 0; i < 4; i++) {
+        const angle = (i * Math.PI) / 2;
+        ctx.beginPath();
+        ctx.arc(Math.cos(angle) * s * 0.5, Math.sin(angle) * s * 0.5, s * 0.22, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.2, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    }
+    case "popcorn": {
+      ctx.beginPath();
+      ctx.arc(-s * 0.35, -s * 0.2, s * 0.45, 0, Math.PI * 2);
+      ctx.arc(s * 0.35, -s * 0.2, s * 0.45, 0, Math.PI * 2);
+      ctx.arc(0, s * 0.3, s * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    }
+    case "star": {
+      ctx.beginPath();
+      ctx.moveTo(0, -s * 1.3);
+      ctx.quadraticCurveTo(0, 0, s * 1.3, 0);
+      ctx.quadraticCurveTo(0, 0, 0, s * 1.3);
+      ctx.quadraticCurveTo(0, 0, -s * 1.3, 0);
+      ctx.quadraticCurveTo(0, 0, 0, -s * 1.3);
+      ctx.fill();
+      break;
+    }
+    case "spark": {
+      ctx.beginPath();
+      ctx.moveTo(-s * 0.7, -s * 0.7);
+      ctx.lineTo(s * 0.7, s * 0.7);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.25, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    }
+    case "pixel":
+    case "square": {
+      ctx.fillRect(-s * 0.6, -s * 0.6, s * 1.2, s * 1.2);
+      break;
+    }
+    case "dot": {
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.6, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    }
+    case "frame": {
+      ctx.strokeRect(-s * 0.9, -s * 0.6, s * 1.8, s * 1.2);
+      ctx.fillRect(-s * 0.7, -s * 0.7, s * 0.3, s * 0.15);
+      ctx.fillRect(s * 0.4, -s * 0.7, s * 0.3, s * 0.15);
+      ctx.fillRect(-s * 0.7, s * 0.55, s * 0.3, s * 0.15);
+      ctx.fillRect(s * 0.4, s * 0.55, s * 0.3, s * 0.15);
+      break;
+    }
+    case "ticket": {
+      ctx.beginPath();
+      ctx.rect(-s * 0.9, -s * 0.55, s * 1.8, s * 1.1);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(-s * 0.9, 0, s * 0.25, -Math.PI / 2, Math.PI / 2);
+      ctx.arc(s * 0.9, 0, s * 0.25, Math.PI / 2, -Math.PI / 2);
+      ctx.fill();
+      break;
+    }
+    case "clapper": {
+      ctx.strokeRect(-s * 0.8, -s * 0.4, s * 1.6, s * 1.1);
+      ctx.fillRect(-s * 0.8, -s * 0.75, s * 1.6, s * 0.35);
+      break;
+    }
+    case "camera": {
+      ctx.strokeRect(-s * 0.7, -s * 0.45, s * 1.4, s * 0.9);
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.28, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(s * 0.7, -s * 0.2);
+      ctx.lineTo(s * 1.1, -s * 0.4);
+      ctx.lineTo(s * 1.1, s * 0.4);
+      ctx.lineTo(s * 0.7, s * 0.2);
+      ctx.fill();
+      break;
+    }
+    default: {
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+};
+
 export function InteractiveTitle() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -136,122 +241,6 @@ export function InteractiveTitle() {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
   }, []);
-
-  // Helper to draw geometric/symbolic icons on 60fps canvas
-  const drawParticleShape = (
-    ctx: CanvasRenderingContext2D,
-    type: string,
-    s: number,
-    color: string
-  ) => {
-    switch (type) {
-      case "reel": {
-        // Film reel circle with holes
-        ctx.beginPath();
-        ctx.arc(0, 0, s, 0, Math.PI * 2);
-        ctx.stroke();
-        // Spokes
-        for (let i = 0; i < 4; i++) {
-          const angle = (i * Math.PI) / 2;
-          ctx.beginPath();
-          ctx.arc(Math.cos(angle) * s * 0.5, Math.sin(angle) * s * 0.5, s * 0.22, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-        ctx.beginPath();
-        ctx.arc(0, 0, s * 0.2, 0, Math.PI * 2);
-        ctx.fill();
-        break;
-      }
-      case "popcorn": {
-        // Soft cloud-like kernel
-        ctx.beginPath();
-        ctx.arc(-s * 0.35, -s * 0.2, s * 0.45, 0, Math.PI * 2);
-        ctx.arc(s * 0.35, -s * 0.2, s * 0.45, 0, Math.PI * 2);
-        ctx.arc(0, s * 0.3, s * 0.5, 0, Math.PI * 2);
-        ctx.fill();
-        break;
-      }
-      case "star": {
-        // 4-point sparkle
-        ctx.beginPath();
-        ctx.moveTo(0, -s * 1.3);
-        ctx.quadraticCurveTo(0, 0, s * 1.3, 0);
-        ctx.quadraticCurveTo(0, 0, 0, s * 1.3);
-        ctx.quadraticCurveTo(0, 0, -s * 1.3, 0);
-        ctx.quadraticCurveTo(0, 0, 0, -s * 1.3);
-        ctx.fill();
-        break;
-      }
-      case "spark": {
-        // Tiny angled spark line
-        ctx.beginPath();
-        ctx.moveTo(-s * 0.7, -s * 0.7);
-        ctx.lineTo(s * 0.7, s * 0.7);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(0, 0, s * 0.25, 0, Math.PI * 2);
-        ctx.fill();
-        break;
-      }
-      case "pixel":
-      case "square": {
-        ctx.fillRect(-s * 0.6, -s * 0.6, s * 1.2, s * 1.2);
-        break;
-      }
-      case "dot": {
-        ctx.beginPath();
-        ctx.arc(0, 0, s * 0.6, 0, Math.PI * 2);
-        ctx.fill();
-        break;
-      }
-      case "frame": {
-        // Mini film frame rectangle with sprocket notches
-        ctx.strokeRect(-s * 0.9, -s * 0.6, s * 1.8, s * 1.2);
-        ctx.fillRect(-s * 0.7, -s * 0.7, s * 0.3, s * 0.15);
-        ctx.fillRect(s * 0.4, -s * 0.7, s * 0.3, s * 0.15);
-        ctx.fillRect(-s * 0.7, s * 0.55, s * 0.3, s * 0.15);
-        ctx.fillRect(s * 0.4, s * 0.55, s * 0.3, s * 0.15);
-        break;
-      }
-      case "ticket": {
-        // Notched ticket
-        ctx.beginPath();
-        ctx.rect(-s * 0.9, -s * 0.55, s * 1.8, s * 1.1);
-        ctx.stroke();
-        // Notch indicator
-        ctx.beginPath();
-        ctx.arc(-s * 0.9, 0, s * 0.25, -Math.PI / 2, Math.PI / 2);
-        ctx.arc(s * 0.9, 0, s * 0.25, Math.PI / 2, -Math.PI / 2);
-        ctx.fill();
-        break;
-      }
-      case "clapper": {
-        // Clapperboard body + chevron bars
-        ctx.strokeRect(-s * 0.8, -s * 0.4, s * 1.6, s * 1.1);
-        ctx.fillRect(-s * 0.8, -s * 0.75, s * 1.6, s * 0.35);
-        break;
-      }
-      case "camera": {
-        // Camera body and lens
-        ctx.strokeRect(-s * 0.7, -s * 0.45, s * 1.4, s * 0.9);
-        ctx.beginPath();
-        ctx.arc(0, 0, s * 0.28, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.moveTo(s * 0.7, -s * 0.2);
-        ctx.lineTo(s * 1.1, -s * 0.4);
-        ctx.lineTo(s * 1.1, s * 0.4);
-        ctx.lineTo(s * 0.7, s * 0.2);
-        ctx.fill();
-        break;
-      }
-      default: {
-        ctx.beginPath();
-        ctx.arc(0, 0, s * 0.5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-  };
 
   const spawnParticlesForLetter = useCallback(
     (e: React.MouseEvent<HTMLSpanElement>, config: LetterConfig) => {

@@ -1,43 +1,40 @@
 export function Footer() {
   return (
-    <footer className="relative z-10 border-t border-white/[0.06] bg-[#060709]/90 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-[1400px] flex-col items-center justify-between gap-6 px-5 py-10 sm:flex-row sm:px-8 lg:px-12">
+    <footer className="relative z-10 border-t border-white/[0.06] bg-[#080808] py-14 sm:py-18">
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-start justify-between gap-8 px-6 sm:flex-row sm:items-center sm:px-8">
+        {/* Brand */}
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/[0.1] bg-gradient-to-br from-[#FF9F1C]/20 via-[#3B82F6]/20 to-[#22C55E]/20 text-[10px] font-black text-white">
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.04] text-[11px] font-mono text-zinc-300">
             B
-          </div>
+          </span>
           <div>
-            <span className="text-sm font-bold tracking-[0.2em] text-zinc-300">
+            <span className="text-xs font-medium tracking-[0.2em] text-zinc-300 uppercase">
               BOXDIT
             </span>
-            <p className="text-[11px] text-zinc-500 font-mono">
-              The Letterboxd Cinephile Wrapped
+            <p className="text-[11px] font-mono text-zinc-500 mt-0.5">
+              Taste Intelligence for Letterboxd
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-6 text-[13px] text-zinc-400">
-          <a
-            href="#features"
-            className="hover:text-white transition-colors"
-          >
+        {/* Links */}
+        <div className="flex flex-wrap items-center gap-8 text-[13px] font-normal text-zinc-400">
+          <a href="#features" className="transition-colors hover:text-white">
             Features
           </a>
-          <a
-            href="#how-it-works"
-            className="hover:text-white transition-colors"
-          >
-            How it works
+          <a href="#showcase" className="transition-colors hover:text-white">
+            Artifact
           </a>
-          <a
-            href="#launch"
-            className="text-[#3B82F6] hover:text-[#60A5FA] font-medium transition-colors"
-          >
-            Create your wrap →
+          <a href="#how-it-works" className="transition-colors hover:text-white">
+            Methodology
+          </a>
+          <a href="#launch" className="text-[#FF8000] hover:underline underline-offset-4 transition-all">
+            Launch Wrap →
           </a>
         </div>
 
-        <p className="text-[12px] text-zinc-600 font-mono">
+        {/* Copyright */}
+        <p className="text-xs font-mono text-zinc-600">
           © {new Date().getFullYear()} Boxdit. Not affiliated with Letterboxd.
         </p>
       </div>

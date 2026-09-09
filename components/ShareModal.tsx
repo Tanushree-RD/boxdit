@@ -33,13 +33,9 @@ export function ShareModal({
   avgRating,
 }: ShareModalProps) {
   const [copied, setCopied] = useState(false);
-  const [canNativeShare, setCanNativeShare] = useState(false);
-
-  useEffect(() => {
-    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
-      setCanNativeShare(true);
-    }
-  }, []);
+  const [canNativeShare] = useState(
+    () => typeof navigator !== "undefined" && typeof navigator.share === "function"
+  );
 
   useEffect(() => {
     if (isOpen) {

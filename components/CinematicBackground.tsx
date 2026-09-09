@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 interface Particle {
   x: number;
@@ -10,35 +10,12 @@ interface Particle {
   speedY: number;
   opacity: number;
   maxOpacity: number;
-  hue: number;
   fadeSpeed: number;
 }
 
 export function CinematicBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
-  const [isHovered, setIsHovered] = useState(false);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-      if (!isHovered) setIsHovered(true);
-    };
-
-    const handleMouseLeave = () => {
-      setIsHovered(false);
-    };
-
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    document.addEventListener("mouseleave", handleMouseLeave);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, [isHovered]);
-
-  // Ambient Star Dust Particles
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -58,39 +35,38 @@ export function CinematicBackground() {
 
     window.addEventListener("resize", handleResize);
 
-    const particleCount = Math.min(45, Math.floor((width * height) / 30000));
+    // Minimal particle density: 16-24 particles max
+    const particleCount = Math.min(22, Math.max(12, Math.floor((width * height) / 60000)));
     const particles: Particle[] = [];
 
-    // Hue palettes: Orange (30-40), Blue (210-220), Green (140-150)
-    const hues = [35, 215, 145];
-
     for (let i = 0; i < particleCount; i++) {
+      const maxOp = Math.random() * 0.05 + 0.05; // 5% to 10% opacity strictly
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        size: Math.random() * 1.8 + 0.6,
-        speedX: (Math.random() - 0.5) * 0.25,
-        speedY: (Math.random() - 0.5) * 0.25 - 0.1, // slight upward float
-        opacity: Math.random() * 0.4,
-        maxOpacity: Math.random() * 0.35 + 0.15,
-        hue: hues[Math.floor(Math.random() * hues.length)],
-        fadeSpeed: (Math.random() * 0.005 + 0.002) * (Math.random() > 0.5 ? 1 : -1),
+        size: Math.random() * 1.5 + 0.5,
+        speedX: (Math.random() - 0.5) * 0.15,
+        speedY: -(Math.random() * 0.18 + 0.06), // slow upward drift
+        opacity: Math.random() * maxOp,
+        maxOpacity: maxOp,
+        fadeSpeed: (Math.random() * 0.0015 + 0.0008) * (Math.random() > 0.5 ? 1 : -1),
       });
     }
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      particles.forEach((p) => {
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
         p.x += p.speedX;
         p.y += p.speedY;
         p.opacity += p.fadeSpeed;
 
-        if (p.opacity > p.maxOpacity || p.opacity < 0.05) {
+        if (p.opacity > p.maxOpacity || p.opacity < 0.03) {
           p.fadeSpeed = -p.fadeSpeed;
         }
 
-        // Wrap around edges
+        // Wrap edges seamlessly
         if (p.x < 0) p.x = width;
         if (p.x > width) p.x = 0;
         if (p.y < 0) p.y = height;
@@ -98,12 +74,10 @@ export function CinematicBackground() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p.hue}, 90%, 75%, ${p.opacity})`;
-        ctx.shadowBlur = p.size * 3;
-        ctx.shadowColor = `hsla(${p.hue}, 100%, 65%, ${p.opacity * 0.8})`;
+        // Neutral warm white particle
+        ctx.fillStyle = `rgba(240, 240, 245, ${Math.max(0.04, Math.min(0.1, p.opacity))})`;
         ctx.fill();
-        ctx.shadowBlur = 0;
-      });
+      }
 
       animationFrameId = requestAnimationFrame(render);
     };
@@ -117,27 +91,21 @@ export function CinematicBackground() {
   }, []);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      {/* Noise overlay */}
-      <div className="film-grain absolute inset-0 opacity-[0.035] pointer-events-none mix-blend-screen" />
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none">
+      {/* Very subtle animated film grain */}
+      <div className="film-grain absolute inset-0 opacity-[0.03] pointer-events-none" />
 
-      {/* Cinematic ambient glowing blobs */}
-      <div className="absolute -top-[20%] -left-[10%] h-[650px] w-[650px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(255,159,28,0.12),_transparent_70%)] blur-[120px] animate-pulse-glow" />
-      <div className="absolute top-[35%] -right-[15%] h-[750px] w-[750px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(59,130,246,0.10),_transparent_70%)] blur-[140px] animate-pulse-glow" style={{ animationDelay: "-2.5s" }} />
-      <div className="absolute bottom-[5%] left-[20%] h-[600px] w-[600px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(34,197,94,0.08),_transparent_70%)] blur-[130px] animate-pulse-glow" style={{ animationDelay: "-5s" }} />
-
-      {/* Interactive Flashlight Glow following mouse */}
+      {/* Very faint radial spotlight behind hero */}
       <div
-        className="absolute h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.04),_rgba(59,130,246,0.03)_40%,_transparent_70%)] blur-3xl transition-opacity duration-700 ease-out"
+        className="absolute top-[18%] left-1/2 -translate-x-1/2 -translate-y-1/2 h-[750px] w-[1100px] max-w-full rounded-full opacity-70 pointer-events-none"
         style={{
-          left: `${mousePos.x}px`,
-          top: `${mousePos.y}px`,
-          opacity: isHovered ? 1 : 0,
+          background: "radial-gradient(ellipse at center, rgba(255, 255, 255, 0.04) 0%, rgba(255, 128, 0, 0.015) 35%, transparent 70%)",
+          filter: "blur(70px)",
         }}
       />
 
-      {/* Canvas for ambient stardust */}
-      <canvas ref={canvasRef} className="absolute inset-0 block h-full w-full opacity-75" />
+      {/* Canvas for occasional floating particles at 5-10% opacity */}
+      <canvas ref={canvasRef} className="absolute inset-0 block h-full w-full" />
     </div>
   );
 }
