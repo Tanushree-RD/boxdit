@@ -10,7 +10,6 @@ import { ProfileHero } from "@/components/ProfileHero";
 import { StatsSection } from "@/components/StatsSection";
 import { InsightsSection } from "@/components/InsightsSection";
 import { RecentActivity } from "@/components/RecentActivity";
-import { FilmGrid } from "@/components/FilmGrid";
 import { ReportPageClient } from "./ReportPageClient";
 
 type ReportPageProps = {
