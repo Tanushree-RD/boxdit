@@ -48,7 +48,7 @@ export function WrapShowcase() {
         viewport={{ once: true, margin: "-50px" }}
         variants={fadeUp}
         custom={2}
-        className="mx-auto overflow-hidden rounded-[22px] border border-white/[0.08] bg-[#0c0c0e]/80 p-6 sm:p-10 backdrop-blur-md shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
+        className="mx-auto overflow-hidden rounded-2xl border border-white/[0.07] bg-[#0c0c0e]/70 p-6 sm:p-8 backdrop-blur-sm"
       >
         {/* Specimen Header */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06] pb-6">

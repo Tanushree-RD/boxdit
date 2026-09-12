@@ -80,14 +80,14 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
         className="flex items-center justify-between px-1"
       >
         <div>
-          <h2 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#FFC857]/70">
+          <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-400">
             Deep-Dive Insights
           </h2>
-          <p className="mt-1.5 text-[13px] text-zinc-500">
+          <p className="mt-1 text-[13px] text-zinc-500">
             Patterns, milestones, and quirks in your taste
           </p>
         </div>
-        <span className="hidden sm:inline-flex rounded-full border border-white/[0.06] bg-white/[0.02] px-3.5 py-1 text-[11px] text-zinc-500">
+        <span className="hidden sm:inline-flex rounded-full border border-white/[0.07] bg-white/[0.02] px-3 py-0.5 text-[11px] text-zinc-500 font-mono">
           {insights.length} insights
         </span>
       </motion.div>
@@ -108,18 +108,15 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-40px" }}
-              whileHover={{ y: -4, transition: { duration: 0.3 } }}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-[28px] border border-white/[0.06] bg-white/[0.02] p-6 transition-all duration-500 hover:border-[#F5B000]/15 hover:bg-white/[0.04] hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)]"
+              whileHover={{ y: -1, transition: { duration: 0.2 } }}
+              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.015] p-5 sm:p-6 transition-colors duration-200 hover:border-white/[0.12] hover:bg-white/[0.025]"
             >
-              {/* Subtle hover glow */}
-              <div className="pointer-events-none absolute -right-16 -top-16 h-36 w-36 rounded-full bg-[#F5B000]/0 blur-2xl transition-all duration-500 group-hover:bg-[#F5B000]/[0.04]" />
-
               {/* Header */}
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-zinc-500">
                   {item.title}
                 </span>
-                <div className="rounded-xl border border-white/[0.04] bg-white/[0.02] p-2 text-zinc-500 transition-colors duration-300 group-hover:text-zinc-300">
+                <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-1.5 text-zinc-500 transition-colors duration-200 group-hover:text-zinc-300">
                   {iconElement}
                 </div>
               </div>
@@ -127,12 +124,12 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
               {/* Content */}
               <div className="my-4 flex items-center gap-3">
                 {item.posterUrl && (
-                  <div className="relative h-16 w-11 shrink-0 overflow-hidden rounded-lg border border-white/[0.06] bg-zinc-900">
+                  <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md border border-white/[0.06] bg-zinc-900">
                     <Image
                       src={item.posterUrl || FALLBACK_POSTER}
                       alt={item.value}
                       fill
-                      sizes="44px"
+                      sizes="40px"
                       className="object-cover"
                       unoptimized
                     />
@@ -142,13 +139,13 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                 <div className="min-w-0 flex-1">
                   <p
                     title={item.value}
-                    className="text-lg font-bold text-white group-hover:text-[#FFC857] transition-colors duration-300 truncate"
+                    className="text-base sm:text-lg font-semibold text-white tracking-tight leading-snug truncate group-hover:text-zinc-200 transition-colors"
                   >
                     {item.value}
                   </p>
                   <p
                     title={item.subtitle}
-                    className="mt-1 text-[12px] text-zinc-500 leading-snug line-clamp-2"
+                    className="mt-0.5 text-xs text-zinc-500 leading-snug line-clamp-2 font-normal"
                   >
                     {item.subtitle}
                   </p>
@@ -156,19 +153,19 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
               </div>
 
               {/* Footer */}
-              <div className="pt-3 border-t border-white/[0.04] flex items-center justify-between text-[11px] text-zinc-600">
+              <div className="pt-3 border-t border-white/[0.05] flex items-center justify-between text-[11px] text-zinc-500 font-normal">
                 <span>Verified Snapshot</span>
                 {item.link ? (
                   <a
                     href={item.link}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[#FFC857]/50 hover:text-[#FFC857] transition-colors duration-200"
+                    className="text-zinc-400 hover:text-white transition-colors duration-200"
                   >
                     View film ↗
                   </a>
                 ) : (
-                  <span>Boxdit AI</span>
+                  <span className="text-zinc-600 font-mono">Archive Data</span>
                 )}
               </div>
             </motion.div>

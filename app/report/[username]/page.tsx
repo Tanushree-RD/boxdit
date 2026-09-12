@@ -52,7 +52,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
             ← Back to search
           </Link>
 
-          <section className="relative overflow-hidden rounded-[32px] border border-red-500/15 bg-gradient-to-b from-red-500/[0.04] to-transparent p-8 sm:p-12">
+          <section className="relative overflow-hidden rounded-2xl border border-red-500/15 bg-gradient-to-b from-red-500/[0.03] to-transparent p-8 sm:p-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-red-400/15 bg-red-400/[0.06] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-red-300/80">
               {isNotFound ? "Profile Not Found" : "Connection Error"}
             </div>

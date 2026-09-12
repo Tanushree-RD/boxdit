@@ -72,7 +72,7 @@ export function FeatureCards() {
             viewport={{ once: true, margin: "-40px" }}
             variants={fadeUp}
             custom={i + 2}
-            className="group relative flex flex-col justify-between rounded-[22px] border border-white/[0.08] bg-[#0c0c0e]/70 p-8 sm:p-9 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.18] hover:bg-[#121214]/80 hover:shadow-[0_16px_40px_rgba(0,0,0,0.5)]"
+            className="group relative flex flex-col justify-between rounded-2xl border border-white/[0.07] bg-[#0c0c0e]/60 p-7 sm:p-8 backdrop-blur-sm transition-colors duration-200 hover:border-white/[0.12] hover:bg-[#121214]/60"
           >
             <div>
               {/* Number */}
