@@ -128,7 +128,10 @@ export function ReportPageClient({
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
           >
-            <RecentActivity entries={profile.recentActivity} />
+            <RecentActivity
+              entries={profile.recentActivity}
+              username={profile.username}
+            />
           </motion.div>
         </div>
 
