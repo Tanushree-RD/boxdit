@@ -47,18 +47,20 @@ export default function ReportLoading() {
               <div className="h-4 sm:h-5 w-44 rounded bg-white/[0.05] animate-pulse" />
               <div className="h-3.5 w-64 rounded bg-white/[0.03] animate-pulse" />
             </div>
-            <div className="grid gap-3.5 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div
                   key={i}
-                  className="rounded-2xl border border-white/[0.07] bg-white/[0.015] p-5 sm:p-6 animate-pulse space-y-4"
+                  className="rounded-2xl border border-white/[0.07] bg-white/[0.015] p-6 sm:p-7 lg:p-8 animate-pulse space-y-6"
                 >
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center h-7">
                     <div className="h-3 w-24 rounded bg-white/[0.04]" />
                     <div className="h-7 w-7 rounded-lg bg-white/[0.03]" />
                   </div>
-                  <div className="h-8 w-28 rounded-lg bg-white/[0.06]" />
-                  <div className="h-3 w-36 rounded bg-white/[0.03]" />
+                  <div className="space-y-2.5">
+                    <div className="h-9 w-32 rounded-lg bg-white/[0.06]" />
+                    <div className="h-3.5 w-40 rounded bg-white/[0.03]" />
+                  </div>
                 </div>
               ))}
             </div>
@@ -70,18 +72,20 @@ export default function ReportLoading() {
               <div className="h-4 sm:h-5 w-40 rounded bg-white/[0.05] animate-pulse" />
               <div className="h-3.5 w-60 rounded bg-white/[0.03] animate-pulse" />
             </div>
-            <div className="grid gap-3.5 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="rounded-2xl border border-white/[0.07] bg-white/[0.015] p-5 animate-pulse space-y-4"
+                  className="rounded-2xl border border-white/[0.07] bg-white/[0.015] p-6 sm:p-7 animate-pulse space-y-5"
                 >
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center h-7">
                     <div className="h-3 w-20 rounded bg-white/[0.04]" />
                     <div className="h-7 w-7 rounded-lg bg-white/[0.03]" />
                   </div>
-                  <div className="h-6 w-24 rounded-lg bg-white/[0.06]" />
-                  <div className="h-3 w-32 rounded bg-white/[0.03]" />
+                  <div className="space-y-2">
+                    <div className="h-6 w-28 rounded-lg bg-white/[0.06]" />
+                    <div className="h-3 w-36 rounded bg-white/[0.03]" />
+                  </div>
                 </div>
               ))}
             </div>

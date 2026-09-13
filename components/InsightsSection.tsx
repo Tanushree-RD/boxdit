@@ -103,52 +103,54 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-40px" }}
-              whileHover={{ y: -1, transition: { duration: 0.2 } }}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.015] p-5 sm:p-6 transition-colors duration-200 hover:border-white/[0.12] hover:bg-white/[0.025]"
+              whileHover={{ y: -2, transition: { duration: 0.2 } }}
+              className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.015] p-6 sm:p-7 transition-all duration-200 hover:border-white/[0.14] hover:bg-white/[0.028]"
             >
-              {/* Header */}
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-zinc-500">
-                  {item.title}
-                </span>
-                <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-1.5 text-zinc-500 transition-colors duration-200 group-hover:text-zinc-300">
-                  {iconElement}
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="my-4 flex items-center gap-3">
-                {item.posterUrl && (
-                  <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md border border-white/[0.06] bg-zinc-900">
-                    <Image
-                      src={item.posterUrl || FALLBACK_POSTER}
-                      alt={item.value}
-                      fill
-                      sizes="40px"
-                      className="object-cover"
-                      unoptimized
-                    />
+              <div>
+                {/* Header */}
+                <div className="flex h-7 items-center justify-between">
+                  <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/40">
+                    {item.title}
+                  </span>
+                  <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-1.5 text-white/35 transition-colors duration-200 group-hover:text-zinc-300">
+                    {iconElement}
                   </div>
-                )}
+                </div>
 
-                <div className="min-w-0 flex-1">
-                  <p
-                    title={item.value}
-                    className="text-base sm:text-lg font-semibold text-white tracking-tight leading-snug truncate group-hover:text-zinc-200 transition-colors"
-                  >
-                    {item.value}
-                  </p>
-                  <p
-                    title={item.subtitle}
-                    className="mt-0.5 text-xs text-zinc-500 leading-snug line-clamp-2 font-normal"
-                  >
-                    {item.subtitle}
-                  </p>
+                {/* Content */}
+                <div className="my-5 flex items-center gap-3.5">
+                  {item.posterUrl && (
+                    <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md border border-white/[0.06] bg-zinc-900">
+                      <Image
+                        src={item.posterUrl || FALLBACK_POSTER}
+                        alt={item.value}
+                        fill
+                        sizes="40px"
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </div>
+                  )}
+
+                  <div className="min-w-0 flex-1">
+                    <p
+                      title={item.value}
+                      className="text-base sm:text-lg font-bold text-white tracking-tight leading-snug truncate group-hover:text-zinc-200 transition-colors"
+                    >
+                      {item.value}
+                    </p>
+                    <p
+                      title={item.subtitle}
+                      className="mt-1 text-xs text-zinc-500 leading-snug line-clamp-2 font-normal"
+                    >
+                      {item.subtitle}
+                    </p>
+                  </div>
                 </div>
               </div>
 
               {/* Footer */}
-              <div className="pt-3 border-t border-white/[0.05] flex items-center justify-between text-[11px] text-zinc-500 font-normal">
+              <div className="pt-3.5 border-t border-white/[0.05] flex items-center justify-between text-[11px] text-zinc-500 font-normal">
                 <span>Verified Snapshot</span>
                 {item.link ? (
                   <a

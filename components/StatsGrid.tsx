@@ -83,22 +83,31 @@ export function StatsGrid({
   ];
 
   return (
-    <div className="grid gap-4 sm:grid-cols-3">
+    <div className="grid gap-4 sm:gap-5 sm:grid-cols-3">
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-all duration-300 hover:border-[#d4c0a6]/40 hover:bg-white/[0.06]"
+          className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 transition-all duration-300 hover:border-[#d4c0a6]/40 hover:bg-white/[0.06]"
         >
-          <div className="flex items-center justify-between">
-            <p className="text-xs uppercase tracking-[0.16em] text-zinc-400">
+          {/* Header */}
+          <div className="flex h-7 items-center justify-between">
+            <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/40">
               {stat.label}
             </p>
-            <div className="rounded-lg bg-[#d4c0a6]/10 p-2">{stat.icon}</div>
+            <div className="rounded-lg bg-[#d4c0a6]/10 p-2 text-[#d4c0a6] transition-colors duration-200">
+              {stat.icon}
+            </div>
           </div>
-          <p className="mt-3 text-3xl font-bold tracking-tight text-white">
-            {stat.value}
-          </p>
-          <p className="mt-1 text-xs text-zinc-500">{stat.description}</p>
+
+          {/* Metric Value & Description */}
+          <div className="mt-6 sm:mt-7">
+            <p className="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-none truncate">
+              {stat.value}
+            </p>
+            <p className="mt-2.5 text-xs sm:text-[13px] text-zinc-500 font-normal truncate">
+              {stat.description}
+            </p>
+          </div>
         </div>
       ))}
     </div>

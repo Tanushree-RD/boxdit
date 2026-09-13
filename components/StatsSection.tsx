@@ -123,14 +123,15 @@ export function StatsSection({
     {
       label: "Film Nerd Score",
       value: `${nerdScore.score}/100`,
-      subtext: nerdScore.percentile,
+      subtext: nerdScore.percentile
+        ? `${nerdScore.label} · ${nerdScore.percentile}`
+        : nerdScore.label,
       icon: (
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
         </svg>
       ),
       textColor: "text-white",
-      badge: nerdScore.label,
     },
     {
       label: "Favorite Actor",
@@ -162,7 +163,7 @@ export function StatsSection({
         </p>
       </motion.div>
 
-      <div className="grid gap-3.5 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((card, i) => (
           <motion.div
             key={card.label}
@@ -171,42 +172,36 @@ export function StatsSection({
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-40px" }}
-            whileHover={{ y: -1, transition: { duration: 0.2 } }}
-            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.015] p-5 sm:p-6 transition-colors duration-200 hover:border-white/[0.12] hover:bg-white/[0.025]"
+            whileHover={{ y: -2, transition: { duration: 0.2 } }}
+            className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.015] p-6 sm:p-7 lg:p-8 transition-all duration-200 hover:border-white/[0.14] hover:bg-white/[0.028]"
           >
             <div>
-              <div className="flex items-start justify-between">
-                <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-500">
+              {/* Header: Label + Icon */}
+              <div className="flex h-7 items-center justify-between">
+                <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/40">
                   {card.label}
                 </span>
-                <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-1.5 text-zinc-500 transition-colors duration-200 group-hover:text-zinc-300">
+                <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-1.5 text-white/35 transition-colors duration-200 group-hover:text-zinc-300">
                   {card.icon}
                 </div>
               </div>
 
-              <div className="mt-4">
+              {/* Metric Value & Subtext */}
+              <div className="mt-6 sm:mt-7">
                 <p
                   title={card.value}
-                  className={`text-2xl sm:text-3xl font-bold tracking-tight ${card.textColor} truncate`}
+                  className="text-3xl sm:text-4xl lg:text-[40px] font-bold tracking-tight text-white leading-none truncate select-all"
                 >
                   {card.value}
                 </p>
                 <p
                   title={card.subtext}
-                  className="mt-1.5 text-[12px] text-zinc-500 leading-relaxed truncate font-normal"
+                  className="mt-2.5 text-xs sm:text-[13px] text-zinc-500 leading-normal truncate font-normal"
                 >
                   {card.subtext}
                 </p>
               </div>
             </div>
-
-            {card.badge && (
-              <div className="mt-4 pt-3 border-t border-white/[0.05]">
-                <span className="inline-flex items-center rounded-md border border-white/[0.08] bg-white/[0.03] px-2.5 py-0.5 text-[11px] font-medium text-zinc-400">
-                  {card.badge}
-                </span>
-              </div>
-            )}
           </motion.div>
         ))}
       </div>
