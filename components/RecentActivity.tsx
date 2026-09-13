@@ -53,12 +53,15 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
   if (latestFive.length === 0) {
     return (
       <section className="py-8">
-        <div className="border-b border-white/[0.08] pb-4">
-          <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-400">
+        <div className="mb-6 sm:mb-8 px-1">
+          <h2 className="text-sm sm:text-base font-semibold uppercase tracking-wider text-zinc-200">
             Recent Diary &amp; Reviews
           </h2>
+          <p className="mt-1.5 text-[13px] text-zinc-400">
+            Latest logged films and diary entries from Letterboxd
+          </p>
         </div>
-        <p className="mt-8 text-sm text-zinc-500">
+        <p className="px-1 text-sm text-zinc-500">
           No recent logged activity or diary entries found.
         </p>
       </section>
@@ -73,18 +76,18 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="flex items-baseline justify-between border-b border-white/[0.08] pb-4"
+        className="mb-6 sm:mb-8 px-1"
       >
-        <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-400">
+        <h2 className="text-sm sm:text-base font-semibold uppercase tracking-wider text-zinc-200">
           Recent Diary &amp; Reviews
         </h2>
-        <span className="text-[11px] uppercase tracking-wider text-zinc-600 font-mono">
-          Latest Entries
-        </span>
+        <p className="mt-1.5 text-[13px] text-zinc-400">
+          Latest logged films and diary entries from Letterboxd
+        </p>
       </motion.div>
 
       {/* Editorial Reading List */}
-      <div className="divide-y divide-white/[0.06]">
+      <div className="border-t border-white/[0.08] divide-y divide-white/[0.06]">
         {latestFive.map((entry, idx) => {
           const stars = renderStars(entry.rating);
           const formattedWatchedDate = formatDate(

@@ -146,25 +146,20 @@ export function StatsSection({
   ];
 
   return (
-    <section className="space-y-4">
+    <section>
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.4 }}
-        className="flex items-center justify-between px-1"
+        className="mb-6 sm:mb-8 px-1"
       >
-        <div>
-          <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-400">
-            Cinematic Highlights
-          </h2>
-          <p className="mt-1 text-[13px] text-zinc-500">
-            Core stats distilled from your Letterboxd archive
-          </p>
-        </div>
-        <span className="hidden sm:inline-flex rounded-full border border-white/[0.07] bg-white/[0.02] px-3 py-0.5 text-[11px] text-zinc-500 font-mono">
-          6 key metrics
-        </span>
+        <h2 className="text-sm sm:text-base font-semibold uppercase tracking-wider text-zinc-200">
+          Cinematic Highlights
+        </h2>
+        <p className="mt-1.5 text-[13px] text-zinc-400">
+          Core stats distilled from your Letterboxd archive
+        </p>
       </motion.div>
 
       <div className="grid gap-3.5 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">

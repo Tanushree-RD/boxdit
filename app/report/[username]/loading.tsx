@@ -42,8 +42,11 @@ export default function ReportLoading() {
           </section>
 
           {/* 2. Core 6 Stats Skeleton */}
-          <div className="space-y-4">
-            <div className="h-4 w-44 rounded bg-white/[0.04] animate-pulse" />
+          <div>
+            <div className="mb-6 sm:mb-8 px-1 space-y-2">
+              <div className="h-4 sm:h-5 w-44 rounded bg-white/[0.05] animate-pulse" />
+              <div className="h-3.5 w-64 rounded bg-white/[0.03] animate-pulse" />
+            </div>
             <div className="grid gap-3.5 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div
@@ -62,8 +65,11 @@ export default function ReportLoading() {
           </div>
 
           {/* 3. Deep-Dive Insights Skeleton */}
-          <div className="space-y-4">
-            <div className="h-4 w-36 rounded bg-white/[0.04] animate-pulse" />
+          <div>
+            <div className="mb-6 sm:mb-8 px-1 space-y-2">
+              <div className="h-4 sm:h-5 w-40 rounded bg-white/[0.05] animate-pulse" />
+              <div className="h-3.5 w-60 rounded bg-white/[0.03] animate-pulse" />
+            </div>
             <div className="grid gap-3.5 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
               {[1, 2, 3, 4].map((i) => (
                 <div
@@ -82,9 +88,12 @@ export default function ReportLoading() {
           </div>
 
           {/* 4. Recent Activity Skeleton */}
-          <div className="space-y-4">
-            <div className="h-4 w-48 rounded bg-white/[0.04] animate-pulse" />
-            <div className="divide-y divide-white/[0.06]">
+          <div>
+            <div className="mb-6 sm:mb-8 px-1 space-y-2">
+              <div className="h-4 sm:h-5 w-48 rounded bg-white/[0.05] animate-pulse" />
+              <div className="h-3.5 w-64 rounded bg-white/[0.03] animate-pulse" />
+            </div>
+            <div className="border-t border-white/[0.08] divide-y divide-white/[0.06]">
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}

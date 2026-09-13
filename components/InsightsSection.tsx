@@ -71,25 +71,20 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
   if (!insights || insights.length === 0) return null;
 
   return (
-    <section className="space-y-5">
+    <section>
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="flex items-center justify-between px-1"
+        className="mb-6 sm:mb-8 px-1"
       >
-        <div>
-          <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-400">
-            Deep-Dive Insights
-          </h2>
-          <p className="mt-1 text-[13px] text-zinc-500">
-            Patterns, milestones, and quirks in your taste
-          </p>
-        </div>
-        <span className="hidden sm:inline-flex rounded-full border border-white/[0.07] bg-white/[0.02] px-3 py-0.5 text-[11px] text-zinc-500 font-mono">
-          {insights.length} insights
-        </span>
+        <h2 className="text-sm sm:text-base font-semibold uppercase tracking-wider text-zinc-200">
+          Deep-Dive Insights
+        </h2>
+        <p className="mt-1.5 text-[13px] text-zinc-400">
+          Patterns, milestones, and quirks in your taste
+        </p>
       </motion.div>
 
       <div className="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
