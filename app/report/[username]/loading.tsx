@@ -51,15 +51,15 @@ export default function ReportLoading() {
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div
                   key={i}
-                  className="rounded-2xl border border-white/[0.07] bg-white/[0.015] p-6 sm:p-7 lg:p-8 animate-pulse space-y-6"
+                  className="rounded-2xl border border-white/[0.07] bg-white/[0.015] p-7 sm:p-8 lg:p-9 animate-pulse flex h-full min-h-[220px] sm:min-h-[230px] lg:min-h-[240px] flex-col justify-between"
                 >
-                  <div className="flex justify-between items-center h-7">
+                  <div className="flex justify-between items-center h-6">
                     <div className="h-3 w-24 rounded bg-white/[0.04]" />
-                    <div className="h-7 w-7 rounded-lg bg-white/[0.03]" />
+                    <div className="h-6 w-6 rounded-lg bg-white/[0.03]" />
                   </div>
-                  <div className="space-y-2.5">
-                    <div className="h-9 w-32 rounded-lg bg-white/[0.06]" />
-                    <div className="h-3.5 w-40 rounded bg-white/[0.03]" />
+                  <div className="space-y-3 pt-8">
+                    <div className="h-10 sm:h-11 w-36 rounded-lg bg-white/[0.06]" />
+                    <div className="h-3.5 w-44 rounded bg-white/[0.03]" />
                   </div>
                 </div>
               ))}
@@ -76,15 +76,19 @@ export default function ReportLoading() {
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="rounded-2xl border border-white/[0.07] bg-white/[0.015] p-6 sm:p-7 animate-pulse space-y-5"
+                  className="rounded-2xl border border-white/[0.07] bg-white/[0.015] p-7 sm:p-8 animate-pulse flex h-full min-h-[220px] sm:min-h-[230px] lg:min-h-[240px] flex-col justify-between"
                 >
-                  <div className="flex justify-between items-center h-7">
+                  <div className="flex justify-between items-center h-6">
                     <div className="h-3 w-20 rounded bg-white/[0.04]" />
-                    <div className="h-7 w-7 rounded-lg bg-white/[0.03]" />
+                    <div className="h-6 w-6 rounded-lg bg-white/[0.03]" />
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2.5 my-6">
                     <div className="h-6 w-28 rounded-lg bg-white/[0.06]" />
                     <div className="h-3 w-36 rounded bg-white/[0.03]" />
+                  </div>
+                  <div className="pt-3.5 border-t border-white/[0.05] flex justify-between">
+                    <div className="h-3 w-20 rounded bg-white/[0.03]" />
+                    <div className="h-3 w-16 rounded bg-white/[0.03]" />
                   </div>
                 </div>
               ))}

@@ -87,24 +87,24 @@ export function StatsGrid({
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7 transition-all duration-300 hover:border-[#d4c0a6]/40 hover:bg-white/[0.06]"
+          className="group relative flex h-full min-h-[220px] sm:min-h-[230px] lg:min-h-[240px] flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-7 sm:p-8 lg:p-9 transition-all duration-300 hover:border-white/20 hover:bg-white/[0.06]"
         >
           {/* Header */}
-          <div className="flex h-7 items-center justify-between">
-            <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/40">
+          <div className="flex h-6 items-center justify-between">
+            <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-white/30">
               {stat.label}
             </p>
-            <div className="rounded-lg bg-[#d4c0a6]/10 p-2 text-[#d4c0a6] transition-colors duration-200">
+            <div className="rounded-lg border border-white/[0.05] bg-white/[0.02] p-1.5 text-white/25 transition-colors duration-200 group-hover:text-zinc-300">
               {stat.icon}
             </div>
           </div>
 
           {/* Metric Value & Description */}
-          <div className="mt-6 sm:mt-7">
-            <p className="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-none truncate">
+          <div className="pt-8 sm:pt-10">
+            <p className="text-3xl sm:text-4xl lg:text-[44px] font-bold tracking-tight text-white leading-none tabular-nums truncate select-all">
               {stat.value}
             </p>
-            <p className="mt-2.5 text-xs sm:text-[13px] text-zinc-500 font-normal truncate">
+            <p className="mt-3 text-xs sm:text-[13px] text-zinc-500 font-normal leading-relaxed truncate">
               {stat.description}
             </p>
           </div>

@@ -104,21 +104,21 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
               whileInView="visible"
               viewport={{ once: true, margin: "-40px" }}
               whileHover={{ y: -2, transition: { duration: 0.2 } }}
-              className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.015] p-6 sm:p-7 transition-all duration-200 hover:border-white/[0.14] hover:bg-white/[0.028]"
+              className="group relative flex h-full min-h-[220px] sm:min-h-[230px] lg:min-h-[240px] flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.015] p-7 sm:p-8 transition-all duration-200 hover:border-white/[0.14] hover:bg-white/[0.028]"
             >
               <div>
                 {/* Header */}
-                <div className="flex h-7 items-center justify-between">
-                  <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/40">
+                <div className="flex h-6 items-center justify-between">
+                  <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-white/30">
                     {item.title}
                   </span>
-                  <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-1.5 text-white/35 transition-colors duration-200 group-hover:text-zinc-300">
+                  <div className="rounded-lg border border-white/[0.05] bg-white/[0.02] p-1.5 text-white/25 transition-colors duration-200 group-hover:text-zinc-300">
                     {iconElement}
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="my-5 flex items-center gap-3.5">
+                <div className="my-6 flex items-center gap-3.5">
                   {item.posterUrl && (
                     <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded-md border border-white/[0.06] bg-zinc-900">
                       <Image
@@ -135,7 +135,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                   <div className="min-w-0 flex-1">
                     <p
                       title={item.value}
-                      className="text-base sm:text-lg font-bold text-white tracking-tight leading-snug truncate group-hover:text-zinc-200 transition-colors"
+                      className="text-lg sm:text-xl font-bold text-white tracking-tight leading-snug truncate tabular-nums group-hover:text-zinc-200 transition-colors"
                     >
                       {item.value}
                     </p>
