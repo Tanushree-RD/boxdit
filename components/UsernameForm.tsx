@@ -72,7 +72,7 @@ export function UsernameForm() {
           <button
             type="submit"
             disabled={!username.trim() || isLoading}
-            className="inline-flex h-8 items-center justify-center rounded-full border border-white/[0.12] bg-white/[0.04] px-3.5 text-xs font-medium tracking-wide text-zinc-200 transition-all duration-200 hover:border-[#FF8000]/60 hover:bg-[#FF8000] hover:text-black disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/[0.12] disabled:hover:bg-white/[0.04] disabled:hover:text-zinc-200"
+            className="btn-base btn-filled shrink-0"
           >
             {isLoading ? (
               <span className="inline-flex items-center gap-1.5">

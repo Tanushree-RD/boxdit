@@ -93,3 +93,75 @@ a {
   border-color: rgba(255, 255, 255, 0.15);
   transform: translateY(-2px);
 }
+
+/* Standardized Button System */
+.btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 2.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  outline: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, filter 0.2s ease;
+}
+
+.btn-base:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* 1. Outlined Style - subtle border, dark translucent surface, slight hover brighten only */
+.btn-outlined {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e4e4e7;
+}
+
+.btn-outlined:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  box-shadow: none !important;
+}
+
+.btn-outlined:active:not(:disabled) {
+  background: rgba(255, 255, 255, 0.11);
+}
+
+/* 2. Filled Style - Letterboxd accent orange, black text, slight hover brighten only, no glow */
+.btn-filled {
+  border: 1px solid transparent;
+  background: var(--accent-orange, #FF8000);
+  color: #080808;
+}
+
+.btn-filled:hover:not(:disabled) {
+  background: #ff901a;
+  filter: brightness(1.06);
+  box-shadow: none !important;
+}
+
+.btn-filled:active:not(:disabled) {
+  background: #f07800;
+  filter: brightness(0.98);
+}
+
+.btn-filled:disabled {
+  background: var(--accent-orange, #FF8000);
+  color: #080808;
+  filter: none;
+}

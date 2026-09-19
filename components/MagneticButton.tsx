@@ -65,7 +65,7 @@ export function MagneticButton({
     >
       <Tag
         ref={ref as never}
-        className={`inline-flex items-center justify-center cursor-pointer transition-shadow duration-300 ${className} ${isHovered ? "shadow-[0_0_40px_rgba(245,176,0,0.3)]" : ""}`}
+        className={`inline-flex items-center justify-center cursor-pointer transition-all duration-200 ${className}`}
         {...extraProps}
       >
         {children}

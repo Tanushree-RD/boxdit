@@ -47,7 +47,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
         <div className="mx-auto flex w-full max-w-[1400px] flex-1 flex-col px-5 py-16 sm:px-8 lg:px-12">
           <Link
             href="/"
-            className="mb-10 inline-flex w-fit items-center gap-2 rounded-full border border-white/[0.06] bg-white/[0.02] px-5 py-2.5 text-[13px] text-zinc-400 transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.06] hover:text-white"
+            className="btn-base btn-outlined mb-10 w-fit"
           >
             ← Back to search
           </Link>
@@ -65,10 +65,10 @@ export default async function ReportPage({ params }: ReportPageProps) {
               {errorMessage}
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
                 href="/"
-                className="inline-flex items-center rounded-xl bg-gradient-to-r from-[#F5B000] to-[#FFC857] px-7 py-3.5 text-sm font-bold text-[#070707] shadow-[0_4px_20px_rgba(245,176,0,0.2)] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(245,176,0,0.3)]"
+                className="btn-base btn-filled"
               >
                 Try Another Username
               </Link>
@@ -76,9 +76,10 @@ export default async function ReportPage({ params }: ReportPageProps) {
                 href={`https://letterboxd.com/${encodeURIComponent(decodedUsername)}/`}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center rounded-xl border border-white/[0.06] bg-white/[0.02] px-6 py-3.5 text-[13px] text-zinc-400 transition-all duration-300 hover:bg-white/[0.06] hover:text-white"
+                className="btn-base btn-outlined"
               >
-                Check on Letterboxd ↗
+                <span>Check on Letterboxd</span>
+                <span className="text-[11px]">↗</span>
               </a>
             </div>
           </section>

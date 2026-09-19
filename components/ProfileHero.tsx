@@ -121,10 +121,10 @@ export function ProfileHero({
           <div className="mt-6 sm:mt-0 shrink-0 self-center">
             <button
               onClick={() => setIsShareOpen(true)}
-              className="group relative inline-flex items-center gap-2 rounded-xl border border-white/[0.1] bg-white/[0.05] px-4 py-2 text-xs sm:text-sm font-medium text-white transition-colors duration-200 hover:border-white/[0.2] hover:bg-white/[0.08] cursor-pointer"
+              className="btn-base btn-outlined"
             >
               <svg
-                className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12"
+                className="h-3.5 w-3.5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

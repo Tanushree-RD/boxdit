@@ -59,7 +59,7 @@ export function Navbar() {
         {/* Right Pill CTA */}
         <a
           href="#launch"
-          className="inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.03] px-4 py-1.5 text-xs font-normal tracking-wide text-zinc-300 backdrop-blur-sm transition-all duration-200 hover:border-white/[0.28] hover:bg-white/[0.07] hover:text-white"
+          className="btn-base btn-outlined"
         >
           <span className="h-1.5 w-1.5 rounded-full bg-[#FF8000]" />
           <span>Launch Wrap</span>

@@ -54,11 +54,9 @@ export function ReportPageClient({
         >
           <Link
             href="/"
-            className="group inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-white/[0.02] px-5 py-2.5 text-[13px] font-medium text-zinc-400 transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.06] hover:text-white"
+            className="btn-base btn-outlined"
           >
-            <span className="transition-transform duration-200 group-hover:-translate-x-0.5">
-              ←
-            </span>
+            <span>←</span>
             <span>Search another cinephile</span>
           </Link>
 
@@ -153,9 +151,9 @@ export function ReportPageClient({
             href={profileUrl}
             target="_blank"
             rel="noreferrer"
-            className="mt-8 inline-flex items-center gap-2 rounded-full border border-zinc-700 bg-transparent px-7 py-3 text-[13px] font-light tracking-wide text-zinc-300 transition-all duration-300 hover:border-zinc-500 hover:-translate-y-0.5"
+            className="btn-base btn-outlined mt-8"
           >
-            Open Letterboxd Profile
+            <span>Open Letterboxd Profile</span>
             <span className="text-[11px]">↗</span>
           </a>
         </motion.div>

@@ -104,9 +104,10 @@ export function ShareModal({
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute right-4 top-4 rounded-full border border-white/[0.06] bg-white/[0.03] p-2 text-zinc-500 transition-colors duration-200 hover:bg-white/[0.08] hover:text-white cursor-pointer"
+              aria-label="Close modal"
+              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.1] bg-white/[0.04] text-zinc-400 transition-colors duration-200 hover:border-white/[0.22] hover:bg-white/[0.08] hover:text-white cursor-pointer select-none"
             >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -199,36 +200,34 @@ export function ShareModal({
             </div>
 
             {/* Action Buttons */}
-            <div className="mt-6 space-y-3">
-              <motion.button
+            <div className="mt-6 space-y-2.5">
+              <button
                 onClick={handleCopy}
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#F5B000] to-[#FFC857] px-5 py-3.5 text-sm font-bold text-[#070707] shadow-[0_4px_20px_rgba(245,176,0,0.2)] transition-shadow duration-300 hover:shadow-[0_8px_30px_rgba(245,176,0,0.3)] cursor-pointer"
+                className="btn-base btn-filled w-full"
               >
                 {copied ? (
                   <>
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     <span>Link Copied!</span>
                   </>
                 ) : (
                   <>
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                     </svg>
                     <span>Copy Shareable Link</span>
                   </>
                 )}
-              </motion.button>
+              </button>
 
-              <div className="flex gap-3">
+              <div className="flex gap-2.5">
                 <a
                   href={twitterShareUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] py-2.5 text-[12px] font-semibold text-zinc-300 transition-all duration-300 hover:bg-white/[0.06] hover:text-white"
+                  className="btn-base btn-outlined flex-1"
                 >
                   <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -239,7 +238,7 @@ export function ShareModal({
                 {canNativeShare && (
                   <button
                     onClick={handleNativeShare}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] py-2.5 text-[12px] font-semibold text-zinc-300 transition-all duration-300 hover:bg-white/[0.06] hover:text-white cursor-pointer"
+                    className="btn-base btn-outlined flex-1"
                   >
                     <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />

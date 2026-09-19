@@ -37,7 +37,7 @@ export default function ReportLoading() {
               </div>
 
               {/* Button placeholder */}
-              <div className="h-9 w-32 rounded-xl bg-white/[0.05] shrink-0 mt-6 sm:mt-0" />
+              <div className="h-9 w-32 rounded-full bg-white/[0.04] shrink-0 mt-6 sm:mt-0" />
             </div>
           </section>
 
