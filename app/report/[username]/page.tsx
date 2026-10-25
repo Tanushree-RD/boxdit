@@ -1,11 +1,11 @@
 import Link from "next/link";
 import {
-  getLetterboxdProfile,
   LetterboxdProfile,
   ProfileFetchError,
   ProfileNotFoundError,
 } from "@/lib/scraper";
-import { analyzeProfileAsync } from "@/lib/analytics";
+import { ProfileAnalytics } from "@/lib/analytics";
+import { getProfileReport } from "@/lib/services/profileReport";
 import { ProfileHero } from "@/components/ProfileHero";
 import { StatsSection } from "@/components/StatsSection";
 import { InsightsSection } from "@/components/InsightsSection";
@@ -14,18 +14,33 @@ import { ReportPageClient } from "./ReportPageClient";
 
 type ReportPageProps = {
   params: Promise<{ username: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function ReportPage({ params }: ReportPageProps) {
+function isRefreshRequested(value: string | string[] | undefined): boolean {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw === "" || raw === "1" || raw === "true";
+}
+
+export default async function ReportPage({
+  params,
+  searchParams,
+}: ReportPageProps) {
   const { username } = await params;
+  const { refresh } = await searchParams;
   const decodedUsername = decodeURIComponent(username.trim());
 
   let profile: LetterboxdProfile | null = null;
+  let analytics: ProfileAnalytics | null = null;
   let isNotFound = false;
   let errorMessage = "";
 
   try {
-    profile = await getLetterboxdProfile(decodedUsername);
+    const report = await getProfileReport(decodedUsername, {
+      forceRefresh: isRefreshRequested(refresh),
+    });
+    profile = report.profile;
+    analytics = report.analytics;
   } catch (error) {
     if (error instanceof ProfileNotFoundError) {
       isNotFound = true;
@@ -37,7 +52,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
     }
   }
 
-  if (!profile) {
+  if (!profile || !analytics) {
     return (
       <main className="relative min-h-screen overflow-hidden bg-[#070707] text-white">
         {/* Ambient background glow */}
@@ -87,9 +102,6 @@ export default async function ReportPage({ params }: ReportPageProps) {
       </main>
     );
   }
-
-  // Calculate full Spotify Wrapped style analytics with real movie metadata
-  const analytics = await analyzeProfileAsync(profile);
 
   return (
     <ReportPageClient

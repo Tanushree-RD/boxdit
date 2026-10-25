@@ -866,9 +866,15 @@ export function analyzeProfile(
 /**
  * Asynchronously enriches the full scraped film library with movie metadata and performs complete analytics.
  */
+export type MovieDetailsLoader = (
+  slugs: string[],
+  concurrency?: number
+) => Promise<Map<string, MovieDetails>>;
+
 export async function analyzeProfileAsync(
   profile: LetterboxdProfile,
-  referenceDate: Date = new Date()
+  referenceDate: Date = new Date(),
+  loadMovieDetails: MovieDetailsLoader = getBatchMovieDetails
 ): Promise<ProfileAnalytics> {
   const allSlugs: string[] = [];
 
@@ -881,7 +887,7 @@ export async function analyzeProfileAsync(
     if (slug) allSlugs.push(slug);
   }
 
-  const detailsMap = await getBatchMovieDetails(allSlugs, 20);
+  const detailsMap = await loadMovieDetails(allSlugs, 20);
   const movieDetailsList = Array.from(detailsMap.values());
 
   return analyzeProfile(profile, movieDetailsList, referenceDate);
