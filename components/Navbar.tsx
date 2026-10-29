@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 const navItems = [
   { label: "Features", href: "#features" },
-  { label: "Showcase", href: "#showcase" },
+  { label: "Dossier Specimen", href: "#showcase" },
   { label: "Methodology", href: "#how-it-works" },
 ];
 
@@ -28,19 +28,22 @@ export function Navbar() {
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "border-b border-white/[0.06] bg-[#080808]/85 backdrop-blur-xl py-3.5"
+          ? "border-b border-white/[0.08] bg-[#090B0E]/85 backdrop-blur-xl py-3.5 shadow-xl"
           : "border-b border-transparent bg-transparent py-5"
       }`}
     >
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 sm:px-8">
         {/* Brand Logo */}
-        <Link href="/" className="group flex items-center gap-2.5">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.04] text-[11px] font-mono tracking-widest text-zinc-200 transition-colors duration-200 group-hover:border-white/[0.25] group-hover:text-white">
+        <Link href="/" className="group flex items-center gap-3">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/[0.12] bg-white/[0.04] text-[11px] font-mono font-bold tracking-widest text-white transition-all duration-200 group-hover:border-[#FF8000]/60 group-hover:text-[#FF8000]">
             B
-          </span>
-          <span className="text-xs font-medium tracking-[0.24em] text-zinc-300 uppercase transition-colors duration-200 group-hover:text-white">
-            BOXDIT
-          </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs font-semibold tracking-[0.25em] text-white uppercase">
+              BOXDIT
+            </span>
+            <span className="h-1 w-1 rounded-full bg-[#00E054]" />
+          </div>
         </Link>
 
         {/* Center Nav Links */}
@@ -59,10 +62,10 @@ export function Navbar() {
         {/* Right Pill CTA */}
         <a
           href="#launch"
-          className="btn-base btn-outlined"
+          className="btn-base btn-filled gap-1.5 text-xs font-semibold px-4 h-9 shadow-md hover:brightness-110 active:scale-95 transition-all"
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-[#FF8000]" />
-          <span>Launch Wrap</span>
+          <span>Launch Dossier</span>
+          <span className="text-xs">→</span>
         </a>
       </div>
     </motion.header>

@@ -1,27 +1,36 @@
 @import "tailwindcss";
 
 :root {
-  --background: #080808;
-  --foreground: #ededed;
+  --background: #090B0E;
+  --foreground: #EDEDED;
   
-  /* Single Letterboxd Orange Accent */
+  /* Letterboxd Authentic Palette */
   --accent-orange: #FF8000;
+  --accent-green: #00E054;
+  --accent-blue: #40BCF4;
   
-  --surface: rgba(255, 255, 255, 0.02);
-  --surface-hover: rgba(255, 255, 255, 0.045);
-  --border: rgba(255, 255, 255, 0.07);
-  --border-hover: rgba(255, 255, 255, 0.14);
+  --surface: rgba(255, 255, 255, 0.025);
+  --surface-hover: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.18);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent-orange: var(--accent-orange);
+  --color-accent-green: var(--accent-green);
+  --color-accent-blue: var(--accent-blue);
   --color-surface: var(--surface);
   --color-surface-hover: var(--surface-hover);
   --color-border: var(--border);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-serif);
+}
+
+.font-serif {
+  font-family: var(--font-serif), Georgia, serif;
 }
 
 * {
@@ -165,3 +174,39 @@ a {
   color: #080808;
   filter: none;
 }
+
+/* Premium Cinema Styling Utilities */
+.cinema-panel {
+  background: linear-gradient(180deg, rgba(24, 28, 34, 0.72) 0%, rgba(13, 16, 20, 0.88) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.06) inset, 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.cinema-panel-hover {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cinema-panel-hover:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(180deg, rgba(28, 34, 42, 0.8) 0%, rgba(15, 18, 24, 0.94) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1) inset, 0 25px 50px -12px rgba(0, 0, 0, 0.85);
+}
+
+.stamp-badge {
+  position: relative;
+  border-radius: 9999px;
+  border: 1px dashed rgba(255, 128, 0, 0.35);
+  background: radial-gradient(circle at center, rgba(255, 128, 0, 0.08) 0%, transparent 80%);
+}
+
+.amber-glow {
+  box-shadow: 0 0 45px -10px rgba(255, 128, 0, 0.18);
+}
+
+.green-glow {
+  box-shadow: 0 0 35px -8px rgba(0, 224, 84, 0.22);
+}
+

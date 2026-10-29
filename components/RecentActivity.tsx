@@ -52,17 +52,10 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
 
   if (latestFive.length === 0) {
     return (
-      <section className="py-8">
-        <div className="mb-6 sm:mb-8 px-1">
-          <h2 className="text-sm sm:text-base font-semibold uppercase tracking-wider text-zinc-200">
-            Recent Diary &amp; Reviews
-          </h2>
-          <p className="mt-1.5 text-[13px] text-zinc-400">
-            Latest logged films and diary entries from Letterboxd
-          </p>
-        </div>
-        <p className="px-1 text-sm text-zinc-500">
-          No recent logged activity or diary entries found.
+      <section className="rounded-2xl cinema-panel p-8 text-center">
+        <h2 className="text-xl font-bold text-white">Recent Diary &amp; Reviews</h2>
+        <p className="mt-2 text-sm text-zinc-500">
+          No public diary logs found for this account.
         </p>
       </section>
     );
@@ -76,18 +69,36 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="mb-6 sm:mb-8 px-1"
+        className="mb-6 sm:mb-8 px-1 flex flex-wrap items-end justify-between gap-4"
       >
-        <h2 className="text-sm sm:text-base font-semibold uppercase tracking-wider text-zinc-200">
-          Recent Diary &amp; Reviews
-        </h2>
-        <p className="mt-1.5 text-[13px] text-zinc-400">
-          Latest logged films and diary entries from Letterboxd
-        </p>
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#40BCF4]" />
+            <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-[#40BCF4]">
+              Screening Journal
+            </span>
+          </div>
+          <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            Recent Diary &amp; Dispatches
+          </h2>
+          <p className="mt-1 text-xs sm:text-sm text-zinc-400">
+            Latest logged screenings, critical ratings, and excerpts direct from Letterboxd
+          </p>
+        </div>
+
+        <a
+          href={diaryUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="text-xs font-mono text-[#00E054] hover:underline transition-colors flex items-center gap-1"
+        >
+          <span>Complete Diary Index</span>
+          <span>↗</span>
+        </a>
       </motion.div>
 
-      {/* Editorial Reading List */}
-      <div className="border-t border-white/[0.08] divide-y divide-white/[0.06]">
+      {/* Critic Journal Entries */}
+      <div className="space-y-4">
         {latestFive.map((entry, idx) => {
           const stars = renderStars(entry.rating);
           const formattedWatchedDate = formatDate(
@@ -101,96 +112,95 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
               custom={idx}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-40px" }}
-              className="py-7 sm:py-8"
+              viewport={{ once: true }}
+              className="group rounded-2xl cinema-panel cinema-panel-hover p-5 sm:p-6 transition-all"
             >
-              <a
-                href={entry.link}
-                target="_blank"
-                rel="noreferrer"
-                className="group -mx-3 sm:-mx-4 flex items-start gap-4 sm:gap-6 rounded-xl p-3 sm:p-4 transition-all duration-200 hover:bg-white/[0.025] hover:translate-x-1 cursor-pointer block"
-              >
+              <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
                 {/* Poster */}
-                <div className="relative w-[56px] sm:w-[64px] shrink-0 aspect-[2/3] overflow-hidden rounded-md border border-white/[0.06] bg-zinc-900">
+                <div className="relative w-16 sm:w-20 shrink-0 aspect-[2/3] overflow-hidden rounded-lg border border-white/[0.1] bg-[#14181C] shadow-lg group-hover:border-white/[0.25] transition-colors">
                   <Image
                     src={entry.posterUrl || FALLBACK_POSTER}
                     alt={entry.filmTitle || entry.title}
                     fill
-                    sizes="(max-width: 640px) 56px, 64px"
-                    className="object-cover transition-opacity duration-200 group-hover:opacity-90"
+                    sizes="(max-width: 640px) 64px, 80px"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                     unoptimized
                   />
                 </div>
 
-                {/* Content */}
-                <div className="flex-1 min-w-0 pt-0.5">
-                  {/* Title */}
-                  <h3 className="text-base sm:text-lg font-semibold text-white tracking-tight leading-snug group-hover:text-white transition-colors">
-                    {entry.filmTitle || entry.title}
-                  </h3>
+                {/* Main Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight group-hover:text-[#FF8000] transition-colors">
+                      <a href={entry.link} target="_blank" rel="noreferrer">
+                        {entry.filmTitle || entry.title}
+                      </a>
+                    </h3>
 
-                  {/* Metadata */}
-                  <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-zinc-400">
-                    {entry.filmYear && (
-                      <span className="font-normal">{entry.filmYear}</span>
+                    {/* Screening Date */}
+                    {formattedWatchedDate && (
+                      <span className="text-xs font-mono text-zinc-500">
+                        {formattedWatchedDate}
+                      </span>
                     )}
+                  </div>
 
-                    {entry.filmYear && stars && (
-                      <span className="text-zinc-600 select-none">•</span>
+                  {/* Metadata Chips: Year, Rating Stars, Rewatch */}
+                  <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs">
+                    {entry.filmYear && (
+                      <span className="font-mono text-zinc-400">
+                        {entry.filmYear}
+                      </span>
                     )}
 
                     {stars && (
-                      <span className="text-[#00e054] tracking-wider font-normal">
-                        {stars}
-                      </span>
-                    )}
-
-                    {(entry.filmYear || stars) && formattedWatchedDate && (
-                      <span className="text-zinc-600 select-none">•</span>
-                    )}
-
-                    {formattedWatchedDate && (
-                      <span className="text-zinc-400 font-normal">
-                        {formattedWatchedDate}
-                      </span>
+                      <>
+                        <span className="text-zinc-600 select-none">•</span>
+                        <span className="text-[#00E054] font-medium tracking-wider">
+                          {stars}
+                        </span>
+                      </>
                     )}
 
                     {entry.rewatch && (
                       <>
                         <span className="text-zinc-600 select-none">•</span>
-                        <span className="text-zinc-500 text-[11px] inline-flex items-center gap-1 font-normal">
-                          <span className="text-[10px]">↺</span> rewatch
+                        <span className="inline-flex items-center gap-1 rounded-full border border-white/[0.08] bg-white/[0.03] px-2 py-0.5 text-[10px] font-mono text-zinc-400">
+                          <span>↺</span> rewatch
                         </span>
                       </>
                     )}
                   </div>
 
-                  {/* Review Excerpt */}
+                  {/* Critic Review Excerpt */}
                   {entry.reviewText && (
-                    <p className="mt-3 text-xs sm:text-[13px] leading-relaxed text-zinc-400 line-clamp-3 font-normal">
-                      &ldquo;{entry.reviewText}&rdquo;
-                    </p>
+                    <div className="mt-3.5 pl-3.5 border-l-2 border-[#FF8000]/40">
+                      <p className="font-serif italic text-sm sm:text-[15px] text-zinc-300 leading-relaxed font-light">
+                        &ldquo;{entry.reviewText}&rdquo;
+                      </p>
+                    </div>
                   )}
+
+                  {/* Footer Action */}
+                  <div className="mt-4 pt-3 border-t border-white/[0.04] flex items-center justify-between text-xs">
+                    <span className="text-[11px] font-mono text-zinc-600">
+                      DIARY DISPATCH #{idx + 1}
+                    </span>
+                    <a
+                      href={entry.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-zinc-400 group-hover:text-white transition-colors inline-flex items-center gap-1 font-mono text-[11px]"
+                    >
+                      <span>Read on Letterboxd</span>
+                      <span>↗</span>
+                    </a>
+                  </div>
                 </div>
-              </a>
+              </div>
             </motion.div>
           );
         })}
-      </div>
-
-      {/* Subtle Footer Link */}
-      <div className="pt-8 border-t border-white/[0.06]">
-        <a
-          href={diaryUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="group inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-normal text-zinc-500 transition-colors duration-200 hover:text-white"
-        >
-          <span>View complete diary on Letterboxd</span>
-          <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-zinc-500 group-hover:text-white">
-            ↗
-          </span>
-        </a>
       </div>
     </section>
   );

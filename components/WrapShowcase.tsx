@@ -25,20 +25,29 @@ export function WrapShowcase() {
         viewport={{ once: true, margin: "-60px" }}
         className="mb-14"
       >
-        <motion.p
-          variants={fadeUp}
-          custom={0}
-          className="text-[11px] font-mono tracking-[0.24em] text-zinc-500 uppercase"
-        >
-          02 // Artifact
-        </motion.p>
+        <motion.div variants={fadeUp} custom={0} className="flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#00E054]" />
+          <span className="text-[11px] font-mono tracking-[0.24em] text-[#00E054] uppercase">
+            02 // SPECIMEN ARTIFACT
+          </span>
+        </motion.div>
         <motion.h2
           variants={fadeUp}
           custom={1}
-          className="mt-3 text-3xl font-light tracking-[-0.03em] text-white sm:text-4xl md:text-5xl"
+          className="mt-3 text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-white"
         >
-          The cinematic ledger.
+          The cinematic ledger,{" "}
+          <span className="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-[#00E054] via-[#40BCF4] to-white">
+            revealed.
+          </span>
         </motion.h2>
+        <motion.p
+          variants={fadeUp}
+          custom={2}
+          className="mt-2 text-sm sm:text-base text-zinc-400 font-light max-w-xl"
+        >
+          Anatomy of a Boxdit annual dossier — precision-crafted for critics, filmmakers, and obsessive viewers.
+        </motion.p>
       </motion.div>
 
       {/* Editorial Exhibition Specimen Card */}
@@ -47,90 +56,106 @@ export function WrapShowcase() {
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
         variants={fadeUp}
-        custom={2}
-        className="mx-auto overflow-hidden rounded-2xl border border-white/[0.07] bg-[#0c0c0e]/70 p-6 sm:p-8 backdrop-blur-sm"
+        custom={3}
+        className="mx-auto overflow-hidden rounded-3xl cinema-panel p-6 sm:p-10 shadow-2xl"
       >
         {/* Specimen Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06] pb-6">
-          <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.03] text-xs font-mono text-zinc-300">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
+          <div className="flex items-center gap-3.5">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.12] bg-[#14181C] text-xs font-mono font-bold text-[#FF8000]">
               01
             </span>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-white">@alex_cinema</span>
-                <span className="rounded-full border border-white/[0.1] bg-white/[0.04] px-2 py-0.5 text-[10px] font-mono text-zinc-400">
-                  ANNUAL DOSSIER
+                <span className="text-base font-bold text-white">@alex_cinema</span>
+                <span className="rounded-full border border-white/[0.1] bg-white/[0.04] px-2.5 py-0.5 text-[10px] font-mono text-zinc-400">
+                  ANNUAL DOSSIER // 2026
                 </span>
               </div>
-              <p className="text-xs font-mono text-zinc-500 mt-0.5">2024 Viewing Index</p>
+              <p className="text-xs font-mono text-zinc-400 mt-0.5">
+                Cannes / Venice Press Accreditation Series
+              </p>
             </div>
           </div>
 
           <div className="text-right">
-            <span className="text-[10px] font-mono uppercase text-zinc-500">Logged Volumes</span>
-            <div className="text-xl font-light tracking-tight text-white">248 Films</div>
+            <span className="text-[10px] font-mono uppercase text-zinc-500 tracking-wider">
+              CATALOGUED VOLUME
+            </span>
+            <div className="text-2xl font-bold font-mono tracking-tight text-white">
+              248 Films Logged
+            </div>
           </div>
         </div>
 
         {/* Specimen Content Columns */}
         <div className="mt-8 grid gap-6 md:grid-cols-12">
           {/* Persona & Archetype (5 cols) */}
-          <div className="flex flex-col justify-between rounded-xl border border-white/[0.05] bg-[#111114]/50 p-6 md:col-span-5">
+          <div className="flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#12161A]/80 p-6 sm:p-7 md:col-span-5">
             <div>
               <div className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#FF8000]" />
-                <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
-                  Archetype Identified
+                <span className="h-2 w-2 rounded-full bg-[#FF8000] shadow-[0_0_8px_#FF8000]" />
+                <span className="text-[10px] font-mono tracking-widest text-[#FF9526] uppercase">
+                  Diagnosed Archetype
                 </span>
               </div>
-              <h4 className="mt-3 text-2xl font-light tracking-tight text-white">
-                The Atmospheric Futurist
+              <h4 className="mt-3 text-2xl sm:text-3xl font-serif italic text-white font-normal">
+                &ldquo;The Atmospheric Futurist&rdquo;
               </h4>
-              <p className="mt-3 text-[13px] font-light leading-relaxed text-zinc-400">
-                Heavy predilection for speculative fiction, high-contrast cinematography, and slow existential pacing. Top 2% in runtime commitment.
+              <p className="mt-3 text-xs sm:text-[13px] font-light leading-relaxed text-zinc-400">
+                Heavy predilection for speculative fiction, high-contrast cinematography, and slow existential pacing. Ranked in the top 2% of Letterboxd runtime commitment.
               </p>
             </div>
 
-            <div className="mt-8 border-t border-white/[0.05] pt-4">
-              <span className="text-[10px] font-mono text-zinc-500 uppercase">Key Allegiance</span>
+            <div className="mt-8 border-t border-white/[0.06] pt-4">
+              <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+                Key Allegiance
+              </span>
               <div className="mt-1 flex items-center justify-between text-sm">
-                <span className="font-normal text-zinc-200">Denis Villeneuve</span>
-                <span className="font-mono text-xs text-zinc-400">4.6★ avg</span>
+                <span className="font-semibold text-white">Denis Villeneuve</span>
+                <span className="font-mono text-xs text-[#00E054] font-bold">4.6★ mean</span>
               </div>
             </div>
           </div>
 
           {/* Film Four Favorites (7 cols) */}
-          <div className="flex flex-col justify-between rounded-xl border border-white/[0.05] bg-[#111114]/50 p-6 md:col-span-7">
+          <div className="flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#12161A]/80 p-6 sm:p-7 md:col-span-7">
             <div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-3.5">
                 <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase">
                   Pinnacle Four
                 </span>
-                <span className="text-[10px] font-mono text-zinc-500">CANONICAL SELECTION</span>
+                <span className="text-[10px] font-mono text-zinc-500">
+                  CANONICAL PILLARS
+                </span>
               </div>
 
               {/* Minimal Four Film Rectangles */}
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {[
-                  { title: "Blade Runner 2049", year: "2017", dir: "Villeneuve" },
-                  { title: "Arrival", year: "2016", dir: "Villeneuve" },
-                  { title: "Interstellar", year: "2014", dir: "Nolan" },
-                  { title: "Dune: Part Two", year: "2024", dir: "Villeneuve" },
+                  { title: "Blade Runner 2049", year: "2017", dir: "Villeneuve", rating: "5.0 ★" },
+                  { title: "Arrival", year: "2016", dir: "Villeneuve", rating: "5.0 ★" },
+                  { title: "Interstellar", year: "2014", dir: "Nolan", rating: "4.5 ★" },
+                  { title: "Dune: Part Two", year: "2024", dir: "Villeneuve", rating: "5.0 ★" },
                 ].map((film) => (
                   <div
                     key={film.title}
-                    className="group/film flex aspect-[2/3] flex-col justify-between rounded-lg border border-white/[0.08] bg-[#141418] p-3 transition-colors duration-200 hover:border-white/[0.2]"
+                    className="group/film flex aspect-[2/3] flex-col justify-between rounded-xl border border-white/[0.1] bg-[#181D23] p-3.5 transition-all duration-200 hover:border-[#FF8000]/50 hover:bg-[#1E242C] shadow-md"
                   >
-                    <span className="font-mono text-[10px] text-zinc-600 group-hover/film:text-zinc-400">
-                      {film.year}
-                    </span>
+                    <div className="flex justify-between items-start">
+                      <span className="font-mono text-[10px] text-zinc-500">
+                        {film.year}
+                      </span>
+                      <span className="font-mono text-[9px] text-[#00E054] font-bold">
+                        {film.rating}
+                      </span>
+                    </div>
+
                     <div>
-                      <p className="text-xs font-normal leading-tight text-white line-clamp-2">
+                      <p className="text-xs font-semibold leading-tight text-white group-hover/film:text-[#FF8000] transition-colors line-clamp-2">
                         {film.title}
                       </p>
-                      <p className="mt-1 text-[10px] font-mono text-zinc-500">
+                      <p className="mt-1 text-[10px] font-mono text-zinc-400">
                         {film.dir}
                       </p>
                     </div>
@@ -139,9 +164,11 @@ export function WrapShowcase() {
               </div>
             </div>
 
-            <div className="mt-6 flex items-center justify-between border-t border-white/[0.05] pt-4 font-mono text-[11px] text-zinc-500">
+            <div className="mt-6 flex flex-wrap items-center justify-between border-t border-white/[0.06] pt-4 font-mono text-[11px] text-zinc-500 gap-2">
               <span>GENRE CONGRUENCE</span>
-              <span className="text-zinc-300">SCI-FI 44% · DRAMA 32%</span>
+              <span className="text-white font-semibold">
+                SCI-FI 44% · DRAMA 32% · MYSTERY 16%
+              </span>
             </div>
           </div>
         </div>

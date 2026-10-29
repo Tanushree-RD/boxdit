@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { LetterboxdProfile } from "@/lib/scraper";
 import { ProfileAnalytics } from "@/lib/analytics";
 import { ProfileHero } from "@/components/ProfileHero";
+import { RatingHistogram } from "@/components/RatingHistogram";
 import { StatsSection } from "@/components/StatsSection";
 import { InsightsSection } from "@/components/InsightsSection";
 import { RecentActivity } from "@/components/RecentActivity";
@@ -36,12 +37,12 @@ export function ReportPageClient({
   const profileUrl = `https://letterboxd.com/${encodeURIComponent(profile.username)}/`;
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#070707] text-white selection:bg-[#F5B000]/30 selection:text-white">
-      {/* Dynamic ambient mesh gradients */}
+    <main className="relative min-h-screen overflow-hidden bg-[#090B0E] text-white selection:bg-[#FF8000]/30 selection:text-white">
+      {/* Subtle warm atmospheric spotlight */}
       <div className="pointer-events-none fixed inset-0 z-0">
-        <div className="absolute left-1/2 -top-40 h-[600px] w-[800px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,_rgba(245,176,11,0.06),_transparent_70%)] blur-3xl" />
-        <div className="absolute right-0 top-1/3 h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(255,200,87,0.04),_transparent_70%)] blur-3xl" />
-        <div className="absolute -left-20 bottom-1/4 h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(99,102,241,0.03),_transparent_70%)] blur-3xl" />
+        <div className="absolute left-1/2 -top-40 h-[650px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,_rgba(255,128,0,0.06),_transparent_70%)] blur-3xl" />
+        <div className="absolute right-0 top-1/3 h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(0,224,84,0.03),_transparent_70%)] blur-3xl" />
+        <div className="absolute -left-20 bottom-1/4 h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(64,188,244,0.03),_transparent_70%)] blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-1 flex-col px-5 py-8 sm:px-8 lg:px-12">
@@ -54,22 +55,22 @@ export function ReportPageClient({
         >
           <Link
             href="/"
-            className="btn-base btn-outlined"
+            className="btn-base btn-outlined gap-2"
           >
-            <span>←</span>
+            <span className="text-zinc-500">←</span>
             <span>Search another cinephile</span>
           </Link>
 
           <div className="flex items-center gap-2.5">
-            <span className="hidden sm:inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-500">
-              Boxdit Wrapped 2026
+            <span className="h-2 w-2 rounded-full bg-[#00E054] shadow-[0_0_8px_#00E054]" />
+            <span className="text-[11px] font-mono font-semibold uppercase tracking-[0.22em] text-zinc-400">
+              Boxdit Dossier // @{decodedUsername}
             </span>
           </div>
         </motion.header>
 
         {/* Content Flow with Generous Spacing */}
-        <div className="space-y-20 sm:space-y-24 pb-24">
+        <div className="space-y-16 sm:space-y-20 pb-24">
           {/* 1. Top Hero Section */}
           <motion.div
             variants={sectionVariants}
@@ -89,10 +90,21 @@ export function ReportPageClient({
             />
           </motion.div>
 
-          {/* 2. Core 6 Hero Stats Cards */}
+          {/* 2. Signature 10-Bar Letterboxd Rating Curve */}
           <motion.div
             variants={sectionVariants}
             custom={1}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+          >
+            <RatingHistogram ratings={analytics.ratings} />
+          </motion.div>
+
+          {/* 3. Core Highlights Bento Grid */}
+          <motion.div
+            variants={sectionVariants}
+            custom={2}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
@@ -107,10 +119,10 @@ export function ReportPageClient({
             />
           </motion.div>
 
-          {/* 3. Deep-Dive Insights Cards */}
+          {/* 4. Deep-Dive Insights Cards */}
           <motion.div
             variants={sectionVariants}
-            custom={2}
+            custom={3}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
@@ -118,10 +130,10 @@ export function ReportPageClient({
             <InsightsSection insights={analytics.insights} />
           </motion.div>
 
-          {/* 4. Recent Diary & Activity */}
+          {/* 5. Recent Diary & Activity */}
           <motion.div
             variants={sectionVariants}
-            custom={3}
+            custom={4}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
@@ -133,29 +145,35 @@ export function ReportPageClient({
           </motion.div>
         </div>
 
-        {/* Letterboxd CTA */}
+        {/* Letterboxd Outro CTA */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center pt-16 pb-20 sm:pt-24 sm:pb-28"
+          className="rounded-3xl cinema-panel p-8 sm:p-12 text-center my-12 relative overflow-hidden shadow-2xl"
         >
-          <p className="text-[15px] font-extralight tracking-wide text-zinc-300">
+          <div className="pointer-events-none absolute left-1/2 top-0 h-40 w-80 -translate-x-1/2 rounded-full bg-[#00E054]/[0.08] blur-3xl" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#00E054]">
+            PRIMARY ARCHIVE
+          </span>
+          <h3 className="mt-2 text-2xl sm:text-3xl font-bold text-white tracking-tight">
             Continue exploring on Letterboxd
+          </h3>
+          <p className="mt-2 max-w-md mx-auto text-xs sm:text-sm font-light text-zinc-400 leading-relaxed">
+            View @{profile.username}&apos;s complete diary, lists, review dispatches, and watchlist directly on Letterboxd.
           </p>
-          <p className="mt-2 max-w-xs text-center text-[12px] font-light leading-relaxed text-zinc-500">
-            View the complete diary, lists, reviews, and watch history.
-          </p>
-          <a
-            href={profileUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="btn-base btn-outlined mt-8"
-          >
-            <span>Open Letterboxd Profile</span>
-            <span className="text-[11px]">↗</span>
-          </a>
+          <div className="mt-6 flex justify-center">
+            <a
+              href={profileUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-base btn-filled gap-2 px-6 py-2.5 text-xs font-semibold shadow-lg hover:brightness-110 active:scale-95 transition-all"
+            >
+              <span>Open @{profile.username} on Letterboxd</span>
+              <span>↗</span>
+            </a>
+          </div>
         </motion.div>
 
         {/* Footer */}

@@ -878,13 +878,14 @@ export async function analyzeProfileAsync(
 ): Promise<ProfileAnalytics> {
   const allSlugs: string[] = [];
 
-  for (const f of profile.films) {
-    if (f.slug) allSlugs.push(f.slug);
-  }
-
   for (const e of profile.recentActivity) {
     const slug = normalizeSlug(e.link);
-    if (slug) allSlugs.push(slug);
+    if (slug && !allSlugs.includes(slug)) allSlugs.push(slug);
+  }
+
+  for (const f of profile.films) {
+    if (f.slug && !allSlugs.includes(f.slug)) allSlugs.push(f.slug);
+    if (allSlugs.length >= 80) break;
   }
 
   const detailsMap = await loadMovieDetails(allSlugs, 20);

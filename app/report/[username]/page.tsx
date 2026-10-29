@@ -6,10 +6,6 @@ import {
 } from "@/lib/scraper";
 import { ProfileAnalytics } from "@/lib/analytics";
 import { getProfileReport } from "@/lib/services/profileReport";
-import { ProfileHero } from "@/components/ProfileHero";
-import { StatsSection } from "@/components/StatsSection";
-import { InsightsSection } from "@/components/InsightsSection";
-import { RecentActivity } from "@/components/RecentActivity";
 import { ReportPageClient } from "./ReportPageClient";
 
 type ReportPageProps = {

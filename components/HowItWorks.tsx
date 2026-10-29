@@ -5,21 +5,24 @@ import { motion } from "framer-motion";
 const steps = [
   {
     number: "01",
-    title: "Input handle",
+    phase: "INGESTION",
+    title: "Public Letterboxd Handle",
     description:
-      "Provide your public Letterboxd username. No passwords, credentials, or integrations required.",
+      "Enter your public Letterboxd username. No passwords, credentials, or third-party OAuth permissions required.",
   },
   {
     number: "02",
-    title: "Parse chronology",
+    phase: "RECONSTRUCTION",
+    title: "Chronological Ledger",
     description:
-      "Our parser ingests ratings, release eras, genres, and diary timestamps into a unified ledger.",
+      "Our parser ingests your complete ratings spectrum, release year distributions, diary timestamps, and auteur affiliations.",
   },
   {
     number: "03",
-    title: "Review dossier",
+    phase: "ACCREDITATION",
+    title: "Curated Festival Dossier",
     description:
-      "Explore your taste breakdown on an interactive canvas and save high-resolution editorial cards.",
+      "Explore your diagnosed archetype, star histogram, and export high-resolution cinematic passes formatted for social sharing.",
   },
 ];
 
@@ -46,20 +49,29 @@ export function HowItWorks() {
         viewport={{ once: true, margin: "-60px" }}
         className="mb-16 sm:mb-20"
       >
-        <motion.p
-          variants={fadeUp}
-          custom={0}
-          className="text-[11px] font-mono tracking-[0.24em] text-zinc-500 uppercase"
-        >
-          03 // Methodology
-        </motion.p>
+        <motion.div variants={fadeUp} custom={0} className="flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#40BCF4]" />
+          <span className="text-[11px] font-mono tracking-[0.24em] text-[#40BCF4] uppercase">
+            03 // THE APPARATUS
+          </span>
+        </motion.div>
         <motion.h2
           variants={fadeUp}
           custom={1}
-          className="mt-3 text-3xl font-light tracking-[-0.03em] text-white sm:text-4xl md:text-5xl"
+          className="mt-3 text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-white"
         >
-          Three movements to synthesis.
+          How your year in film is{" "}
+          <span className="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-[#40BCF4] via-[#00E054] to-white">
+            reconstructed.
+          </span>
         </motion.h2>
+        <motion.p
+          variants={fadeUp}
+          custom={2}
+          className="mt-3 text-sm sm:text-base text-zinc-400 font-light max-w-xl"
+        >
+          Three transparent stages transforming unstructured Letterboxd logs into an authoritative cinematic dossier.
+        </motion.p>
       </motion.div>
 
       {/* Steps Grid */}
@@ -71,26 +83,31 @@ export function HowItWorks() {
             whileInView="visible"
             viewport={{ once: true, margin: "-40px" }}
             variants={fadeUp}
-            custom={i + 2}
-            className="group relative flex flex-col justify-between rounded-2xl border border-white/[0.07] bg-[#0c0c0e]/60 p-7 sm:p-8 backdrop-blur-sm transition-colors duration-200 hover:border-white/[0.12] hover:bg-[#121214]/60"
+            custom={i + 3}
+            className="group relative flex flex-col justify-between rounded-3xl cinema-panel cinema-panel-hover p-7 sm:p-8"
           >
             <div>
-              <span className="font-mono text-xs tracking-widest text-zinc-500 transition-colors duration-200 group-hover:text-zinc-300">
-                Phase {step.number}
-              </span>
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                <span className="font-mono text-xs text-[#40BCF4] font-semibold tracking-wider">
+                  STAGE {step.number}
+                </span>
+                <span className="text-[10px] font-mono text-zinc-500">
+                  {step.phase}
+                </span>
+              </div>
 
-              <h3 className="mt-8 text-xl font-light tracking-tight text-white sm:text-2xl">
+              <h3 className="mt-8 text-xl sm:text-2xl font-bold text-white tracking-tight">
                 {step.title}
               </h3>
 
-              <p className="mt-3 text-[14px] font-light leading-relaxed text-zinc-400">
+              <p className="mt-3 text-xs sm:text-[13px] font-light leading-relaxed text-zinc-400">
                 {step.description}
               </p>
             </div>
 
-            <div className="mt-10 flex items-center justify-between border-t border-white/[0.05] pt-4 font-mono text-[10px] text-zinc-600">
-              <span className="uppercase tracking-widest">Protocol</span>
-              <span>0{i + 1} / 03</span>
+            <div className="mt-10 flex items-center justify-between border-t border-white/[0.05] pt-4 font-mono text-[10px] text-zinc-500">
+              <span className="uppercase tracking-widest">AUTHENTICATION</span>
+              <span className="text-zinc-400">0{i + 1} / 03</span>
             </div>
           </motion.div>
         ))}
