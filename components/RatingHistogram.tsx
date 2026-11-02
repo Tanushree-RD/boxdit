@@ -71,138 +71,150 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
       : "Severe Realist";
 
   return (
-    <div className="relative border-t border-b border-white/[0.08] py-12 sm:py-16">
-      {/* Header */}
-      <div className="flex flex-wrap items-baseline justify-between gap-6 border-b border-white/[0.06] pb-8">
-        <div>
-          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block mb-2 font-normal">
-            SPECTRUM // 10-BAR DISTRIBUTION
-          </span>
-          <h3 className="font-display font-light text-3xl sm:text-5xl text-white tracking-tight leading-tight">
-            The Critical Curve
-          </h3>
-          <p className="mt-2 font-sans font-normal text-xs sm:text-sm text-neutral-400">
-            Calculated across {totalRated.toLocaleString()} logged ratings
-          </p>
+    <section className="relative border-t border-white/[0.08] pt-20 sm:pt-28">
+      {/* 12-Column Editorial Spread */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        {/* Left Column (5 cols): Curatorial Commentary & Verdict */}
+        <div className="lg:col-span-5 space-y-8">
+          <div>
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block mb-4 font-normal">
+              EXHIBIT 01 // CRITICAL SPECTRUM
+            </span>
+            <h2 className="font-display font-light text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[0.98]">
+              The Critical Curve
+            </h2>
+            <p className="mt-4 font-sans font-normal text-xs sm:text-sm text-neutral-400 leading-relaxed max-w-sm">
+              A continuous frequency distribution of critical judgment. Evaluates whether viewing habits lean toward celebratory affection or severe discrimination.
+            </p>
+          </div>
+
+          <div className="pt-6 border-t border-white/[0.06] space-y-6">
+            <div>
+              <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 block font-normal">
+                Diagnosed Skew
+              </span>
+              <p className="font-display italic font-light text-2xl sm:text-3xl text-white mt-1">
+                &ldquo;{critiqueArchetype}&rdquo;
+              </p>
+            </div>
+
+            <div className="flex items-baseline gap-10">
+              <div>
+                <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 block font-normal">
+                  Mean Score
+                </span>
+                <p className="font-display font-light text-4xl sm:text-5xl text-white mt-1">
+                  {avg ? `${avg.toFixed(2)}` : "—"}
+                  <span className="text-xl text-neutral-500 font-light ml-1">★</span>
+                </p>
+              </div>
+
+              <div>
+                <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 block font-normal">
+                  Peak Mode
+                </span>
+                <p className="font-display font-light text-4xl sm:text-5xl text-white mt-1">
+                  {peakKey}
+                  <span className="text-xl text-neutral-500 font-light ml-1">★</span>
+                </p>
+              </div>
+            </div>
+
+            <p className="font-mono text-[10px] text-neutral-600 font-normal">
+              Derived from {totalRated.toLocaleString()} logged ratings across catalogue
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-baseline gap-8 font-mono text-xs">
-          <div>
-            <span className="block text-[9px] uppercase tracking-[0.24em] text-neutral-500 font-normal">
-              Critical Skew
-            </span>
-            <span className="font-display italic text-lg text-white font-normal mt-0.5 block">
-              {critiqueArchetype}
-            </span>
+        {/* Right Column (7 cols): The Architectural Histogram */}
+        <div className="lg:col-span-7 flex flex-col justify-end pt-4 lg:pt-0">
+          <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 pb-4 border-b border-white/[0.06] mb-8 font-normal">
+            <span>FREQUENCY SPECTRUM // 10 BINS</span>
+            <span>HIGH WATER: {peakCount} FILMS</span>
           </div>
-          <div>
-            <span className="block text-[9px] uppercase tracking-[0.24em] text-neutral-500 font-normal">
-              Mean Score
-            </span>
-            <span className="font-display text-xl text-white font-light mt-0.5 block">
-              {avg ? `${avg.toFixed(2)} ★` : "—"}
-            </span>
-          </div>
-        </div>
-      </div>
 
-      {/* The 10-Bar Architectural Chart */}
-      <div className="pt-12 pb-6">
-        <div className="flex h-52 sm:h-64 items-end justify-between gap-2 sm:gap-6 px-2">
-          {RATING_KEYS.map((key) => {
-            const count = distribution[key] || 0;
-            const heightPercent = totalRated > 0 ? Math.max((count / effectiveMax) * 100, 4) : 4;
-            const isPeak = key === peakKey && count > 0;
-            const isHovered = hoveredKey === key;
-            const percentage = totalRated > 0 ? ((count / totalRated) * 100).toFixed(1) : "0";
+          {/* Bar Chart Area with Generous Height */}
+          <div className="h-64 sm:h-72 flex items-end justify-between gap-2 sm:gap-4 px-1">
+            {RATING_KEYS.map((key) => {
+              const count = distribution[key] || 0;
+              const heightPercent = totalRated > 0 ? Math.max((count / effectiveMax) * 100, 3) : 3;
+              const isPeak = key === peakKey && count > 0;
+              const isHovered = hoveredKey === key;
+              const percentage = totalRated > 0 ? ((count / totalRated) * 100).toFixed(1) : "0";
 
-            return (
-              <div
-                key={key}
-                onMouseEnter={() => setHoveredKey(key)}
-                onMouseLeave={() => setHoveredKey(null)}
-                className="group relative flex flex-1 flex-col items-center h-full justify-end cursor-pointer"
-              >
-                {/* Floating Tooltip */}
+              return (
                 <div
-                  className={`pointer-events-none absolute -top-10 z-20 flex flex-col items-center border border-white/[0.12] bg-[#121214] px-2.5 py-1 transition-all duration-150 ${
-                    isHovered
-                      ? "opacity-100 scale-100 translate-y-0"
-                      : "opacity-0 scale-95 translate-y-1"
-                  }`}
+                  key={key}
+                  onMouseEnter={() => setHoveredKey(key)}
+                  onMouseLeave={() => setHoveredKey(null)}
+                  className="group relative flex flex-1 flex-col items-center h-full justify-end cursor-pointer"
                 >
-                  <span className="font-mono text-[9px] text-white whitespace-nowrap font-normal">
-                    {count} {count === 1 ? "film" : "films"} ({percentage}%)
+                  {/* Floating Tooltip */}
+                  <div
+                    className={`pointer-events-none absolute -top-12 z-20 flex flex-col items-center border border-white/[0.12] bg-[#121214] px-2.5 py-1.5 transition-all duration-150 ${
+                      isHovered
+                        ? "opacity-100 scale-100 translate-y-0"
+                        : "opacity-0 scale-95 translate-y-1"
+                    }`}
+                  >
+                    <span className="font-mono text-[9px] text-white whitespace-nowrap font-normal">
+                      {RATING_LABELS[key]}: {count} ({percentage}%)
+                    </span>
+                  </div>
+
+                  {/* Count above bar */}
+                  <span
+                    className={`mb-2 font-mono text-[9px] tabular-nums transition-colors duration-150 font-normal ${
+                      isPeak
+                        ? "text-white"
+                        : isHovered
+                        ? "text-white"
+                        : "text-neutral-500 group-hover:text-neutral-300"
+                    }`}
+                  >
+                    {count > 0 ? count : ""}
+                  </span>
+
+                  {/* Bar Track & Fill */}
+                  <div className="relative w-full h-48 sm:h-56 flex items-end bg-white/[0.02]">
+                    <motion.div
+                      initial={{ height: 0 }}
+                      whileInView={{ height: `${heightPercent}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                      className={`w-full transition-colors duration-200 ${
+                        isPeak
+                          ? "bg-white"
+                          : isHovered
+                          ? "bg-neutral-200"
+                          : "bg-neutral-600/70 group-hover:bg-neutral-400"
+                      }`}
+                    />
+                  </div>
+
+                  {/* Rating Label Below Baseline */}
+                  <span
+                    className={`mt-3 font-mono text-[10px] tracking-tight transition-colors duration-150 font-normal ${
+                      isPeak
+                        ? "text-white font-medium"
+                        : isHovered
+                        ? "text-white"
+                        : "text-neutral-500 group-hover:text-neutral-300"
+                    }`}
+                  >
+                    {RATING_LABELS[key]}
                   </span>
                 </div>
+              );
+            })}
+          </div>
 
-                {/* Count label above bar */}
-                <span
-                  className={`mb-2 font-mono text-[9px] tabular-nums transition-colors duration-150 font-normal ${
-                    isPeak
-                      ? "text-white"
-                      : isHovered
-                      ? "text-white"
-                      : "text-neutral-500 group-hover:text-neutral-300"
-                  }`}
-                >
-                  {count > 0 ? count : ""}
-                </span>
-
-                {/* The Bar Track */}
-                <div className="relative w-full h-40 sm:h-48 flex items-end bg-white/[0.02]">
-                  <motion.div
-                    initial={{ height: 0 }}
-                    whileInView={{ height: `${heightPercent}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    className={`w-full transition-colors duration-200 ${
-                      isPeak
-                        ? "bg-neutral-200"
-                        : isHovered
-                        ? "bg-white"
-                        : "bg-neutral-600 group-hover:bg-neutral-400"
-                    }`}
-                  />
-                </div>
-
-                {/* Rating Label (½★ to 5★) */}
-                <span
-                  className={`mt-4 font-mono text-[9px] tracking-tight transition-colors duration-150 font-normal ${
-                    isPeak
-                      ? "text-white"
-                      : isHovered
-                      ? "text-white"
-                      : "text-neutral-500 group-hover:text-neutral-300"
-                  }`}
-                >
-                  {RATING_LABELS[key]}
-                </span>
-              </div>
-            );
-          })}
+          <div className="mt-6 pt-4 border-t border-white/[0.04] flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-600 font-normal">
+            <span>LOW DISCRIMINATION (0.5★)</span>
+            <span>HIGH ACCLAIM (5.0★)</span>
+          </div>
         </div>
       </div>
-
-      {/* Footer details: Movie titles feel like magazine headlines */}
-      <div className="mt-8 flex flex-wrap items-baseline justify-between gap-6 border-t border-white/[0.06] pt-6 font-mono text-xs">
-        <div className="flex items-baseline gap-2">
-          <span className="text-neutral-500 uppercase text-[9px] tracking-[0.24em] font-normal">Most Awarded:</span>
-          <span className="text-white font-normal">
-            {RATING_LABELS[peakKey]} ({peakCount.toLocaleString()} {peakCount === 1 ? "film" : "films"})
-          </span>
-        </div>
-        <div>
-          {ratings.highestRatedMovie && (
-            <div className="flex items-baseline gap-3">
-              <span className="text-neutral-500 uppercase text-[9px] tracking-[0.24em] font-normal">Pinnacle Rating:</span>
-              <span className="font-display italic font-normal text-xl sm:text-2xl text-white tracking-tight">
-                {ratings.highestRatedMovie.filmTitle}
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+    </section>
   );
 }

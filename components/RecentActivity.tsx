@@ -30,19 +30,6 @@ function formatDate(dateStr: string | null): string {
 const FALLBACK_POSTER =
   "https://s.ltrbxd.com/static/img/empty-poster-70-BSf-Pjrh.png";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-      delay: i * 0.05,
-    },
-  }),
-};
-
 export function RecentActivity({ entries, username }: RecentActivityProps) {
   const latestFive = entries.slice(0, 5);
 
@@ -52,89 +39,154 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
 
   if (latestFive.length === 0) {
     return (
-      <section className="border-t border-b border-white/[0.08] py-14 text-center">
+      <section className="border-t border-white/[0.08] pt-20 sm:pt-28 text-center">
         <h2 className="font-display italic font-light text-2xl text-white">Recent Diary Logs</h2>
         <p className="mt-3 font-mono text-[9px] text-neutral-500 uppercase tracking-widest font-normal">
-          No public diary logs found for this account.
+          No public diary logs recorded for this account.
         </p>
       </section>
     );
   }
 
-  return (
-    <section className="w-full">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="mb-14 flex flex-wrap items-baseline justify-between gap-4 border-b border-white/[0.08] pb-8"
-      >
-        <div>
-          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block mb-2 font-normal">
-            SCREENING JOURNAL // DISPATCHES
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-display font-light tracking-tight text-white">
-            Recent Diary &amp; Reviews
-          </h2>
-          <p className="mt-2 text-xs sm:text-sm text-neutral-400 font-sans font-normal">
-            Latest logged screenings, critical ratings, and review dispatches direct from Letterboxd
-          </p>
-        </div>
+  const [leadEntry, ...remainingEntries] = latestFive;
+  const leadStars = renderStars(leadEntry.rating);
+  const leadDate = formatDate(leadEntry.watchedDate || leadEntry.pubDate);
 
+  return (
+    <section className="relative border-t border-white/[0.08] pt-20 sm:pt-28">
+      {/* Section Header */}
+      <div className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 sm:mb-20 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 font-normal">
+        <span>EXHIBIT 07 // SCREENING JOURNAL</span>
         <a
           href={diaryUrl}
           target="_blank"
           rel="noreferrer"
-          className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-white transition-colors font-normal"
+          className="text-neutral-400 hover:text-white transition-colors tracking-[0.2em]"
         >
-          [ Full Diary Index ↗ ]
+          Letterboxd Diary Index ↗
         </a>
-      </motion.div>
+      </div>
 
-      {/* Critic Journal Entries: Magazine Headlines */}
-      <div className="divide-y divide-white/[0.08] border-b border-white/[0.08]">
-        {latestFive.map((entry, idx) => {
-          const stars = renderStars(entry.rating);
-          const formattedWatchedDate = formatDate(
-            entry.watchedDate || entry.pubDate
-          );
+      <div className="mb-14 max-w-xl">
+        <h2 className="font-display font-light text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[0.98]">
+          Recent Diary &amp; Reviews
+        </h2>
+        <p className="mt-4 font-sans font-normal text-xs sm:text-sm text-neutral-400 leading-relaxed">
+          Chronological record of recent theatrical screenings, critical verdicts, and review commentary.
+        </p>
+      </div>
 
-          return (
-            <motion.div
-              key={`${entry.link}-${idx}`}
-              variants={fadeUp}
-              custom={idx}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="py-10 sm:py-12 flex flex-col sm:flex-row items-start gap-8 group"
-            >
-              {/* Poster */}
-              <div className="relative w-20 sm:w-24 shrink-0 aspect-[2/3] overflow-hidden border border-white/[0.1] bg-[#121214]">
-                <Image
-                  src={entry.posterUrl || FALLBACK_POSTER}
-                  alt={entry.filmTitle || entry.title}
-                  fill
-                  sizes="(max-width: 640px) 80px, 96px"
-                  className="object-cover"
-                  unoptimized
-                />
+      {/* LEAD FEATURE DISPATCH: Most Recent Screening */}
+      {leadEntry && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="pb-16 sm:pb-20 border-b border-white/[0.08]"
+        >
+          <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 pb-3 border-b border-white/[0.06] mb-8 font-normal">
+            <span>LEAD DISPATCH 01 // LATEST LOGGED SCREENING</span>
+            <span>{leadDate || "Recent"}</span>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-start gap-8 lg:gap-12">
+            {/* Large Lead Poster */}
+            <div className="relative w-36 sm:w-44 aspect-[2/3] shrink-0 overflow-hidden border border-white/[0.12] bg-[#121214]">
+              <Image
+                src={leadEntry.posterUrl || FALLBACK_POSTER}
+                alt={leadEntry.filmTitle || leadEntry.title}
+                fill
+                sizes="(max-width: 640px) 144px, 176px"
+                className="object-cover"
+                unoptimized
+              />
+            </div>
+
+            {/* Lead Content */}
+            <div className="flex-1 min-w-0 space-y-6">
+              <div className="flex flex-wrap items-baseline gap-3 font-mono text-xs">
+                {leadEntry.filmYear && (
+                  <span className="text-neutral-400">{leadEntry.filmYear}</span>
+                )}
+                {leadStars && (
+                  <>
+                    <span className="text-neutral-700">·</span>
+                    <span className="text-white tracking-widest">{leadStars}</span>
+                  </>
+                )}
+                {leadEntry.rewatch && (
+                  <>
+                    <span className="text-neutral-700">·</span>
+                    <span className="text-neutral-500 uppercase text-[9px] tracking-wider">
+                      ↺ Rewatch
+                    </span>
+                  </>
+                )}
               </div>
 
-              {/* Main Content */}
-              <div className="flex-1 min-w-0 space-y-4">
-                {/* Meta Bar */}
-                <div className="flex flex-wrap items-baseline justify-between gap-2 font-mono text-xs">
-                  <div className="flex items-baseline gap-3 text-neutral-400 font-normal">
-                    <span className="text-[10px] text-neutral-600">DISPATCH 0{idx + 1}</span>
-                    {entry.filmYear && (
-                      <>
-                        <span className="text-neutral-700">·</span>
-                        <span>{entry.filmYear}</span>
-                      </>
-                    )}
+              <h3 className="font-display italic font-light text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[1.02]">
+                <a
+                  href={leadEntry.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:underline underline-offset-4 decoration-white/20 transition-all"
+                >
+                  {leadEntry.filmTitle || leadEntry.title}
+                </a>
+              </h3>
+
+              {leadEntry.reviewText && (
+                <div className="pt-2 pl-6 border-l border-white/[0.2]">
+                  <p className="font-display italic font-light text-lg sm:text-xl text-neutral-200 leading-relaxed">
+                    &ldquo;{leadEntry.reviewText}&rdquo;
+                  </p>
+                </div>
+              )}
+
+              <div className="pt-2">
+                <a
+                  href={leadEntry.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400 hover:text-white transition-colors font-normal inline-block"
+                >
+                  Read Review Dispatch on Letterboxd ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* CHRONOLOGICAL SCREENING ARCHIVE (Items 02—05) */}
+      {remainingEntries.length > 0 && (
+        <div className="divide-y divide-white/[0.06]">
+          {remainingEntries.map((entry, idx) => {
+            const stars = renderStars(entry.rating);
+            const formattedDate = formatDate(entry.watchedDate || entry.pubDate);
+
+            return (
+              <motion.div
+                key={`${entry.link}-${idx}`}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.05 }}
+                className="py-10 sm:py-12 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start group"
+              >
+                {/* Meta Column (3 cols) */}
+                <div className="md:col-span-3 font-mono text-xs space-y-1">
+                  <span className="text-[9px] uppercase tracking-[0.24em] text-neutral-500 block font-normal">
+                    DISPATCH 0{idx + 2}
+                  </span>
+                  <span className="text-neutral-400 block">{formattedDate || "—"}</span>
+                </div>
+
+                {/* Content Column (7 cols) */}
+                <div className="md:col-span-7 space-y-3">
+                  <div className="flex items-baseline gap-3 font-mono text-xs text-neutral-400">
+                    {entry.filmYear && <span>{entry.filmYear}</span>}
                     {stars && (
                       <>
                         <span className="text-neutral-700">·</span>
@@ -151,50 +203,42 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
                     )}
                   </div>
 
-                  {formattedWatchedDate && (
-                    <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider font-normal">
-                      {formattedWatchedDate}
-                    </span>
+                  <h4 className="font-display italic font-light text-2xl sm:text-3xl lg:text-4xl text-white tracking-tight leading-[1.08]">
+                    <a
+                      href={entry.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:underline underline-offset-4 decoration-white/20 transition-all"
+                    >
+                      {entry.filmTitle || entry.title}
+                    </a>
+                  </h4>
+
+                  {entry.reviewText && (
+                    <p className="font-sans font-normal text-xs sm:text-sm text-neutral-400 leading-relaxed max-w-lg">
+                      &ldquo;{entry.reviewText}&rdquo;
+                    </p>
                   )}
                 </div>
 
-                {/* Film Title as Magazine Headline */}
-                <h3 className="font-display italic font-normal text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-[1.05]">
-                  <a
-                    href={entry.link}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:underline underline-offset-4 decoration-white/20 transition-all"
-                  >
-                    {entry.filmTitle || entry.title}
-                  </a>
-                </h3>
-
-                {/* Review Excerpt */}
-                {entry.reviewText && (
-                  <div className="pt-2 pl-5 border-l border-white/[0.14]">
-                    <p className="font-display italic font-light text-base sm:text-lg text-neutral-300 leading-relaxed">
-                      &ldquo;{entry.reviewText}&rdquo;
-                    </p>
+                {/* Thumbnail Column (2 cols) */}
+                <div className="md:col-span-2 flex md:justify-end">
+                  <div className="relative w-16 sm:w-20 aspect-[2/3] overflow-hidden border border-white/[0.08] bg-[#121214] shrink-0">
+                    <Image
+                      src={entry.posterUrl || FALLBACK_POSTER}
+                      alt={entry.filmTitle || entry.title}
+                      fill
+                      sizes="80px"
+                      className="object-cover"
+                      unoptimized
+                    />
                   </div>
-                )}
-
-                {/* Footer Link */}
-                <div className="pt-2">
-                  <a
-                    href={entry.link}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500 hover:text-white transition-colors font-normal inline-block"
-                  >
-                    Read Entry on Letterboxd ↗
-                  </a>
                 </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }

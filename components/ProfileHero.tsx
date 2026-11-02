@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { PersonaInfo, FilmNerdScore } from "@/lib/analytics";
 import { ShareModal } from "./ShareModal";
 
@@ -18,7 +17,7 @@ interface ProfileHeroProps {
 }
 
 const FALLBACK_AVATAR =
-  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80";
+  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80";
 
 export function ProfileHero({
   displayName,
@@ -34,71 +33,55 @@ export function ProfileHero({
 
   return (
     <>
-      <motion.section
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="relative border-t border-b border-white/[0.08] py-12 sm:py-16"
-      >
-        {/* Top Meta Line: Small Uppercase Tracked */}
-        <div className="flex flex-wrap items-baseline justify-between gap-4 pb-8 mb-10 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 font-normal">
-          <span>MONOGRAPH // @{username}</span>
+      <section className="relative pb-16 sm:pb-24">
+        {/* Monograph Top Meta Ledger */}
+        <div className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-14 sm:mb-20 border-b border-white/[0.08] font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 font-normal">
+          <span>MONOGRAPH 001 // ARCHIVAL DOSSIER</span>
           <span>Index: {nerdScore.score}/100 · {nerdScore.label}</span>
         </div>
 
-        {/* Hero Identity Body */}
-        <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12">
-          {/* Avatar in Minimal Hairline Frame */}
-          <div className="relative shrink-0 mb-8 lg:mb-0">
-            <div className="relative h-28 w-28 sm:h-36 sm:w-36 overflow-hidden border border-white/[0.12] bg-[#101012]">
-              <Image
-                src={avatar || FALLBACK_AVATAR}
-                alt={`${displayName} avatar`}
-                fill
-                sizes="(max-width: 640px) 112px, 144px"
-                className="object-cover"
-                unoptimized
-              />
-            </div>
-          </div>
-
-          {/* User Details & Archetype Synthesis */}
-          <div className="flex-1 min-w-0 space-y-8">
+        {/* 12-Column Asymmetric Monograph Spread */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* Main Column (8 cols): Typography, Identity & Narrative Archetype */}
+          <div className="lg:col-span-8 flex flex-col justify-between">
             <div>
-              <div className="flex flex-wrap items-baseline gap-4">
-                <h1 className="text-4xl sm:text-6xl lg:text-7xl font-display font-light tracking-tight text-white leading-none">
+              {/* User Identity */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 font-mono text-xs text-neutral-500 font-normal">
+                  <span>@{username}</span>
+                  <span className="text-neutral-700">/</span>
+                  <a
+                    href={`https://letterboxd.com/${username}/`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-neutral-400 hover:text-white transition-colors text-[10px] tracking-[0.2em] uppercase"
+                  >
+                    Letterboxd Profile ↗
+                  </a>
+                </div>
+
+                <h1 className="text-5xl sm:text-7xl lg:text-8xl font-display font-light tracking-tight text-white leading-[0.92]">
                   {displayName}
                 </h1>
-                <span className="font-mono text-xs text-neutral-500 font-normal">
-                  @{username}
-                </span>
-                <a
-                  href={`https://letterboxd.com/${username}/`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400 hover:text-white transition-colors"
-                >
-                  [ Letterboxd ↗ ]
-                </a>
               </div>
 
-              {/* Archetype Editorial Headline */}
-              <div className="mt-8 pt-8 border-t border-white/[0.06]">
-                <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block mb-2 font-normal">
-                  Diagnosed Archetype
+              {/* Archetype Pull-Quote */}
+              <div className="mt-12 sm:mt-16 pt-10 border-t border-white/[0.06]">
+                <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block mb-4 font-normal">
+                  DIAGNOSED ARCHETYPE
                 </span>
-                <h2 className="font-display italic font-light text-3xl sm:text-5xl text-white leading-tight">
+                <h2 className="font-display italic font-light text-3xl sm:text-5xl lg:text-6xl text-neutral-100 leading-[1.08]">
                   &ldquo;{persona.title}&rdquo;
                 </h2>
-                <p className="mt-4 max-w-2xl font-sans font-normal text-xs sm:text-sm text-neutral-400 leading-relaxed">
+                <p className="mt-5 max-w-xl font-sans font-normal text-sm sm:text-base text-neutral-400 leading-relaxed">
                   {persona.tagline}
                 </p>
 
                 {/* Persona Traits */}
-                <div className="mt-6 flex flex-wrap gap-3 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">
+                <div className="mt-8 flex flex-wrap gap-4 font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500">
                   {persona.traits.map((trait, idx) => (
                     <span key={trait}>
-                      {idx > 0 && <span className="mr-3 text-neutral-700">·</span>}
+                      {idx > 0 && <span className="mr-4 text-neutral-700">·</span>}
                       #{trait}
                     </span>
                   ))}
@@ -107,58 +90,93 @@ export function ProfileHero({
             </div>
           </div>
 
-          {/* Share Action */}
-          <div className="mt-8 lg:mt-0 shrink-0 self-start">
-            <button
-              onClick={() => setIsShareOpen(true)}
-              className="btn-editorial btn-editorial-ghost font-mono text-[9px] tracking-[0.2em] h-9 px-4 uppercase font-normal cursor-pointer"
-            >
-              <span>Export Pass</span>
-              <span>→</span>
-            </button>
+          {/* Right Column (4 cols): Archival Photographic Portrait & Export */}
+          <div className="lg:col-span-4 flex flex-col items-start lg:items-end">
+            <div className="w-full max-w-xs space-y-4">
+              <div className="relative aspect-[4/5] w-full overflow-hidden border border-white/[0.12] bg-[#101012]">
+                <Image
+                  src={avatar || FALLBACK_AVATAR}
+                  alt={`${displayName} portrait`}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 320px"
+                  className="object-cover grayscale contrast-[1.05]"
+                  unoptimized
+                />
+              </div>
+
+              <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 font-normal">
+                <span>FIG. 01 — ARCHIVAL PORTRAIT</span>
+                <span>@{username}</span>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  onClick={() => setIsShareOpen(true)}
+                  className="btn-editorial btn-editorial-ghost font-mono text-[9px] tracking-[0.24em] h-10 w-full px-4 uppercase font-normal cursor-pointer justify-between"
+                >
+                  <span>Export Archival Pass</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* 4-Metric Grid Communicating via Typography */}
-        <div className="mt-14 grid grid-cols-2 sm:grid-cols-4 border-t border-white/[0.08] divide-y sm:divide-y-0 sm:divide-x divide-white/[0.08] pt-8 sm:pt-0">
-          <div className="py-6 sm:py-8 sm:px-8 sm:first:pl-0">
-            <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block font-normal">
-              Films Logged
-            </span>
-            <p className="font-display font-light text-3xl sm:text-4xl text-white mt-2">
-              {totalMovies.toLocaleString()}
-            </p>
-          </div>
+        {/* Archival Baseline Specimen Ledger (No Card Enclosures) */}
+        <div className="mt-20 sm:mt-28 border-t border-white/[0.08] pt-12 sm:pt-16">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+            <div>
+              <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block font-normal">
+                Films Logged
+              </span>
+              <p className="font-display font-light text-4xl sm:text-5xl text-white mt-2">
+                {totalMovies.toLocaleString()}
+              </p>
+              <p className="mt-1 font-mono text-[10px] text-neutral-600 font-normal">
+                Catalogued total
+              </p>
+            </div>
 
-          <div className="py-6 sm:py-8 sm:px-8">
-            <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block font-normal">
-              Mean Rating
-            </span>
-            <p className="font-display font-light text-3xl sm:text-4xl text-white mt-2">
-              {avgRating ? `${avgRating.toFixed(2)} ★` : "—"}
-            </p>
-          </div>
+            <div>
+              <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block font-normal">
+                Mean Rating
+              </span>
+              <p className="font-display font-light text-4xl sm:text-5xl text-white mt-2">
+                {avgRating ? `${avgRating.toFixed(2)} ★` : "—"}
+              </p>
+              <p className="mt-1 font-mono text-[10px] text-neutral-600 font-normal">
+                Critical baseline
+              </p>
+            </div>
 
-          <div className="py-6 sm:py-8 sm:px-8">
-            <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block font-normal">
-              Dominant Era
-            </span>
-            <p className="font-display font-light text-3xl sm:text-4xl text-white mt-2">
-              {favoriteDecade}
-            </p>
-          </div>
+            <div>
+              <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block font-normal">
+                Dominant Era
+              </span>
+              <p className="font-display font-light text-4xl sm:text-5xl text-white mt-2">
+                {favoriteDecade}
+              </p>
+              <p className="mt-1 font-mono text-[10px] text-neutral-600 font-normal">
+                Temporal center
+              </p>
+            </div>
 
-          <div className="py-6 sm:py-8 sm:px-8">
-            <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block font-normal">
-              Percentile Rank
-            </span>
-            <p className="font-display font-light text-3xl sm:text-4xl text-white mt-2">
-              {nerdScore.percentile || "Top 5%"}
-            </p>
+            <div>
+              <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block font-normal">
+                Percentile Rank
+              </span>
+              <p className="font-display font-light text-4xl sm:text-5xl text-white mt-2">
+                {nerdScore.percentile || "Top 5%"}
+              </p>
+              <p className="mt-1 font-mono text-[10px] text-neutral-600 font-normal">
+                Letterboxd cohort
+              </p>
+            </div>
           </div>
         </div>
-      </motion.section>
+      </section>
 
+      {/* Share Modal Dialog */}
       <ShareModal
         isOpen={isShareOpen}
         onClose={() => setIsShareOpen(false)}

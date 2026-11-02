@@ -38,10 +38,10 @@ export function ReportPageClient({
 
   return (
     <main className="relative min-h-screen bg-[#080808] text-white selection:bg-white/20 selection:text-white">
-      {/* Archival grain */}
+      {/* Archival subtle grain */}
       <div className="film-grain fixed inset-0 opacity-[0.02] pointer-events-none" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-12 sm:px-12">
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-12 sm:px-12 lg:px-16">
         {/* Navigation Masthead */}
         <motion.header
           initial={{ opacity: 0, y: -8 }}
@@ -61,9 +61,9 @@ export function ReportPageClient({
           </div>
         </motion.header>
 
-        {/* Content Flow with Generous Whitespace */}
-        <div className="space-y-36 sm:space-y-48 pb-32">
-          {/* 1. Monograph Hero Section */}
+        {/* Content Flow with Generous Whitespace & Disciplined Grid Alignment */}
+        <div className="space-y-32 sm:space-y-44 pb-32">
+          {/* Chapter 00: Monograph Hero Section */}
           <motion.div
             variants={sectionVariants}
             custom={0}
@@ -82,7 +82,7 @@ export function ReportPageClient({
             />
           </motion.div>
 
-          {/* 2. Signature 10-Bar Rating Curve */}
+          {/* Chapter 01: Signature 10-Bar Rating Curve */}
           <motion.div
             variants={sectionVariants}
             custom={1}
@@ -93,7 +93,7 @@ export function ReportPageClient({
             <RatingHistogram ratings={analytics.ratings} />
           </motion.div>
 
-          {/* 3. Core Highlights Grid */}
+          {/* Chapters 02—05: Core Highlights (Scale, Chronology, Taste Matrix, Cinephile Index) */}
           <motion.div
             variants={sectionVariants}
             custom={2}
@@ -111,7 +111,7 @@ export function ReportPageClient({
             />
           </motion.div>
 
-          {/* 4. Deep-Dive Curatorial Insights */}
+          {/* Chapter 06: Curatorial Superlatives */}
           <motion.div
             variants={sectionVariants}
             custom={3}
@@ -122,7 +122,7 @@ export function ReportPageClient({
             <InsightsSection insights={analytics.insights} />
           </motion.div>
 
-          {/* 5. Recent Screening Journal */}
+          {/* Chapter 07: Recent Screening Journal */}
           <motion.div
             variants={sectionVariants}
             custom={4}
@@ -137,18 +137,18 @@ export function ReportPageClient({
           </motion.div>
         </div>
 
-        {/* Letterboxd Outro Section */}
+        {/* Primary Archive Outro */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="border-t border-b border-white/[0.08] py-16 sm:py-24 text-center my-12"
+          className="border-t border-white/[0.08] pt-24 sm:pt-32 pb-20 text-center"
         >
           <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block font-normal">
             PRIMARY ARCHIVE
           </span>
-          <h3 className="mt-4 font-display italic font-light text-3xl sm:text-5xl text-white leading-tight">
+          <h3 className="mt-4 font-display italic font-light text-3xl sm:text-5xl lg:text-6xl text-white leading-tight">
             &ldquo;Continue exploring on Letterboxd&rdquo;
           </h3>
           <p className="mt-4 max-w-md mx-auto font-sans font-normal text-xs sm:text-sm text-neutral-400 leading-relaxed">
@@ -159,7 +159,7 @@ export function ReportPageClient({
               href={profileUrl}
               target="_blank"
               rel="noreferrer"
-              className="btn-editorial btn-editorial-primary px-6 h-10 text-[10px] tracking-[0.2em] font-medium"
+              className="btn-editorial btn-editorial-primary px-8 h-11 text-[10px] tracking-[0.24em] font-normal"
             >
               <span>Open @{profile.username} on Letterboxd</span>
               <span>↗</span>
@@ -168,7 +168,7 @@ export function ReportPageClient({
         </motion.div>
 
         {/* Footer Colophon */}
-        <footer className="border-t border-white/[0.08] py-16 text-center">
+        <footer className="border-t border-white/[0.06] py-16 text-center">
           <p className="font-mono text-[9px] uppercase tracking-widest text-neutral-500 font-normal">
             Dossier compiled by Boxdit
           </p>

@@ -11,89 +11,83 @@ interface InsightsSectionProps {
 const FALLBACK_POSTER =
   "https://s.ltrbxd.com/static/img/empty-poster-70-BSf-Pjrh.png";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-      delay: i * 0.08,
-    },
-  }),
-};
-
 export function InsightsSection({ insights }: InsightsSectionProps) {
   if (!insights || insights.length === 0) return null;
 
   return (
-    <section>
-      {/* Section Headline */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="mb-14 flex flex-wrap items-baseline justify-between gap-4 border-b border-white/[0.08] pb-8"
-      >
-        <div>
-          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block mb-2 font-normal">
-            CURATORIAL DISPATCHES // SUPERLATIVES
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-display font-light tracking-tight text-white">
-            Editorial Superlatives
-          </h2>
-          <p className="mt-2 text-xs sm:text-sm text-neutral-400 font-sans font-normal">
-            Curious patterns, polarities, and milestones uncovered in your logging behavior
-          </p>
-        </div>
+    <section className="relative border-t border-white/[0.08] pt-20 sm:pt-28">
+      {/* Section Header */}
+      <div className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 sm:mb-20 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 font-normal">
+        <span>EXHIBIT 06 // CURATORIAL SUPERLATIVES</span>
+        <span>Dispatches 01—0{insights.length}</span>
+      </div>
 
-        <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-widest hidden sm:inline-block font-normal">
-          Dispatches
-        </span>
-      </motion.div>
+      <div className="mb-14 max-w-xl">
+        <h2 className="font-display font-light text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[0.98]">
+          Editorial Superlatives
+        </h2>
+        <p className="mt-4 font-sans font-normal text-xs sm:text-sm text-neutral-400 leading-relaxed">
+          Curious polarities, outlying obsessions, and definitive milestones uncovered within your historical viewing pattern.
+        </p>
+      </div>
 
-      {/* Grid of Curatorial Artifacts with Magazine Headline Titles */}
-      <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Asymmetric Portfolio Gallery Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-16 sm:gap-y-24 items-start">
         {insights.map((item, i) => {
+          // Asymmetric column spans to give magazine editorial cadence
+          // 4 items: [7, 5], [5, 7]
+          // 3 items: [7, 5], [12]
+          // 2 items: [6, 6]
+          let colSpan = "lg:col-span-6";
+          if (insights.length === 4) {
+            if (i === 0) colSpan = "lg:col-span-7";
+            else if (i === 1) colSpan = "lg:col-span-5";
+            else if (i === 2) colSpan = "lg:col-span-5";
+            else colSpan = "lg:col-span-7";
+          } else if (insights.length === 3) {
+            if (i === 0) colSpan = "lg:col-span-7";
+            else if (i === 1) colSpan = "lg:col-span-5";
+            else colSpan = "lg:col-span-12";
+          } else if (insights.length === 2) {
+            colSpan = "lg:col-span-6";
+          }
+
+          const isLargeFeature = (insights.length === 4 && (i === 0 || i === 3)) || (insights.length === 3 && (i === 0 || i === 2));
+
           return (
             <motion.div
               key={item.id}
-              variants={fadeUp}
-              custom={i}
-              initial="hidden"
-              whileInView="visible"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="border-t border-b border-white/[0.08] py-8 flex flex-col justify-between"
+              transition={{ duration: 0.6, delay: i * 0.08 }}
+              className={`${colSpan} group`}
             >
-              <div>
-                {/* Category Label */}
-                <div className="flex items-baseline justify-between border-b border-white/[0.06] pb-4 font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 font-normal">
-                  <span>{item.title}</span>
-                  <span>[ 0{i + 1} ]</span>
-                </div>
+              {/* Dispatch Meta */}
+              <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 pb-3 border-b border-white/[0.06] mb-6 font-normal">
+                <span>DISPATCH 0{i + 1} {"//"} {item.title}</span>
+                <span>Verified</span>
+              </div>
 
-                {/* Content: Poster + Magazine Headline Title */}
-                <div className="my-6 space-y-4">
-                  {item.posterUrl ? (
-                    <div className="relative h-44 w-28 overflow-hidden border border-white/[0.1] bg-[#121214]">
+              {/* Main Content Layout */}
+              {isLargeFeature ? (
+                /* Feature Layout: Side-by-Side on sm+ */
+                <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-8">
+                  {item.posterUrl && (
+                    <div className="relative w-28 sm:w-36 aspect-[2/3] shrink-0 overflow-hidden border border-white/[0.12] bg-[#121214]">
                       <Image
                         src={item.posterUrl || FALLBACK_POSTER}
                         alt={item.value}
                         fill
-                        sizes="112px"
-                        className="object-cover"
+                        sizes="(max-width: 640px) 112px, 144px"
+                        className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
                         unoptimized
                       />
                     </div>
-                  ) : null}
+                  )}
 
-                  <div>
-                    <h3
-                      title={item.value}
-                      className="font-display italic font-normal text-2xl sm:text-3xl text-white leading-tight tracking-tight"
-                    >
+                  <div className="flex-1 min-w-0 space-y-3">
+                    <h3 className="font-display italic font-light text-3xl sm:text-4xl text-white tracking-tight leading-[1.05]">
                       {item.link ? (
                         <a
                           href={item.link}
@@ -107,32 +101,73 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                         item.value
                       )}
                     </h3>
-                    <p
-                      title={item.subtitle}
-                      className="mt-2 font-sans font-normal text-xs text-neutral-400 leading-relaxed"
-                    >
+                    <p className="font-sans font-normal text-xs sm:text-sm text-neutral-400 leading-relaxed">
                       {item.subtitle}
                     </p>
+
+                    {item.link && (
+                      <div className="pt-2">
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500 hover:text-white transition-colors font-normal inline-block"
+                        >
+                          View Film on Letterboxd ↗
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
+              ) : (
+                /* Companion Layout: Vertical Flow */
+                <div className="space-y-4">
+                  {item.posterUrl && (
+                    <div className="relative w-24 sm:w-28 aspect-[2/3] overflow-hidden border border-white/[0.1] bg-[#121214]">
+                      <Image
+                        src={item.posterUrl || FALLBACK_POSTER}
+                        alt={item.value}
+                        fill
+                        sizes="112px"
+                        className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                        unoptimized
+                      />
+                    </div>
+                  )}
 
-              {/* Card Footer */}
-              <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.2em] font-normal">
-                <span>Verified</span>
-                {item.link ? (
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-neutral-400 hover:text-white transition-colors"
-                  >
-                    Letterboxd ↗
-                  </a>
-                ) : (
-                  <span>Canonical</span>
-                )}
-              </div>
+                  <h3 className="font-display italic font-light text-2xl sm:text-3xl text-white tracking-tight leading-[1.08]">
+                    {item.link ? (
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="hover:underline underline-offset-4 decoration-white/20"
+                      >
+                        {item.value}
+                      </a>
+                    ) : (
+                      item.value
+                    )}
+                  </h3>
+
+                  <p className="font-sans font-normal text-xs text-neutral-400 leading-relaxed max-w-md">
+                    {item.subtitle}
+                  </p>
+
+                  {item.link && (
+                    <div className="pt-1">
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500 hover:text-white transition-colors font-normal inline-block"
+                      >
+                        View Film on Letterboxd ↗
+                      </a>
+                    </div>
+                  )}
+                </div>
+              )}
             </motion.div>
           );
         })}
