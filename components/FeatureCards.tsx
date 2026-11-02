@@ -23,34 +23,34 @@ export function FeatureCards() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-60px" }}
-        className="mb-20 sm:mb-28 border-b border-white/[0.08] pb-10"
+        className="mb-20 sm:mb-28 border-b border-white/[0.06] pb-10"
       >
         <motion.div variants={fadeUp} custom={0}>
-          <span className="font-mono text-[9px] uppercase tracking-[0.32em] text-neutral-500 block mb-4 font-normal">
+          <span className="font-mono text-[9px] uppercase tracking-[0.32em] text-white/55 block mb-4 font-normal">
             01 / CAPABILITIES
           </span>
         </motion.div>
         <motion.h2
           variants={fadeUp}
           custom={1}
-          className="text-4xl sm:text-6xl md:text-7xl font-display font-light tracking-tight text-white leading-[0.98]"
+          className="text-4xl sm:text-6xl md:text-7xl font-display font-light tracking-tight text-[#F5F5F5] leading-[0.98]"
         >
           A quiet, rigorous lens on{" "}
-          <span className="font-display italic font-light text-neutral-300">
+          <span className="font-display italic font-light text-white/70">
             taste.
           </span>
         </motion.h2>
         <motion.p
           variants={fadeUp}
           custom={2}
-          className="mt-6 max-w-lg text-sm sm:text-base font-sans font-normal text-neutral-400 leading-relaxed"
+          className="mt-6 max-w-lg text-sm sm:text-base font-sans font-normal text-white/55 leading-relaxed"
         >
           No superficial summaries or generic template cards. Boxdit extracts real statistical rigor from your Letterboxd archive.
         </motion.p>
       </motion.div>
 
       {/* 3-Column Typographic Grid Separated by Hairlines */}
-      <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/[0.08] border-b border-white/[0.08]">
+      <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/[0.06] border-b border-white/[0.06]">
         {/* Column 1 */}
         <motion.div
           initial="hidden"
@@ -61,39 +61,44 @@ export function FeatureCards() {
           className="py-10 md:py-0 md:px-10 first:pl-0 last:pr-0 flex flex-col justify-between"
         >
           <div>
-            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block mb-6 font-normal">
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block mb-6 font-normal">
               PLATE 01 / SPECTRUM
             </span>
 
-            <h3 className="font-display font-normal text-2xl sm:text-3xl text-white tracking-tight">
+            <h3 className="font-display font-normal text-2xl sm:text-3xl text-[#F5F5F5] tracking-tight">
               The Critical Curve
             </h3>
-            <p className="mt-4 font-sans font-normal text-xs sm:text-[13px] leading-relaxed text-neutral-400">
+            <p className="mt-4 font-sans font-normal text-xs sm:text-[13px] leading-relaxed text-white/55">
               An unvarnished look at your rating tendencies. Discover whether you skew toward generous 4-star adulation or austere critical skepticism.
             </p>
 
             {/* Micro Chart */}
             <div className="mt-10 border-t border-b border-white/[0.06] py-5">
               <div className="flex h-14 items-end justify-between gap-1">
-                {[12, 24, 38, 62, 85, 100, 72, 45, 22, 10].map((h, idx) => (
-                  <div
-                    key={idx}
-                    className="flex-1 bg-neutral-600 hover:bg-neutral-300 transition-colors"
-                    style={{ height: `${h}%` }}
-                  />
-                ))}
+                {[12, 24, 38, 62, 85, 100, 72, 45, 22, 10].map((h, idx) => {
+                  const isPeak = idx === 5;
+                  return (
+                    <div
+                      key={idx}
+                      className={`flex-1 transition-colors ${
+                        isPeak ? "bg-[#F5F5F5]" : "bg-white/20 hover:bg-white/40"
+                      }`}
+                      style={{ height: `${h}%` }}
+                    />
+                  );
+                })}
               </div>
-              <div className="mt-3 flex justify-between font-mono text-[8px] text-neutral-500 uppercase tracking-widest">
+              <div className="mt-3 flex justify-between font-mono text-[8px] text-white/40 uppercase tracking-widest">
                 <span>½★</span>
-                <span className="text-neutral-300">Peak 3.5★</span>
+                <span className="text-white/70">Peak 3.5★</span>
                 <span>5★</span>
               </div>
             </div>
           </div>
 
-          <div className="mt-10 pt-4 flex items-center justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.24em]">
+          <div className="mt-10 pt-4 flex items-center justify-between font-mono text-[9px] text-white/55 uppercase tracking-[0.24em]">
             <span>Metric</span>
-            <span className="text-neutral-300">True Distribution</span>
+            <span className="text-white/70">True Distribution</span>
           </div>
         </motion.div>
 
@@ -107,31 +112,31 @@ export function FeatureCards() {
           className="py-10 md:py-0 md:px-10 flex flex-col justify-between"
         >
           <div>
-            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block mb-6 font-normal">
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block mb-6 font-normal">
               PLATE 02 / DIAGNOSIS
             </span>
 
-            <h3 className="font-display font-normal text-2xl sm:text-3xl text-white tracking-tight">
+            <h3 className="font-display font-normal text-2xl sm:text-3xl text-[#F5F5F5] tracking-tight">
               Taste Archetypes
             </h3>
-            <p className="mt-4 font-sans font-normal text-xs sm:text-[13px] leading-relaxed text-neutral-400">
+            <p className="mt-4 font-sans font-normal text-xs sm:text-[13px] leading-relaxed text-white/55">
               A literary diagnosis of your cinephilic psyche, narrative themes, and recurring directorial allegiances across cinema history.
             </p>
 
             {/* Specimen Callout */}
             <div className="mt-10 border-t border-b border-white/[0.06] py-5 space-y-2">
-              <span className="font-display italic font-light text-xl text-white block">
+              <span className="font-display italic font-light text-xl text-[#F5F5F5] block">
                 &ldquo;The Auteur Loyalist&rdquo;
               </span>
-              <p className="font-sans font-normal text-xs text-neutral-400 leading-relaxed">
+              <p className="font-sans font-normal text-xs text-white/55 leading-relaxed">
                 Dominant Allegiances: Denis Villeneuve, Christopher Nolan, David Fincher
               </p>
             </div>
           </div>
 
-          <div className="mt-10 pt-4 flex items-center justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.24em]">
+          <div className="mt-10 pt-4 flex items-center justify-between font-mono text-[9px] text-white/55 uppercase tracking-[0.24em]">
             <span>Diagnosis</span>
-            <span className="text-neutral-300">Literary Synthesis</span>
+            <span className="text-white/70">Literary Synthesis</span>
           </div>
         </motion.div>
 
@@ -145,26 +150,26 @@ export function FeatureCards() {
           className="py-10 md:py-0 md:px-10 last:pr-0 flex flex-col justify-between"
         >
           <div>
-            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block mb-6 font-normal">
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block mb-6 font-normal">
               PLATE 03 / EXPORT
             </span>
 
-            <h3 className="font-display font-normal text-2xl sm:text-3xl text-white tracking-tight">
+            <h3 className="font-display font-normal text-2xl sm:text-3xl text-[#F5F5F5] tracking-tight">
               Festival Credentials
             </h3>
-            <p className="mt-4 font-sans font-normal text-xs sm:text-[13px] leading-relaxed text-neutral-400">
+            <p className="mt-4 font-sans font-normal text-xs sm:text-[13px] leading-relaxed text-white/55">
               High-resolution, typography-first summary passes designed with restraint for digital sharing or print preservation.
             </p>
 
             {/* Specimen Box */}
             <div className="mt-10 border-t border-b border-white/[0.06] py-5 text-center">
-              <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-widest block font-normal">
+              <span className="font-mono text-[9px] text-white/55 uppercase tracking-widest block font-normal">
                 Accreditation Specimen
               </span>
-              <div className="mt-2 font-display italic font-light text-base text-white">
+              <div className="mt-2 font-display italic font-light text-base text-[#F5F5F5]">
                 Cinephile Credential
               </div>
-              <div className="mt-3 flex justify-center gap-4 font-mono text-[10px] text-neutral-400">
+              <div className="mt-3 flex justify-center gap-4 font-mono text-[10px] text-white/55">
                 <span>405 Films</span>
                 <span>·</span>
                 <span>3.68★ Avg</span>
@@ -174,9 +179,9 @@ export function FeatureCards() {
             </div>
           </div>
 
-          <div className="mt-10 pt-4 flex items-center justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.24em]">
+          <div className="mt-10 pt-4 flex items-center justify-between font-mono text-[9px] text-white/55 uppercase tracking-[0.24em]">
             <span>Format</span>
-            <span className="text-neutral-300">Monograph Export</span>
+            <span className="text-white/70">Monograph Export</span>
           </div>
         </motion.div>
       </div>

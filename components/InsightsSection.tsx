@@ -15,18 +15,18 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
   if (!insights || insights.length === 0) return null;
 
   return (
-    <section className="relative border-t border-white/[0.08] pt-20 sm:pt-28">
+    <section className="relative border-t border-white/[0.06] pt-20 sm:pt-28">
       {/* Section Header */}
-      <div className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 sm:mb-20 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 font-normal">
+      <div className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 sm:mb-20 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal">
         <span>EXHIBIT 06 // CURATORIAL SUPERLATIVES</span>
         <span>Dispatches 01—0{insights.length}</span>
       </div>
 
       <div className="mb-14 max-w-xl">
-        <h2 className="font-display font-light text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[0.98]">
+        <h2 className="font-display font-light text-4xl sm:text-5xl lg:text-6xl text-[#F5F5F5] tracking-tight leading-[0.98]">
           Editorial Superlatives
         </h2>
-        <p className="mt-4 font-sans font-normal text-xs sm:text-sm text-neutral-400 leading-relaxed">
+        <p className="mt-4 font-sans font-normal text-xs sm:text-sm text-white/55 leading-relaxed">
           Curious polarities, outlying obsessions, and definitive milestones uncovered within your historical viewing pattern.
         </p>
       </div>
@@ -34,10 +34,6 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
       {/* Asymmetric Portfolio Gallery Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-16 sm:gap-y-24 items-start">
         {insights.map((item, i) => {
-          // Asymmetric column spans to give magazine editorial cadence
-          // 4 items: [7, 5], [5, 7]
-          // 3 items: [7, 5], [12]
-          // 2 items: [6, 6]
           let colSpan = "lg:col-span-6";
           if (insights.length === 4) {
             if (i === 0) colSpan = "lg:col-span-7";
@@ -64,7 +60,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
               className={`${colSpan} group`}
             >
               {/* Dispatch Meta */}
-              <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 pb-3 border-b border-white/[0.06] mb-6 font-normal">
+              <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-white/55 pb-3 border-b border-white/[0.06] mb-6 font-normal">
                 <span>DISPATCH 0{i + 1} {"//"} {item.title}</span>
                 <span>Verified</span>
               </div>
@@ -74,7 +70,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                 /* Feature Layout: Side-by-Side on sm+ */
                 <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-8">
                   {item.posterUrl && (
-                    <div className="relative w-28 sm:w-36 aspect-[2/3] shrink-0 overflow-hidden border border-white/[0.12] bg-[#121214]">
+                    <div className="relative w-28 sm:w-36 aspect-[2/3] shrink-0 overflow-hidden border border-white/[0.06] bg-[#0D0D0D]">
                       <Image
                         src={item.posterUrl || FALLBACK_POSTER}
                         alt={item.value}
@@ -87,7 +83,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                   )}
 
                   <div className="flex-1 min-w-0 space-y-3">
-                    <h3 className="font-display italic font-light text-3xl sm:text-4xl text-white tracking-tight leading-[1.05]">
+                    <h3 className="font-display italic font-light text-3xl sm:text-4xl text-[#F5F5F5] tracking-tight leading-[1.05]">
                       {item.link ? (
                         <a
                           href={item.link}
@@ -101,7 +97,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                         item.value
                       )}
                     </h3>
-                    <p className="font-sans font-normal text-xs sm:text-sm text-neutral-400 leading-relaxed">
+                    <p className="font-sans font-normal text-xs sm:text-sm text-white/55 leading-relaxed">
                       {item.subtitle}
                     </p>
 
@@ -111,7 +107,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                           href={item.link}
                           target="_blank"
                           rel="noreferrer"
-                          className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500 hover:text-white transition-colors font-normal inline-block"
+                          className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/55 hover:text-[#F5F5F5] transition-colors font-normal inline-block"
                         >
                           View Film on Letterboxd ↗
                         </a>
@@ -123,7 +119,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                 /* Companion Layout: Vertical Flow */
                 <div className="space-y-4">
                   {item.posterUrl && (
-                    <div className="relative w-24 sm:w-28 aspect-[2/3] overflow-hidden border border-white/[0.1] bg-[#121214]">
+                    <div className="relative w-24 sm:w-28 aspect-[2/3] overflow-hidden border border-white/[0.06] bg-[#0D0D0D]">
                       <Image
                         src={item.posterUrl || FALLBACK_POSTER}
                         alt={item.value}
@@ -135,7 +131,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                     </div>
                   )}
 
-                  <h3 className="font-display italic font-light text-2xl sm:text-3xl text-white tracking-tight leading-[1.08]">
+                  <h3 className="font-display italic font-light text-2xl sm:text-3xl text-[#F5F5F5] tracking-tight leading-[1.08]">
                     {item.link ? (
                       <a
                         href={item.link}
@@ -150,7 +146,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                     )}
                   </h3>
 
-                  <p className="font-sans font-normal text-xs text-neutral-400 leading-relaxed max-w-md">
+                  <p className="font-sans font-normal text-xs text-white/55 leading-relaxed max-w-md">
                     {item.subtitle}
                   </p>
 
@@ -160,7 +156,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                         href={item.link}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500 hover:text-white transition-colors font-normal inline-block"
+                        className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/55 hover:text-[#F5F5F5] transition-colors font-normal inline-block"
                       >
                         View Film on Letterboxd ↗
                       </a>

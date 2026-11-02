@@ -100,94 +100,94 @@ export function ShareModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.98, y: 8 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-10 w-full max-w-md border border-white/[0.12] bg-[#0A0A0B] p-8 sm:p-10"
+            className="relative z-10 w-full max-w-md border border-white/[0.06] bg-[#0D0D0D] p-8 sm:p-10"
           >
             {/* Close Button */}
             <button
               onClick={onClose}
               aria-label="Close modal"
-              className="absolute right-4 top-4 font-mono text-xs text-neutral-500 hover:text-white transition-colors cursor-pointer select-none p-1 font-normal"
+              className="absolute right-4 top-4 font-mono text-xs text-white/55 hover:text-[#F5F5F5] transition-colors cursor-pointer select-none p-1 font-normal"
             >
               [ ✕ ]
             </button>
 
             {/* Modal Header */}
             <div className="text-center pb-2">
-              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block font-normal">
+              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block font-normal">
                 ACCREDITATION PASS
               </span>
-              <h3 className="mt-2 font-display font-light text-2xl text-white tracking-tight">
+              <h3 className="mt-2 font-display font-light text-2xl text-[#F5F5F5] tracking-tight">
                 Cinephile Credential
               </h3>
             </div>
 
             {/* Physical Accreditation Pass Artifact */}
-            <div className="relative mt-8 border border-white/[0.1] bg-[#070708] p-6 text-left">
+            <div className="relative mt-8 border border-white/[0.06] bg-[#050505] p-6 text-left">
               {/* Pass Header */}
-              <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="relative h-11 w-11 overflow-hidden border border-white/[0.16] bg-[#101012]">
+                  <div className="relative h-11 w-11 overflow-hidden border border-white/[0.06] bg-[#0D0D0D]">
                     <Image
                       src={avatar || FALLBACK_AVATAR}
                       alt={displayName}
                       fill
-                      className="object-cover"
+                      className="object-cover grayscale"
                       unoptimized
                     />
                   </div>
                   <div>
-                    <p className="font-display font-light text-base text-white leading-none">
+                    <p className="font-display font-light text-base text-[#F5F5F5] leading-none">
                       {displayName}
                     </p>
-                    <p className="font-mono text-xs text-neutral-400 mt-1 font-normal">
+                    <p className="font-mono text-xs text-white/55 mt-1 font-normal">
                       @{username}
                     </p>
                   </div>
                 </div>
 
-                <div className="text-right font-mono text-[8px] uppercase tracking-widest text-neutral-500 font-normal">
-                  <span className="text-white block">BOXDIT 2026</span>
+                <div className="text-right font-mono text-[8px] uppercase tracking-widest text-white/55 font-normal">
+                  <span className="text-[#F5F5F5] block">BOXDIT 2026</span>
                   <span>PASS 01</span>
                 </div>
               </div>
 
               {/* Archetype Focal Point */}
               <div className="my-8 text-center">
-                <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-neutral-500 block font-normal">
+                <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-white/55 block font-normal">
                   OFFICIAL ARCHETYPE
                 </span>
-                <h4 className="mt-2 font-display italic font-light text-3xl text-white">
+                <h4 className="mt-2 font-display italic font-light text-3xl text-[#F5F5F5]">
                   &ldquo;{persona.title}&rdquo;
                 </h4>
-                <p className="mt-2 font-sans font-normal text-xs text-neutral-400 leading-relaxed max-w-xs mx-auto">
+                <p className="mt-2 font-sans font-normal text-xs text-white/55 leading-relaxed max-w-xs mx-auto">
                   {persona.tagline}
                 </p>
               </div>
 
               {/* Pass Metrics Grid */}
-              <div className="grid grid-cols-3 border-t border-white/[0.08] divide-x divide-white/[0.08] pt-4 text-center">
+              <div className="grid grid-cols-3 border-t border-white/[0.06] divide-x divide-white/[0.06] pt-4 text-center">
                 <div className="px-2">
-                  <p className="font-mono text-[8px] uppercase text-neutral-500 tracking-wider font-normal">Archive</p>
-                  <p className="font-display font-light text-xl text-white mt-0.5">
+                  <p className="font-mono text-[8px] uppercase text-white/55 tracking-wider font-normal">Archive</p>
+                  <p className="font-display font-light text-xl text-[#F5F5F5] mt-0.5">
                     {totalMovies.toLocaleString()}
                   </p>
                 </div>
                 <div className="px-2">
-                  <p className="font-mono text-[8px] uppercase text-neutral-500 tracking-wider font-normal">Mean</p>
-                  <p className="font-display font-light text-xl text-white mt-0.5">
+                  <p className="font-mono text-[8px] uppercase text-white/55 tracking-wider font-normal">Mean</p>
+                  <p className="font-display font-light text-xl text-[#F5F5F5] mt-0.5">
                     {avgRating ? `${avgRating.toFixed(2)} ★` : "—"}
                   </p>
                 </div>
                 <div className="px-2">
-                  <p className="font-mono text-[8px] uppercase text-neutral-500 tracking-wider font-normal">Index</p>
-                  <p className="font-display font-light text-xl text-white mt-0.5">
+                  <p className="font-mono text-[8px] uppercase text-white/55 tracking-wider font-normal">Index</p>
+                  <p className="font-display font-light text-xl text-[#F5F5F5] mt-0.5">
                     {nerdScore.score}/100
                   </p>
                 </div>
               </div>
 
               {/* Seal */}
-              <div className="mt-5 pt-3 border-t border-white/[0.04] flex items-center justify-between font-mono text-[8px] text-neutral-500 uppercase tracking-widest font-normal">
+              <div className="mt-5 pt-3 border-t border-white/[0.04] flex items-center justify-between font-mono text-[8px] text-white/40 uppercase tracking-widest font-normal">
                 <span>ERA: {favoriteDecade}</span>
                 <span>BOXDIT.COM</span>
               </div>
@@ -199,25 +199,25 @@ export function ShareModal({
                 onClick={handleCopy}
                 className="btn-editorial btn-editorial-primary w-full h-10 text-[10px] tracking-[0.2em] font-medium cursor-pointer"
               >
-                {copied ? "Link Copied to Clipboard" : "Copy Shareable Link"}
+                {copied ? "Pass Link Copied" : "Copy Dossier Link"}
               </button>
 
-              <div className="flex gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <a
                   href={twitterShareUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="btn-editorial btn-editorial-ghost flex-1 h-9 text-[9px] tracking-[0.16em] uppercase font-normal text-center"
+                  className="btn-editorial btn-editorial-ghost h-9 text-[9px] tracking-[0.18em] font-normal"
                 >
-                  Post on X
+                  Share on X ↗
                 </a>
 
                 {canNativeShare && (
                   <button
                     onClick={handleNativeShare}
-                    className="btn-editorial btn-editorial-ghost flex-1 h-9 text-[9px] tracking-[0.16em] uppercase font-normal cursor-pointer"
+                    className="btn-editorial btn-editorial-ghost h-9 text-[9px] tracking-[0.18em] font-normal cursor-pointer"
                   >
-                    Share Pass
+                    Share System
                   </button>
                 )}
               </div>

@@ -1,18 +1,18 @@
 export default function ReportLoading() {
   return (
-    <main className="relative min-h-screen bg-[#080808] text-white">
+    <main className="relative min-h-screen bg-[#050505] text-[#F5F5F5]">
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-12 sm:px-12">
         {/* Navigation placeholder */}
-        <div className="mb-16 sm:mb-24 flex items-center justify-between border-b border-white/[0.08] pb-6">
+        <div className="mb-16 sm:mb-24 flex items-center justify-between border-b border-white/[0.06] pb-6">
           <div className="h-4 w-32 bg-white/[0.04] animate-pulse" />
           <div className="h-3 w-28 bg-white/[0.04] animate-pulse" />
         </div>
 
         <div className="space-y-36 sm:space-y-48 pb-32">
           {/* 1. Hero Skeleton */}
-          <section className="border-t border-b border-white/[0.08] py-14 animate-pulse">
+          <section className="border-t border-b border-white/[0.06] py-14 animate-pulse">
             <div className="flex flex-col sm:flex-row items-start gap-10">
-              <div className="h-32 w-32 bg-white/[0.04] shrink-0 border border-white/[0.08]" />
+              <div className="h-32 w-32 bg-[#0D0D0D] shrink-0 border border-white/[0.06]" />
               <div className="flex-1 space-y-6 w-full">
                 <div className="h-3 w-24 bg-white/[0.04]" />
                 <div className="h-12 w-3/4 max-w-md bg-white/[0.06]" />
@@ -21,15 +21,15 @@ export default function ReportLoading() {
               </div>
             </div>
 
-            <div className="mt-14 grid grid-cols-2 sm:grid-cols-4 border-t border-white/[0.08] divide-x divide-white/[0.08] pt-8">
+            <div className="mt-14 grid grid-cols-2 sm:grid-cols-4 border-t border-white/[0.06] divide-x divide-white/[0.06] pt-8">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="px-6 h-16 bg-white/[0.02]" />
+                <div key={i} className="px-6 h-16 bg-[#0D0D0D]" />
               ))}
             </div>
           </section>
 
           {/* 2. Rating Histogram Skeleton */}
-          <section className="border-t border-b border-white/[0.08] py-14 animate-pulse">
+          <section className="border-t border-b border-white/[0.06] py-14 animate-pulse">
             <div className="flex justify-between items-baseline border-b border-white/[0.06] pb-8">
               <div className="space-y-3">
                 <div className="h-3 w-32 bg-white/[0.04]" />
@@ -53,7 +53,7 @@ export default function ReportLoading() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-64 border-t border-b border-white/[0.08] py-8 animate-pulse bg-white/[0.01]"
+                className="h-64 border-t border-b border-white/[0.06] py-8 animate-pulse bg-[#0D0D0D]"
               />
             ))}
           </div>

@@ -50,7 +50,7 @@ export default async function ReportPage({
 
   if (!profile || !analytics) {
     return (
-      <main className="relative min-h-screen bg-[#080808] text-white">
+      <main className="relative min-h-screen bg-[#050505] text-[#F5F5F5]">
         <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-20 sm:px-10">
           <Link
             href="/"
@@ -59,16 +59,16 @@ export default async function ReportPage({
             ← Return to Index
           </Link>
 
-          <section className="border-t border-b border-white/[0.08] py-16">
-            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block font-normal">
+          <section className="border-t border-b border-white/[0.06] py-16">
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block font-normal">
               {isNotFound ? "404 // PROFILE UNRESOLVED" : "502 // LEDGER ERROR"}
             </span>
 
-            <h1 className="mt-4 font-display italic font-light text-4xl sm:text-5xl text-white">
+            <h1 className="mt-4 font-display italic font-light text-4xl sm:text-5xl text-[#F5F5F5]">
               {isNotFound ? "Dossier Not Found" : "Unable to Retrieve Archive"}
             </h1>
 
-            <p className="mt-4 max-w-xl text-sm font-sans font-normal leading-relaxed text-neutral-400">
+            <p className="mt-4 max-w-xl text-sm font-sans font-normal leading-relaxed text-white/55">
               {errorMessage}
             </p>
 

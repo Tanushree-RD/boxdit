@@ -10,7 +10,7 @@ import { WrapShowcase } from "@/components/WrapShowcase";
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen bg-[#080808] text-[#EDEDED] selection:bg-white/20 selection:text-white">
+    <div className="relative min-h-screen bg-[#050505] text-[#F5F5F5] selection:bg-white/20 selection:text-white">
       {/* Archival Grain & Atmosphere */}
       <CinematicBackground />
 

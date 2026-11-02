@@ -71,56 +71,56 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
       : "Severe Realist";
 
   return (
-    <section className="relative border-t border-white/[0.08] pt-20 sm:pt-28">
+    <section className="relative border-t border-white/[0.06] pt-20 sm:pt-28">
       {/* 12-Column Editorial Spread */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
         {/* Left Column (5 cols): Curatorial Commentary & Verdict */}
         <div className="lg:col-span-5 space-y-8">
           <div>
-            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block mb-4 font-normal">
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block mb-4 font-normal">
               EXHIBIT 01 // CRITICAL SPECTRUM
             </span>
-            <h2 className="font-display font-light text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[0.98]">
+            <h2 className="font-display font-light text-4xl sm:text-5xl lg:text-6xl text-[#F5F5F5] tracking-tight leading-[0.98]">
               The Critical Curve
             </h2>
-            <p className="mt-4 font-sans font-normal text-xs sm:text-sm text-neutral-400 leading-relaxed max-w-sm">
+            <p className="mt-4 font-sans font-normal text-xs sm:text-sm text-white/55 leading-relaxed max-w-sm">
               A continuous frequency distribution of critical judgment. Evaluates whether viewing habits lean toward celebratory affection or severe discrimination.
             </p>
           </div>
 
           <div className="pt-6 border-t border-white/[0.06] space-y-6">
             <div>
-              <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 block font-normal">
+              <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-white/55 block font-normal">
                 Diagnosed Skew
               </span>
-              <p className="font-display italic font-light text-2xl sm:text-3xl text-white mt-1">
+              <p className="font-display italic font-light text-2xl sm:text-3xl text-[#F5F5F5] mt-1">
                 &ldquo;{critiqueArchetype}&rdquo;
               </p>
             </div>
 
             <div className="flex items-baseline gap-10">
               <div>
-                <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 block font-normal">
+                <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-white/55 block font-normal">
                   Mean Score
                 </span>
-                <p className="font-display font-light text-4xl sm:text-5xl text-white mt-1">
+                <p className="font-display font-light text-4xl sm:text-5xl text-[#F5F5F5] mt-1">
                   {avg ? `${avg.toFixed(2)}` : "—"}
-                  <span className="text-xl text-neutral-500 font-light ml-1">★</span>
+                  <span className="text-xl text-white/40 font-light ml-1">★</span>
                 </p>
               </div>
 
               <div>
-                <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 block font-normal">
+                <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-white/55 block font-normal">
                   Peak Mode
                 </span>
-                <p className="font-display font-light text-4xl sm:text-5xl text-white mt-1">
+                <p className="font-display font-light text-4xl sm:text-5xl text-[#F5F5F5] mt-1">
                   {peakKey}
-                  <span className="text-xl text-neutral-500 font-light ml-1">★</span>
+                  <span className="text-xl text-white/40 font-light ml-1">★</span>
                 </p>
               </div>
             </div>
 
-            <p className="font-mono text-[10px] text-neutral-600 font-normal">
+            <p className="font-mono text-[10px] text-white/40 font-normal">
               Derived from {totalRated.toLocaleString()} logged ratings across catalogue
             </p>
           </div>
@@ -128,7 +128,7 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
 
         {/* Right Column (7 cols): The Architectural Histogram */}
         <div className="lg:col-span-7 flex flex-col justify-end pt-4 lg:pt-0">
-          <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 pb-4 border-b border-white/[0.06] mb-8 font-normal">
+          <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-white/55 pb-4 border-b border-white/[0.06] mb-8 font-normal">
             <span>FREQUENCY SPECTRUM // 10 BINS</span>
             <span>HIGH WATER: {peakCount} FILMS</span>
           </div>
@@ -151,13 +151,13 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
                 >
                   {/* Floating Tooltip */}
                   <div
-                    className={`pointer-events-none absolute -top-12 z-20 flex flex-col items-center border border-white/[0.12] bg-[#121214] px-2.5 py-1.5 transition-all duration-150 ${
+                    className={`pointer-events-none absolute -top-12 z-20 flex flex-col items-center border border-white/[0.06] bg-[#0D0D0D] px-2.5 py-1.5 transition-all duration-150 ${
                       isHovered
                         ? "opacity-100 scale-100 translate-y-0"
                         : "opacity-0 scale-95 translate-y-1"
                     }`}
                   >
-                    <span className="font-mono text-[9px] text-white whitespace-nowrap font-normal">
+                    <span className="font-mono text-[9px] text-[#F5F5F5] whitespace-nowrap font-normal">
                       {RATING_LABELS[key]}: {count} ({percentage}%)
                     </span>
                   </div>
@@ -166,10 +166,10 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
                   <span
                     className={`mb-2 font-mono text-[9px] tabular-nums transition-colors duration-150 font-normal ${
                       isPeak
-                        ? "text-white"
+                        ? "text-[#F5F5F5]"
                         : isHovered
-                        ? "text-white"
-                        : "text-neutral-500 group-hover:text-neutral-300"
+                        ? "text-[#F5F5F5]"
+                        : "text-white/40 group-hover:text-white/70"
                     }`}
                   >
                     {count > 0 ? count : ""}
@@ -184,10 +184,10 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
                       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                       className={`w-full transition-colors duration-200 ${
                         isPeak
-                          ? "bg-white"
+                          ? "bg-[#F5F5F5]"
                           : isHovered
-                          ? "bg-neutral-200"
-                          : "bg-neutral-600/70 group-hover:bg-neutral-400"
+                          ? "bg-white/40"
+                          : "bg-white/20 group-hover:bg-white/30"
                       }`}
                     />
                   </div>
@@ -196,10 +196,10 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
                   <span
                     className={`mt-3 font-mono text-[10px] tracking-tight transition-colors duration-150 font-normal ${
                       isPeak
-                        ? "text-white font-medium"
+                        ? "text-[#F5F5F5] font-medium"
                         : isHovered
-                        ? "text-white"
-                        : "text-neutral-500 group-hover:text-neutral-300"
+                        ? "text-[#F5F5F5]"
+                        : "text-white/55 group-hover:text-[#F5F5F5]"
                     }`}
                   >
                     {RATING_LABELS[key]}
@@ -209,7 +209,7 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
             })}
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/[0.04] flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-600 font-normal">
+          <div className="mt-6 pt-4 border-t border-white/[0.03] flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-white/40 font-normal">
             <span>LOW DISCRIMINATION (0.5★)</span>
             <span>HIGH ACCLAIM (5.0★)</span>
           </div>

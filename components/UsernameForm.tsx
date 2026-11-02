@@ -49,13 +49,13 @@ export function UsernameForm() {
         onSubmit={handleSubmit}
         className={`relative w-full border transition-all duration-300 ${
           isFocused
-            ? "border-white/[0.3] bg-[#0E0E10]"
-            : "border-white/[0.1] bg-[#0A0A0B] hover:border-white/[0.18]"
+            ? "border-white/[0.2] bg-[#0D0D0D]"
+            : "border-white/[0.06] bg-[#0D0D0D] hover:border-white/[0.12]"
         } p-2`}
       >
         <div className="flex items-center gap-2">
           {/* Prefix */}
-          <div className="flex items-center pl-3 select-none text-neutral-500 font-mono text-xs font-normal">
+          <div className="flex items-center pl-3 select-none text-white/55 font-mono text-xs font-normal">
             <span className="hidden sm:inline">letterboxd.com/</span>
             <span className="sm:hidden">@</span>
           </div>
@@ -73,7 +73,7 @@ export function UsernameForm() {
             autoComplete="off"
             spellCheck="false"
             aria-label="Letterboxd username"
-            className="h-10 flex-1 border-0 bg-transparent px-2 font-mono text-sm font-normal tracking-tight text-white placeholder:text-neutral-600 focus:outline-none disabled:opacity-40"
+            className="h-10 flex-1 border-0 bg-transparent px-2 font-mono text-sm font-normal tracking-tight text-[#F5F5F5] placeholder:text-white/30 focus:outline-none disabled:opacity-40"
           />
 
           {/* Submit Button */}
@@ -118,7 +118,7 @@ export function UsernameForm() {
 
       {/* Curated Exemplar Fast-Picks */}
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs">
-        <span className="text-neutral-500 font-mono text-[9px] uppercase tracking-[0.28em] font-normal">
+        <span className="text-white/55 font-mono text-[9px] uppercase tracking-[0.28em] font-normal">
           Specimens:
         </span>
         {SAMPLE_USERS.map((sample) => (
@@ -127,10 +127,10 @@ export function UsernameForm() {
             type="button"
             onClick={() => handleQuickFill(sample.username)}
             disabled={isLoading}
-            className="group flex items-center gap-2 border border-white/[0.08] bg-transparent px-3 py-1 text-neutral-400 hover:border-white/[0.2] hover:text-white transition-all cursor-pointer font-mono text-[10px] tracking-[0.14em] font-normal"
+            className="group flex items-center gap-2 border border-white/[0.06] bg-transparent px-3 py-1 text-white/55 hover:border-white/[0.16] hover:text-[#F5F5F5] transition-all cursor-pointer font-mono text-[10px] tracking-[0.14em] font-normal"
           >
             <span>@{sample.username}</span>
-            <span className="text-neutral-500 font-display italic font-light text-xs hidden md:inline">
+            <span className="text-white/40 font-display italic font-light text-xs hidden md:inline">
               / {sample.archetype}
             </span>
           </button>
