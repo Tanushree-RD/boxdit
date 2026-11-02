@@ -52,9 +52,9 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
 
   if (latestFive.length === 0) {
     return (
-      <section className="rounded-2xl cinema-panel p-8 text-center">
-        <h2 className="text-xl font-bold text-white">Recent Diary &amp; Reviews</h2>
-        <p className="mt-2 text-sm text-zinc-500">
+      <section className="border-t border-b border-white/[0.08] py-14 text-center">
+        <h2 className="font-display italic font-light text-2xl text-white">Recent Diary Logs</h2>
+        <p className="mt-3 font-mono text-[9px] text-neutral-500 uppercase tracking-widest font-normal">
           No public diary logs found for this account.
         </p>
       </section>
@@ -69,20 +69,17 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="mb-6 sm:mb-8 px-1 flex flex-wrap items-end justify-between gap-4"
+        className="mb-14 flex flex-wrap items-baseline justify-between gap-4 border-b border-white/[0.08] pb-8"
       >
         <div>
-          <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#40BCF4]" />
-            <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-[#40BCF4]">
-              Screening Journal
-            </span>
-          </div>
-          <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-white">
-            Recent Diary &amp; Dispatches
+          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block mb-2 font-normal">
+            SCREENING JOURNAL // DISPATCHES
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-display font-light tracking-tight text-white">
+            Recent Diary &amp; Reviews
           </h2>
-          <p className="mt-1 text-xs sm:text-sm text-zinc-400">
-            Latest logged screenings, critical ratings, and excerpts direct from Letterboxd
+          <p className="mt-2 text-xs sm:text-sm text-neutral-400 font-sans font-normal">
+            Latest logged screenings, critical ratings, and review dispatches direct from Letterboxd
           </p>
         </div>
 
@@ -90,15 +87,14 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
           href={diaryUrl}
           target="_blank"
           rel="noreferrer"
-          className="text-xs font-mono text-[#00E054] hover:underline transition-colors flex items-center gap-1"
+          className="font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-400 hover:text-white transition-colors font-normal"
         >
-          <span>Complete Diary Index</span>
-          <span>↗</span>
+          [ Full Diary Index ↗ ]
         </a>
       </motion.div>
 
-      {/* Critic Journal Entries */}
-      <div className="space-y-4">
+      {/* Critic Journal Entries: Magazine Headlines */}
+      <div className="divide-y divide-white/[0.08] border-b border-white/[0.08]">
         {latestFive.map((entry, idx) => {
           const stars = renderStars(entry.rating);
           const formattedWatchedDate = formatDate(
@@ -113,89 +109,86 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="group rounded-2xl cinema-panel cinema-panel-hover p-5 sm:p-6 transition-all"
+              className="py-10 sm:py-12 flex flex-col sm:flex-row items-start gap-8 group"
             >
-              <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
-                {/* Poster */}
-                <div className="relative w-16 sm:w-20 shrink-0 aspect-[2/3] overflow-hidden rounded-lg border border-white/[0.1] bg-[#14181C] shadow-lg group-hover:border-white/[0.25] transition-colors">
-                  <Image
-                    src={entry.posterUrl || FALLBACK_POSTER}
-                    alt={entry.filmTitle || entry.title}
-                    fill
-                    sizes="(max-width: 640px) 64px, 80px"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    unoptimized
-                  />
-                </div>
+              {/* Poster */}
+              <div className="relative w-20 sm:w-24 shrink-0 aspect-[2/3] overflow-hidden border border-white/[0.1] bg-[#121214]">
+                <Image
+                  src={entry.posterUrl || FALLBACK_POSTER}
+                  alt={entry.filmTitle || entry.title}
+                  fill
+                  sizes="(max-width: 640px) 80px, 96px"
+                  className="object-cover"
+                  unoptimized
+                />
+              </div>
 
-                {/* Main Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight group-hover:text-[#FF8000] transition-colors">
-                      <a href={entry.link} target="_blank" rel="noreferrer">
-                        {entry.filmTitle || entry.title}
-                      </a>
-                    </h3>
-
-                    {/* Screening Date */}
-                    {formattedWatchedDate && (
-                      <span className="text-xs font-mono text-zinc-500">
-                        {formattedWatchedDate}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Metadata Chips: Year, Rating Stars, Rewatch */}
-                  <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs">
+              {/* Main Content */}
+              <div className="flex-1 min-w-0 space-y-4">
+                {/* Meta Bar */}
+                <div className="flex flex-wrap items-baseline justify-between gap-2 font-mono text-xs">
+                  <div className="flex items-baseline gap-3 text-neutral-400 font-normal">
+                    <span className="text-[10px] text-neutral-600">DISPATCH 0{idx + 1}</span>
                     {entry.filmYear && (
-                      <span className="font-mono text-zinc-400">
-                        {entry.filmYear}
-                      </span>
+                      <>
+                        <span className="text-neutral-700">·</span>
+                        <span>{entry.filmYear}</span>
+                      </>
                     )}
-
                     {stars && (
                       <>
-                        <span className="text-zinc-600 select-none">•</span>
-                        <span className="text-[#00E054] font-medium tracking-wider">
-                          {stars}
-                        </span>
+                        <span className="text-neutral-700">·</span>
+                        <span className="text-white tracking-widest">{stars}</span>
                       </>
                     )}
-
                     {entry.rewatch && (
                       <>
-                        <span className="text-zinc-600 select-none">•</span>
-                        <span className="inline-flex items-center gap-1 rounded-full border border-white/[0.08] bg-white/[0.03] px-2 py-0.5 text-[10px] font-mono text-zinc-400">
-                          <span>↺</span> rewatch
+                        <span className="text-neutral-700">·</span>
+                        <span className="text-neutral-500 uppercase text-[9px] tracking-wider">
+                          ↺ Rewatch
                         </span>
                       </>
                     )}
                   </div>
 
-                  {/* Critic Review Excerpt */}
-                  {entry.reviewText && (
-                    <div className="mt-3.5 pl-3.5 border-l-2 border-[#FF8000]/40">
-                      <p className="font-serif italic text-sm sm:text-[15px] text-zinc-300 leading-relaxed font-light">
-                        &ldquo;{entry.reviewText}&rdquo;
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Footer Action */}
-                  <div className="mt-4 pt-3 border-t border-white/[0.04] flex items-center justify-between text-xs">
-                    <span className="text-[11px] font-mono text-zinc-600">
-                      DIARY DISPATCH #{idx + 1}
+                  {formattedWatchedDate && (
+                    <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider font-normal">
+                      {formattedWatchedDate}
                     </span>
-                    <a
-                      href={entry.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-zinc-400 group-hover:text-white transition-colors inline-flex items-center gap-1 font-mono text-[11px]"
-                    >
-                      <span>Read on Letterboxd</span>
-                      <span>↗</span>
-                    </a>
+                  )}
+                </div>
+
+                {/* Film Title as Magazine Headline */}
+                <h3 className="font-display italic font-normal text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-[1.05]">
+                  <a
+                    href={entry.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:underline underline-offset-4 decoration-white/20 transition-all"
+                  >
+                    {entry.filmTitle || entry.title}
+                  </a>
+                </h3>
+
+                {/* Review Excerpt */}
+                {entry.reviewText && (
+                  <div className="pt-2 pl-5 border-l border-white/[0.14]">
+                    <p className="font-display italic font-light text-base sm:text-lg text-neutral-300 leading-relaxed">
+                      &ldquo;{entry.reviewText}&rdquo;
+                    </p>
                   </div>
+                )}
+
+                {/* Footer Link */}
+                <div className="pt-2">
+                  <a
+                    href={entry.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500 hover:text-white transition-colors font-normal inline-block"
+                  >
+                    Read Entry on Letterboxd ↗
+                  </a>
                 </div>
               </div>
             </motion.div>

@@ -50,7 +50,7 @@ export function ShareModal({
   }, [isOpen]);
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
-  const shareText = `Check out my Letterboxd Cinematic Dossier on Boxdit! 🎬 "${persona.title}" • Film Nerd Score: ${nerdScore.score}/100`;
+  const shareText = `Check out my Letterboxd Cinematic Dossier on Boxdit: "${persona.title}" • Cinephile Index: ${nerdScore.score}/100`;
 
   const handleCopy = async () => {
     try {
@@ -89,57 +89,44 @@ export function ShareModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-0 bg-black/85 backdrop-blur-md"
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black/85"
             onClick={onClose}
           />
 
           {/* Modal Container */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 12 }}
+            initial={{ opacity: 0, scale: 0.98, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 12 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-10 w-full max-w-md overflow-hidden rounded-3xl border border-white/[0.1] bg-[#0E1216] p-6 sm:p-8 shadow-[0_30px_90px_rgba(0,0,0,0.9)]"
+            exit={{ opacity: 0, scale: 0.98, y: 8 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="relative z-10 w-full max-w-md border border-white/[0.12] bg-[#0A0A0B] p-8 sm:p-10"
           >
             {/* Close Button */}
             <button
               onClick={onClose}
               aria-label="Close modal"
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.1] bg-white/[0.04] text-zinc-400 transition-colors duration-200 hover:border-white/[0.2] hover:bg-white/[0.08] hover:text-white cursor-pointer select-none"
+              className="absolute right-4 top-4 font-mono text-xs text-neutral-500 hover:text-white transition-colors cursor-pointer select-none p-1 font-normal"
             >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              [ ✕ ]
             </button>
 
             {/* Modal Header */}
-            <div className="text-center">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#FF8000]/30 bg-[#FF8000]/[0.08] px-3.5 py-1 text-[10px] font-mono font-semibold uppercase tracking-[0.2em] text-[#FF9526]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#FF8000]" />
-                Festival Accreditation Pass
+            <div className="text-center pb-2">
+              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block font-normal">
+                ACCREDITATION PASS
               </span>
-              <h3 className="mt-2.5 text-xl sm:text-2xl font-bold text-white tracking-tight">
-                Your Cinephile Credential
+              <h3 className="mt-2 font-display font-light text-2xl text-white tracking-tight">
+                Cinephile Credential
               </h3>
-              <p className="mt-1 text-xs text-zinc-400">
-                Editorial artifact ready for social export
-              </p>
             </div>
 
-            {/* Physical Festival Pass Artifact */}
-            <div className="relative mt-6 overflow-hidden rounded-2xl border border-white/[0.12] bg-gradient-to-b from-[#181D23] via-[#12161B] to-[#0A0D10] p-6 shadow-2xl">
-              {/* Film Grain Texture */}
-              <div className="film-grain absolute inset-0 opacity-25 pointer-events-none" />
-
-              {/* Faint Amber & Green Atmospheric Bleeds */}
-              <div className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-[#FF8000]/[0.12] blur-2xl" />
-              <div className="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-[#00E054]/[0.08] blur-2xl" />
-
+            {/* Physical Accreditation Pass Artifact */}
+            <div className="relative mt-8 border border-white/[0.1] bg-[#070708] p-6 text-left">
               {/* Pass Header */}
-              <div className="relative flex items-center justify-between border-b border-white/[0.08] pb-4">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="relative h-12 w-12 overflow-hidden rounded-full border border-white/[0.2] bg-[#14181C] shadow-md">
+                  <div className="relative h-11 w-11 overflow-hidden border border-white/[0.16] bg-[#101012]">
                     <Image
                       src={avatar || FALLBACK_AVATAR}
                       alt={displayName}
@@ -149,112 +136,88 @@ export function ShareModal({
                     />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-white leading-none">
+                    <p className="font-display font-light text-base text-white leading-none">
                       {displayName}
                     </p>
-                    <p className="text-xs font-mono text-[#00E054] mt-1">
+                    <p className="font-mono text-xs text-neutral-400 mt-1 font-normal">
                       @{username}
                     </p>
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#FF8000] font-bold block">
-                    BOXDIT 2026
-                  </span>
-                  <span className="text-[10px] font-mono text-zinc-400">
-                    DOSSIER PASS
-                  </span>
+                <div className="text-right font-mono text-[8px] uppercase tracking-widest text-neutral-500 font-normal">
+                  <span className="text-white block">BOXDIT 2026</span>
+                  <span>PASS 01</span>
                 </div>
               </div>
 
               {/* Archetype Focal Point */}
-              <div className="relative my-6 text-center">
-                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-zinc-400">
+              <div className="my-8 text-center">
+                <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-neutral-500 block font-normal">
                   OFFICIAL ARCHETYPE
                 </span>
-                <h4 className="mt-1 text-2xl font-serif italic text-white font-normal">
+                <h4 className="mt-2 font-display italic font-light text-3xl text-white">
                   &ldquo;{persona.title}&rdquo;
                 </h4>
-                <p className="mt-2 text-xs text-zinc-400 leading-relaxed max-w-xs mx-auto">
+                <p className="mt-2 font-sans font-normal text-xs text-neutral-400 leading-relaxed max-w-xs mx-auto">
                   {persona.tagline}
                 </p>
               </div>
 
               {/* Pass Metrics Grid */}
-              <div className="relative grid grid-cols-3 gap-2 border-t border-white/[0.08] pt-4 text-center">
-                <div className="rounded-xl border border-white/[0.05] bg-white/[0.03] p-2.5">
-                  <p className="text-[10px] font-mono uppercase text-zinc-400">Archive</p>
-                  <p className="text-base font-bold text-white font-mono mt-0.5">
+              <div className="grid grid-cols-3 border-t border-white/[0.08] divide-x divide-white/[0.08] pt-4 text-center">
+                <div className="px-2">
+                  <p className="font-mono text-[8px] uppercase text-neutral-500 tracking-wider font-normal">Archive</p>
+                  <p className="font-display font-light text-xl text-white mt-0.5">
                     {totalMovies.toLocaleString()}
                   </p>
                 </div>
-                <div className="rounded-xl border border-white/[0.05] bg-white/[0.03] p-2.5">
-                  <p className="text-[10px] font-mono uppercase text-zinc-400">Mean</p>
-                  <p className="text-base font-bold text-[#00E054] font-mono mt-0.5">
+                <div className="px-2">
+                  <p className="font-mono text-[8px] uppercase text-neutral-500 tracking-wider font-normal">Mean</p>
+                  <p className="font-display font-light text-xl text-white mt-0.5">
                     {avgRating ? `${avgRating.toFixed(2)} ★` : "—"}
                   </p>
                 </div>
-                <div className="rounded-xl border border-white/[0.05] bg-white/[0.03] p-2.5">
-                  <p className="text-[10px] font-mono uppercase text-zinc-400">Quotient</p>
-                  <p className="text-base font-bold text-[#FF8000] font-mono mt-0.5">
+                <div className="px-2">
+                  <p className="font-mono text-[8px] uppercase text-neutral-500 tracking-wider font-normal">Index</p>
+                  <p className="font-display font-light text-xl text-white mt-0.5">
                     {nerdScore.score}/100
                   </p>
                 </div>
               </div>
 
-              {/* Watermark / Seal */}
-              <div className="mt-4 pt-3 border-t border-white/[0.04] flex items-center justify-between text-[9px] font-mono text-zinc-500 uppercase tracking-widest">
-                <span>ERA: {favoriteDecade} · VERIFIED INDEX</span>
+              {/* Seal */}
+              <div className="mt-5 pt-3 border-t border-white/[0.04] flex items-center justify-between font-mono text-[8px] text-neutral-500 uppercase tracking-widest font-normal">
+                <span>ERA: {favoriteDecade}</span>
                 <span>BOXDIT.COM</span>
               </div>
             </div>
 
             {/* Actions */}
-            <div className="mt-6 space-y-2.5">
+            <div className="mt-8 space-y-3">
               <button
                 onClick={handleCopy}
-                className="btn-base btn-filled w-full py-2.5 text-xs font-semibold shadow-lg hover:brightness-110 active:scale-98 transition-all cursor-pointer"
+                className="btn-editorial btn-editorial-primary w-full h-10 text-[10px] tracking-[0.2em] font-medium cursor-pointer"
               >
-                {copied ? (
-                  <>
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Link Copied to Clipboard</span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                    </svg>
-                    <span>Copy Shareable Link</span>
-                  </>
-                )}
+                {copied ? "Link Copied to Clipboard" : "Copy Shareable Link"}
               </button>
 
-              <div className="flex gap-2.5">
+              <div className="flex gap-3">
                 <a
                   href={twitterShareUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="btn-base btn-outlined flex-1 text-xs"
+                  className="btn-editorial btn-editorial-ghost flex-1 h-9 text-[9px] tracking-[0.16em] uppercase font-normal text-center"
                 >
-                  <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
-                  <span>Post on X</span>
+                  Post on X
                 </a>
 
                 {canNativeShare && (
                   <button
                     onClick={handleNativeShare}
-                    className="btn-base btn-outlined flex-1 text-xs cursor-pointer"
+                    className="btn-editorial btn-editorial-ghost flex-1 h-9 text-[9px] tracking-[0.16em] uppercase font-normal cursor-pointer"
                   >
-                    <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                    </svg>
-                    <span>Share Pass</span>
+                    Share Pass
                   </button>
                 )}
               </div>

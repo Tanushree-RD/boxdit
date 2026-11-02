@@ -12,174 +12,150 @@ const fadeUp = {
     transition: {
       duration: 0.8,
       ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-      delay: i * 0.1,
+      delay: i * 0.08,
     },
   }),
 };
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-[96vh] w-full flex-col justify-between items-center px-6 pt-32 pb-16 text-center sm:px-8">
-      {/* Film Strip Notch Watermark */}
-      <div className="hidden lg:flex absolute left-8 top-1/2 -translate-y-1/2 flex-col gap-4 opacity-20 pointer-events-none select-none">
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className="h-5 w-3 rounded-[2px] border border-white/50" />
-        ))}
-      </div>
-      <div className="hidden lg:flex absolute right-8 top-1/2 -translate-y-1/2 flex-col gap-4 opacity-20 pointer-events-none select-none">
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className="h-5 w-3 rounded-[2px] border border-white/50" />
-        ))}
-      </div>
-
-      {/* Main Hero Content */}
+    <section className="relative flex min-h-[95vh] w-full flex-col justify-between items-center px-6 pt-44 pb-36 text-center sm:px-12 sm:pt-52 sm:pb-44">
+      {/* Main Hero Header */}
       <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center">
-        {/* Curated Brand Badge */}
+        {/* Curated Volume Notation */}
         <motion.div
           custom={0}
           initial="hidden"
           animate="visible"
           variants={fadeUp}
         >
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#FF8000]/30 bg-[#FF8000]/[0.08] px-4 py-1.5 text-xs font-mono tracking-widest text-[#FF9526] uppercase shadow-lg">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#FF8000] animate-pulse" />
-            <span>Cinematic Taste Intelligence // 2026</span>
-          </div>
+          <span className="font-mono text-[9px] uppercase tracking-[0.32em] text-neutral-500 block mb-8 font-normal">
+            01 / ARCHIVAL DOSSIER — VOLUME 2026
+          </span>
         </motion.div>
 
-        {/* Hero Title */}
+        {/* Hero Title: Thin, Elegant Display Serif */}
         <motion.h1
           custom={1}
           initial="hidden"
           animate="visible"
           variants={fadeUp}
-          className="text-balance text-5xl sm:text-7xl md:text-8xl lg:text-[6.5rem] font-light tracking-tight text-white leading-[1.02]"
+          className="text-balance text-6xl sm:text-8xl md:text-9xl lg:text-[7.5rem] font-display font-light tracking-tight text-white leading-[0.92]"
         >
           Your Letterboxd,
           <br />
-          <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#FF8000] via-[#FFA84D] to-[#EDEDED]">
-            distilled into cinema.
+          <span className="font-display italic font-light text-neutral-300">
+            distilled into print.
           </span>
         </motion.h1>
 
-        {/* Editorial Subtitle */}
+        {/* Editorial Subtitle: Neutral Sans Body */}
         <motion.p
           custom={2}
           initial="hidden"
           animate="visible"
           variants={fadeUp}
-          className="mx-auto mt-6 max-w-2xl text-balance text-base sm:text-lg font-light leading-relaxed text-zinc-300"
+          className="mx-auto mt-10 max-w-xl text-balance text-sm sm:text-base font-sans font-normal leading-relaxed text-neutral-400"
         >
-          A quiet, rigorous lens on your cinematic year. Authentic Letterboxd rating curves, era journeys, auteur allegiances, and festival-grade artifacts.
+          A quiet, rigorous lens on cinematic taste. Authentic Letterboxd rating distributions, era journeys, auteur allegiances, and exhibition-grade dossiers.
         </motion.p>
 
-        {/* Interactive Search Bar */}
+        {/* Search Bar */}
         <motion.div
           custom={3}
           initial="hidden"
           animate="visible"
           variants={fadeUp}
-          className="mt-9 w-full"
+          className="mt-14 w-full"
         >
           <UsernameForm />
         </motion.div>
 
-        {/* Floating Live Dossier Preview (Centerpiece) */}
+        {/* Specimen Plate: Communicates via Typography */}
         <motion.div
           custom={4}
           initial="hidden"
           animate="visible"
           variants={fadeUp}
-          className="mt-14 w-full max-w-4xl"
+          className="mt-28 w-full max-w-4xl"
         >
-          <div className="relative mx-auto rounded-3xl cinema-panel p-6 sm:p-8 text-left shadow-2xl transition-all duration-300 hover:border-white/[0.18]">
-            {/* Ambient inner glow */}
-            <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#FF8000]/[0.1] blur-3xl" />
-            <div className="pointer-events-none absolute -left-16 -bottom-16 h-48 w-48 rounded-full bg-[#00E054]/[0.08] blur-3xl" />
-
-            {/* Dossier Header */}
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-5">
-              <div className="flex items-center gap-3.5">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#FF8000]/30 bg-[#FF8000]/[0.08] text-sm font-mono font-bold text-[#FF8000]">
-                  ★
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-base font-bold text-white">@karsten</span>
-                    <span className="rounded-full border border-white/[0.08] bg-white/[0.04] px-2.5 py-0.5 text-[10px] font-mono text-zinc-400">
-                      EXEMPLAR DOSSIER
-                    </span>
-                  </div>
-                  <p className="text-xs font-mono text-[#00E054] mt-0.5">
-                    405 Films Catalogued · 3.68 ★ Mean Rating
-                  </p>
-                </div>
+          <div className="relative mx-auto border-t border-b border-white/[0.08] py-10 sm:py-14 text-left">
+            {/* Specimen Header */}
+            <div className="flex flex-wrap items-baseline justify-between gap-4 pb-8 border-b border-white/[0.06]">
+              <div className="flex items-baseline gap-4">
+                <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 font-normal">
+                  SPECIMEN // 01
+                </span>
+                <span className="font-mono text-sm font-normal text-white">
+                  @karsten
+                </span>
+                <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest hidden sm:inline">
+                  405 Films Catalogued · 3.68 ★ Mean
+                </span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div>
                 <Link
                   href="/report/karsten"
-                  className="btn-base btn-outlined text-xs py-1.5 h-8 gap-1.5 hover:border-[#FF8000]/40 transition-colors"
+                  className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400 hover:text-white transition-colors"
                 >
-                  <span>Inspect Live Dossier</span>
-                  <span>→</span>
+                  Inspect Dossier →
                 </Link>
               </div>
             </div>
 
-            {/* Dossier Body: Archetype + Live Letterboxd Histogram Teaser */}
-            <div className="mt-6 grid gap-6 md:grid-cols-12 items-center">
-              {/* Left Column: Archetype */}
-              <div className="md:col-span-6 space-y-2.5">
-                <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#FF8000]">
-                  DIAGNOSED ARCHETYPE
+            {/* Specimen Body */}
+            <div className="mt-8 grid gap-10 md:grid-cols-12 items-baseline">
+              {/* Left Column: Archetype as Magazine Headline */}
+              <div className="md:col-span-6 space-y-4">
+                <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block font-normal">
+                  Diagnosed Archetype
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-serif italic text-white font-normal">
+                <h3 className="font-display italic font-light text-3xl sm:text-4xl text-white leading-tight">
                   &ldquo;The Thoughtful Cinephile&rdquo;
                 </h3>
-                <p className="text-xs sm:text-[13px] text-zinc-400 leading-relaxed">
-                  Drawn to emotional resonance, visual poetry, and character-driven storytelling. Peak affinity for 2020s independent cinema and existential narratives.
+                <p className="font-sans font-normal text-xs sm:text-sm text-neutral-400 leading-relaxed max-w-md">
+                  Predilection for emotional resonance, visual poetry, and character-driven pacing. High affinity for independent releases and existential literature.
                 </p>
 
-                <div className="pt-2 flex flex-wrap gap-1.5">
-                  <span className="rounded-full border border-white/[0.08] bg-white/[0.03] px-2.5 py-0.5 text-[10px] font-mono text-zinc-400">
-                    #Atmospheric Taste
-                  </span>
-                  <span className="rounded-full border border-white/[0.08] bg-white/[0.03] px-2.5 py-0.5 text-[10px] font-mono text-zinc-400">
-                    #Visual Poet
-                  </span>
-                  <span className="rounded-full border border-white/[0.08] bg-white/[0.03] px-2.5 py-0.5 text-[10px] font-mono text-zinc-400">
-                    #Narrative Empathy
-                  </span>
+                <div className="pt-2 flex flex-wrap gap-2.5 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">
+                  <span>Atmospheric</span>
+                  <span>/</span>
+                  <span>Visual Poetry</span>
+                  <span>/</span>
+                  <span>Modern Indie</span>
                 </div>
               </div>
 
-              {/* Right Column: 10-Bar Histogram Mock */}
-              <div className="md:col-span-6 rounded-2xl border border-white/[0.06] bg-[#0E1216]/80 p-4">
-                <div className="flex items-center justify-between text-xs font-mono text-zinc-400 mb-3">
-                  <span className="text-[10px] uppercase text-zinc-500 tracking-wider">
-                    Rating Distribution Curve
+              {/* Right Column: Monochromatic 10-Bar Distribution Curve */}
+              <div className="md:col-span-6 border-l border-white/[0.06] pl-0 md:pl-10">
+                <div className="flex items-baseline justify-between font-mono text-xs text-neutral-400 mb-6">
+                  <span className="text-[9px] uppercase tracking-[0.28em] text-neutral-500">
+                    Rating Curve
                   </span>
-                  <span className="text-[#00E054] font-bold">Peak at 4.0 ★</span>
+                  <span className="text-[10px] text-neutral-400">Peak at 4.0 ★</span>
                 </div>
 
-                {/* 10 Miniature Bars */}
-                <div className="flex h-24 items-end justify-between gap-1.5 px-1">
-                  {[8, 12, 18, 32, 45, 75, 95, 120, 80, 50].map((val, idx) => {
+                {/* 10 Architectural Bars */}
+                <div className="flex h-28 items-end justify-between gap-2 px-1">
+                  {[8, 14, 22, 38, 52, 78, 96, 120, 82, 48].map((val, idx) => {
                     const isPeak = idx === 7;
-                    const labels = ["½★", "1★", "1½", "2★", "2½", "3★", "3½", "4★", "4½", "5★"];
+                    const labels = ["½", "1", "1½", "2", "2½", "3", "3½", "4", "4½", "5"];
                     return (
-                      <div key={idx} className="flex-1 flex flex-col items-center justify-end h-full">
+                      <div
+                        key={idx}
+                        className="flex-1 flex flex-col items-center justify-end h-full"
+                      >
                         <div
-                          className={`w-full rounded-t-[3px] transition-all duration-300 ${
+                          className={`w-full transition-colors duration-200 ${
                             isPeak
-                              ? "bg-gradient-to-t from-[#00b042] to-[#00ff60] shadow-[0_0_10px_rgba(0,224,84,0.4)]"
-                              : "bg-[#00E054]/70 hover:bg-[#00E054]"
+                              ? "bg-white"
+                              : "bg-neutral-600 hover:bg-neutral-400"
                           }`}
                           style={{ height: `${(val / 120) * 100}%` }}
                         />
-                        <span className="mt-1.5 text-[8px] font-mono text-zinc-500">
-                          {labels[idx]}
+                        <span className="mt-3 font-mono text-[8px] text-neutral-500">
+                          {labels[idx]}★
                         </span>
                       </div>
                     );
@@ -191,25 +167,19 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* Index Scroll Indicator */}
+      {/* Subtle Scroll Down Prompt */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.9, duration: 1 }}
-        className="relative z-10 pt-12"
+        className="relative z-10 pt-20"
       >
         <a
           href="#features"
-          className="group flex flex-col items-center gap-2 text-[10px] font-mono tracking-[0.25em] text-zinc-400 uppercase transition-colors hover:text-white"
+          className="group flex flex-col items-center gap-3 font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 hover:text-neutral-300 transition-colors"
         >
-          <span>Explore Architecture</span>
-          <div className="relative h-6 w-px overflow-hidden bg-white/[0.15]">
-            <motion.div
-              animate={{ y: ["-100%", "100%"] }}
-              transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
-              className="h-full w-full bg-[#FF8000]"
-            />
-          </div>
+          <span>Scroll to Explore</span>
+          <div className="h-8 w-px bg-white/[0.12]" />
         </a>
       </motion.div>
     </section>

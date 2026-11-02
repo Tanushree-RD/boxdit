@@ -39,16 +39,9 @@ export function StatsSection({
   genreStats,
   actorStats,
 }: StatsSectionProps) {
-  // Estimated viewing time (avg 105 mins per film)
   const approxHours = Math.round((totalMovies * 105) / 60);
-
-  // Top genres list
   const topGenres = genreStats?.breakdown?.slice(0, 4) || [];
-
-  // Top actors list
   const topActors = actorStats?.topActors?.slice(0, 4) || [];
-
-  // Decades breakdown
   const decades = releaseYears.decadeBreakdown?.slice(0, 5) || [];
 
   return (
@@ -59,79 +52,69 @@ export function StatsSection({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.4 }}
-        className="mb-6 sm:mb-8 px-1 flex flex-wrap items-end justify-between gap-4"
+        className="mb-14 flex flex-wrap items-baseline justify-between gap-4 border-b border-white/[0.08] pb-8"
       >
         <div>
-          <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#FF8000]" />
-            <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-[#FF8000]">
-              Analytical Breakdown
-            </span>
-          </div>
-          <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-white">
+          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block mb-2 font-normal">
+            HIGHLIGHTS // ANALYTICAL PLATES
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-display font-light tracking-tight text-white">
             Cinematic Highlights
           </h2>
-          <p className="mt-1 text-xs sm:text-sm text-zinc-400">
-            Distilled metrics and narrative footprints from your Letterboxd archive
+          <p className="mt-2 text-xs sm:text-sm text-neutral-400 font-sans font-normal">
+            Distilled metrics and narrative footprints from the archive
           </p>
         </div>
 
-        <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-widest hidden sm:inline-block">
-          ARCHIVE DOSSIER // 01-06
+        <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-widest hidden sm:inline-block font-normal">
+          Plates 01-05
         </span>
       </motion.div>
 
-      {/* Luxury Bento Grid */}
-      <div className="grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {/* Card 1: Chronological Era Odyssey (2 cols on lg) */}
+      {/* Grid of Typographic Plates */}
+      <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {/* Plate 1: Era Odyssey (2 cols on lg) */}
         <motion.div
           variants={fadeUp}
           custom={0}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="lg:col-span-2 rounded-2xl cinema-panel cinema-panel-hover p-7 sm:p-8 flex flex-col justify-between"
+          className="lg:col-span-2 border-t border-b border-white/[0.08] py-8 flex flex-col justify-between"
         >
           <div>
-            <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
-                  Era Odyssey
-                </span>
-                <span className="rounded-full border border-white/[0.08] bg-white/[0.03] px-2 py-0.5 text-[10px] font-mono text-zinc-400">
-                  Release Eras
-                </span>
-              </div>
-              <span className="text-xs font-mono text-zinc-500">
-                Mean Year: {releaseYears.averageReleaseYear || "—"}
-              </span>
+            <div className="flex items-baseline justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.28em] pb-6 border-b border-white/[0.06] font-normal">
+              <span>PLATE 01 / ERA ODYSSEY</span>
+              <span>Mean Year: {releaseYears.averageReleaseYear || "—"}</span>
             </div>
 
-            <div className="mt-5 flex flex-wrap items-baseline gap-4">
+            <div className="mt-8 flex flex-wrap items-baseline justify-between gap-4">
               <div>
-                <span className="text-xs text-zinc-500 font-mono block">Favorite Era</span>
-                <span className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-mono">
+                <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-wider block font-normal">
+                  Dominant Era
+                </span>
+                <span className="font-display font-light text-4xl sm:text-5xl text-white mt-1 block">
                   {releaseYears.favoriteDecade?.decade || "2020s"}
                 </span>
               </div>
-              <span className="text-sm font-mono text-[#00E054] font-semibold">
+              <span className="font-mono text-xs text-neutral-400 font-normal">
                 {releaseYears.favoriteDecade?.percentage || 0}% of watched cinema
               </span>
             </div>
 
-            {/* Decades Visual Progress Breakdown */}
-            <div className="mt-6 space-y-2.5">
+            {/* Decades Visual Breakdown */}
+            <div className="mt-10 space-y-4">
               {decades.map((dec) => (
-                <div key={dec.decade} className="space-y-1">
-                  <div className="flex items-center justify-between text-xs font-mono">
-                    <span className="text-zinc-300 font-medium">{dec.decade}</span>
-                    <span className="text-zinc-500">
+                <div key={dec.decade} className="space-y-1.5">
+                  <div className="flex items-center justify-between font-mono text-xs font-normal">
+                    <span className="text-neutral-300">{dec.decade}</span>
+                    <span className="text-neutral-500">
                       {dec.count} films ({dec.percentage}%)
                     </span>
                   </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-white/[0.05]">
+                  <div className="h-0.5 w-full bg-white/[0.06]">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#FF8000] to-[#FFB049] transition-all duration-500"
+                      className="h-full bg-neutral-400 transition-all duration-500"
                       style={{ width: `${Math.min(dec.percentage, 100)}%` }}
                     />
                   </div>
@@ -140,102 +123,96 @@ export function StatsSection({
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/[0.05] flex items-center justify-between text-[11px] font-mono text-zinc-500">
-            <span>MOST WATCHED YEAR</span>
-            <span className="text-zinc-300 font-semibold">
+          <div className="mt-10 pt-4 border-t border-white/[0.06] flex items-center justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.24em] font-normal">
+            <span>Peak Release Year</span>
+            <span className="text-neutral-300">
               {releaseYears.mostWatchedYear ? `${releaseYears.mostWatchedYear.year} (${releaseYears.mostWatchedYear.count} films)` : "Recent years"}
             </span>
           </div>
         </motion.div>
 
-        {/* Card 2: Total Hours in the Dark */}
+        {/* Plate 2: Screen Time Volume */}
         <motion.div
           variants={fadeUp}
           custom={1}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="rounded-2xl cinema-panel cinema-panel-hover p-7 sm:p-8 flex flex-col justify-between"
+          className="border-t border-b border-white/[0.08] py-8 flex flex-col justify-between"
         >
           <div>
-            <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
-                Screen Time Volume
-              </span>
-              <div className="h-6 w-6 rounded-lg bg-white/[0.03] border border-white/[0.08] flex items-center justify-center text-zinc-400">
-                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
+            <div className="flex items-baseline justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.28em] pb-6 border-b border-white/[0.06] font-normal">
+              <span>PLATE 02 / VOLUME</span>
+              <span>Screen Time</span>
             </div>
 
-            <div className="mt-6">
-              <span className="text-xs text-zinc-500 font-mono block">Immersed in Cinema</span>
-              <p className="text-4xl sm:text-5xl font-extrabold text-white font-mono tracking-tight mt-1">
+            <div className="mt-8">
+              <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-wider block font-normal">
+                Titles Catalogued
+              </span>
+              <p className="font-display font-light text-5xl sm:text-6xl text-white mt-1">
                 {totalMovies.toLocaleString()}
               </p>
-              <p className="mt-2 text-xs text-zinc-400 leading-relaxed">
-                Total catalogued titles in archive ({ratings.totalRated.toLocaleString()} with star ratings)
+              <p className="mt-3 font-sans font-normal text-xs text-neutral-400 leading-relaxed">
+                Across total library ({ratings.totalRated.toLocaleString()} with star ratings)
               </p>
             </div>
 
-            <div className="mt-6 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 block">
-                Time in the Dark
+            <div className="mt-10 border-t border-b border-white/[0.06] py-5">
+              <span className="font-mono text-[9px] uppercase tracking-widest text-neutral-500 block font-normal">
+                Immersion In The Dark
               </span>
-              <p className="text-lg font-bold text-white font-mono mt-0.5">
+              <p className="font-display font-light text-2xl text-white mt-1">
                 ~{approxHours.toLocaleString()} Hours
               </p>
-              <p className="text-[11px] text-zinc-500 mt-0.5">
+              <p className="font-mono text-[10px] text-neutral-500 mt-1 font-normal">
                 Equivalent to {(approxHours / 24).toFixed(1)} full days of cinema
               </p>
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/[0.05] text-[11px] font-mono text-zinc-500 flex justify-between">
-            <span>ARCHIVE STATUS</span>
-            <span className="text-[#00E054]">Active &amp; Growing</span>
+          <div className="mt-10 pt-4 border-t border-white/[0.06] font-mono text-[9px] text-neutral-500 uppercase tracking-[0.24em] flex justify-between font-normal">
+            <span>Ledger</span>
+            <span className="text-neutral-300">Active</span>
           </div>
         </motion.div>
 
-        {/* Card 3: Genre Affinity & Spectrum */}
+        {/* Plate 3: Genre Predilection */}
         <motion.div
           variants={fadeUp}
           custom={2}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="rounded-2xl cinema-panel cinema-panel-hover p-7 sm:p-8 flex flex-col justify-between"
+          className="border-t border-b border-white/[0.08] py-8 flex flex-col justify-between"
         >
           <div>
-            <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
-                Genre DNA
-              </span>
-              <span className="text-[10px] font-mono text-zinc-500">
-                TOP CATEGORIES
-              </span>
+            <div className="flex items-baseline justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.28em] pb-6 border-b border-white/[0.06] font-normal">
+              <span>PLATE 03 / GENRES</span>
+              <span>Matrix</span>
             </div>
 
-            <div className="mt-6">
-              <span className="text-xs text-zinc-500 font-mono block">Primary Predilection</span>
-              <p className="text-3xl sm:text-4xl font-bold text-white tracking-tight mt-1">
+            <div className="mt-8">
+              <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-wider block font-normal">
+                Primary Predilection
+              </span>
+              <p className="font-display italic font-light text-3xl sm:text-4xl text-white mt-1">
                 {genreStats?.favoriteGenre || "Cinema"}
               </p>
-              <p className="mt-1 text-xs text-zinc-400">
+              <p className="mt-2 font-mono text-xs text-neutral-500 font-normal">
                 {genreStats?.genreCount || totalMovies} titles categorized
               </p>
             </div>
 
-            {/* Top Genre Pills */}
-            <div className="mt-5 space-y-2">
+            {/* Top Genre Rows */}
+            <div className="mt-8 space-y-3">
               {topGenres.map((g, idx) => (
-                <div key={g.genre} className="flex items-center justify-between text-xs">
-                  <span className="text-zinc-300 font-medium">
-                    <span className="font-mono text-zinc-600 mr-2">0{idx + 1}</span>
+                <div key={g.genre} className="flex items-baseline justify-between font-mono text-xs pb-2 border-b border-white/[0.04] font-normal">
+                  <span className="text-neutral-300">
+                    <span className="text-neutral-600 mr-2">0{idx + 1}</span>
                     {g.genre}
                   </span>
-                  <span className="font-mono text-zinc-400">
+                  <span className="text-neutral-500">
                     {g.count} films ({g.percentage}%)
                   </span>
                 </div>
@@ -243,50 +220,48 @@ export function StatsSection({
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/[0.05] flex justify-between text-[11px] font-mono text-zinc-500">
-            <span>TASTE ALIGNMENT</span>
-            <span className="text-zinc-300">High Concentration</span>
+          <div className="mt-10 pt-4 border-t border-white/[0.06] flex justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.24em] font-normal">
+            <span>Congruence</span>
+            <span className="text-neutral-300">High Concentration</span>
           </div>
         </motion.div>
 
-        {/* Card 4: Cast Affinity (Top Actors) */}
+        {/* Plate 4: Screen Presence */}
         <motion.div
           variants={fadeUp}
           custom={3}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="rounded-2xl cinema-panel cinema-panel-hover p-7 sm:p-8 flex flex-col justify-between"
+          className="border-t border-b border-white/[0.08] py-8 flex flex-col justify-between"
         >
           <div>
-            <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
-                Screen Presence
-              </span>
-              <span className="text-[10px] font-mono text-zinc-500">
-                RECURRING CAST
-              </span>
+            <div className="flex items-baseline justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.28em] pb-6 border-b border-white/[0.06] font-normal">
+              <span>PLATE 04 / CAST</span>
+              <span>Presence</span>
             </div>
 
-            <div className="mt-6">
-              <span className="text-xs text-zinc-500 font-mono block">Most Watched Performer</span>
-              <p className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">
+            <div className="mt-8">
+              <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-wider block font-normal">
+                Most Watched Performer
+              </span>
+              <p className="font-display italic font-light text-3xl sm:text-4xl text-white mt-1">
                 {actorStats?.favoriteActor || "Ensemble Cast"}
               </p>
-              <p className="mt-1 text-xs text-zinc-400 font-mono">
+              <p className="mt-2 font-mono text-xs text-neutral-500 font-normal">
                 {actorStats?.appearanceCount || 0} appearances across library
               </p>
             </div>
 
             {/* Recurring actors list */}
-            <div className="mt-5 space-y-2">
+            <div className="mt-8 space-y-3">
               {topActors.map((actor, idx) => (
-                <div key={actor.name} className="flex items-center justify-between text-xs">
-                  <span className="text-zinc-300 font-medium">
-                    <span className="font-mono text-zinc-600 mr-2">0{idx + 1}</span>
+                <div key={actor.name} className="flex items-baseline justify-between font-mono text-xs pb-2 border-b border-white/[0.04] font-normal">
+                  <span className="text-neutral-300">
+                    <span className="text-neutral-600 mr-2">0{idx + 1}</span>
                     {actor.name}
                   </span>
-                  <span className="font-mono text-zinc-400">
+                  <span className="text-neutral-500">
                     {actor.count} {actor.count === 1 ? "film" : "films"}
                   </span>
                 </div>
@@ -294,61 +269,59 @@ export function StatsSection({
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/[0.05] flex justify-between text-[11px] font-mono text-zinc-500">
-            <span>CAST LOYALTY</span>
-            <span className="text-zinc-300">Recognized Frequenters</span>
+          <div className="mt-10 pt-4 border-t border-white/[0.06] flex justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.24em] font-normal">
+            <span>Screen Presence</span>
+            <span className="text-neutral-300">Recognized</span>
           </div>
         </motion.div>
 
-        {/* Card 5: Film Nerd Quotient (Nerd Score) */}
+        {/* Plate 5: Cinephile Quotient */}
         <motion.div
           variants={fadeUp}
           custom={4}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="rounded-2xl cinema-panel cinema-panel-hover p-7 sm:p-8 flex flex-col justify-between"
+          className="border-t border-b border-white/[0.08] py-8 flex flex-col justify-between"
         >
           <div>
-            <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
-                Cinephile Quotient
-              </span>
-              <span className="text-[10px] font-mono text-[#FF8000] font-semibold">
-                INDEX 0-100
-              </span>
+            <div className="flex items-baseline justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.28em] pb-6 border-b border-white/[0.06] font-normal">
+              <span>PLATE 05 / INDEX</span>
+              <span>0-100</span>
             </div>
 
-            <div className="mt-6 flex items-center justify-between">
+            <div className="mt-8 flex items-baseline justify-between">
               <div>
-                <span className="text-xs text-zinc-500 font-mono block">Nerd Score</span>
-                <p className="text-4xl sm:text-5xl font-extrabold text-[#FF8000] font-mono tracking-tight mt-1">
+                <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-wider block font-normal">
+                  Quotient Score
+                </span>
+                <p className="font-display font-light text-5xl sm:text-6xl text-white mt-1">
                   {nerdScore.score}
-                  <span className="text-xl text-zinc-500 font-normal">/100</span>
+                  <span className="text-xl font-display text-neutral-500 font-light">/100</span>
                 </p>
               </div>
 
-              <div className="h-16 w-16 rounded-full border border-[#FF8000]/30 bg-[#FF8000]/[0.08] flex items-center justify-center font-mono font-bold text-sm text-[#FF8000]">
+              <span className="font-mono text-xs text-neutral-400 font-normal">
                 {nerdScore.percentile || "Top 2%"}
-              </div>
+              </span>
             </div>
 
-            <div className="mt-6 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 block">
+            <div className="mt-10 border-t border-b border-white/[0.06] py-5">
+              <span className="font-mono text-[9px] uppercase tracking-widest text-neutral-500 block font-normal">
                 Rank Designation
               </span>
-              <p className="text-base font-bold text-white mt-0.5">
+              <p className="font-display italic font-light text-2xl text-white mt-1">
                 {nerdScore.label}
               </p>
-              <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+              <p className="font-sans font-normal text-xs text-neutral-400 mt-2 leading-relaxed">
                 Calculated by logging volume, era diversity, critical distribution, and arthouse index.
               </p>
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-white/[0.05] flex justify-between text-[11px] font-mono text-zinc-500">
-            <span>COMMUNITY BENCHMARK</span>
-            <span className="text-[#FF8000]">Elite Tier</span>
+          <div className="mt-10 pt-4 border-t border-white/[0.06] flex justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.24em] font-normal">
+            <span>Benchmark</span>
+            <span className="text-neutral-300">Verified</span>
           </div>
         </motion.div>
       </div>

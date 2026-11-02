@@ -71,50 +71,44 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
       : "Severe Realist";
 
   return (
-    <div className="relative overflow-hidden rounded-2xl cinema-panel p-6 sm:p-8">
-      {/* Subtle background glow */}
-      <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#00E054]/[0.05] blur-3xl" />
-
+    <div className="relative border-t border-b border-white/[0.08] py-12 sm:py-16">
       {/* Header */}
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/[0.06] pb-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-6 border-b border-white/[0.06] pb-8">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[#00E054] shadow-[0_0_8px_#00E054]" />
-            <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-[#00E054]">
-              Signature Letterboxd Curve
-            </span>
-          </div>
-          <h3 className="mt-1.5 text-xl sm:text-2xl font-bold tracking-tight text-white">
-            The Rating Spectrum
+          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block mb-2 font-normal">
+            SPECTRUM // 10-BAR DISTRIBUTION
+          </span>
+          <h3 className="font-display font-light text-3xl sm:text-5xl text-white tracking-tight leading-tight">
+            The Critical Curve
           </h3>
-          <p className="mt-0.5 text-xs text-zinc-400">
-            Critical curve calculated across {totalRated.toLocaleString()} logged ratings
+          <p className="mt-2 font-sans font-normal text-xs sm:text-sm text-neutral-400">
+            Calculated across {totalRated.toLocaleString()} logged ratings
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] px-3.5 py-2 text-right">
-            <span className="block text-[10px] font-mono uppercase tracking-wider text-zinc-500">
+        <div className="flex items-baseline gap-8 font-mono text-xs">
+          <div>
+            <span className="block text-[9px] uppercase tracking-[0.24em] text-neutral-500 font-normal">
               Critical Skew
             </span>
-            <span className="text-sm font-semibold text-zinc-200">
+            <span className="font-display italic text-lg text-white font-normal mt-0.5 block">
               {critiqueArchetype}
             </span>
           </div>
-          <div className="rounded-xl border border-[#00E054]/20 bg-[#00E054]/[0.06] px-3.5 py-2 text-right">
-            <span className="block text-[10px] font-mono uppercase tracking-wider text-[#00E054]/75">
-              Mean Rating
+          <div>
+            <span className="block text-[9px] uppercase tracking-[0.24em] text-neutral-500 font-normal">
+              Mean Score
             </span>
-            <span className="text-base font-bold text-white font-mono">
+            <span className="font-display text-xl text-white font-light mt-0.5 block">
               {avg ? `${avg.toFixed(2)} ★` : "—"}
             </span>
           </div>
         </div>
       </div>
 
-      {/* The 10-Bar Chart */}
-      <div className="pt-8 pb-4">
-        <div className="flex h-44 sm:h-52 items-end justify-between gap-2 sm:gap-3 px-1 sm:px-3">
+      {/* The 10-Bar Architectural Chart */}
+      <div className="pt-12 pb-6">
+        <div className="flex h-52 sm:h-64 items-end justify-between gap-2 sm:gap-6 px-2">
           {RATING_KEYS.map((key) => {
             const count = distribution[key] || 0;
             const heightPercent = totalRated > 0 ? Math.max((count / effectiveMax) * 100, 4) : 4;
@@ -129,60 +123,57 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
                 onMouseLeave={() => setHoveredKey(null)}
                 className="group relative flex flex-1 flex-col items-center h-full justify-end cursor-pointer"
               >
-                {/* Floating Tooltip Pill */}
+                {/* Floating Tooltip */}
                 <div
-                  className={`pointer-events-none absolute -top-11 z-20 flex flex-col items-center rounded-lg border border-white/[0.14] bg-[#12161A] px-2 py-1 shadow-xl transition-all duration-150 ${
+                  className={`pointer-events-none absolute -top-10 z-20 flex flex-col items-center border border-white/[0.12] bg-[#121214] px-2.5 py-1 transition-all duration-150 ${
                     isHovered
                       ? "opacity-100 scale-100 translate-y-0"
                       : "opacity-0 scale-95 translate-y-1"
                   }`}
                 >
-                  <span className="text-[11px] font-mono font-bold text-white whitespace-nowrap">
-                    {count} {count === 1 ? "film" : "films"}
-                  </span>
-                  <span className="text-[9px] font-mono text-zinc-400 whitespace-nowrap">
-                    {percentage}% of rated
+                  <span className="font-mono text-[9px] text-white whitespace-nowrap font-normal">
+                    {count} {count === 1 ? "film" : "films"} ({percentage}%)
                   </span>
                 </div>
 
-                {/* Star Count Count label above bar (visible for peak or hovered) */}
+                {/* Count label above bar */}
                 <span
-                  className={`mb-2 text-[11px] font-mono tabular-nums transition-colors duration-150 ${
+                  className={`mb-2 font-mono text-[9px] tabular-nums transition-colors duration-150 font-normal ${
                     isPeak
-                      ? "font-bold text-[#00E054]"
+                      ? "text-white"
                       : isHovered
                       ? "text-white"
-                      : "text-zinc-500 group-hover:text-zinc-300"
+                      : "text-neutral-500 group-hover:text-neutral-300"
                   }`}
                 >
                   {count > 0 ? count : ""}
                 </span>
 
                 {/* The Bar Track */}
-                <div className="relative w-full h-32 sm:h-36 flex items-end overflow-hidden rounded-t-[6px] bg-white/[0.04]">
+                <div className="relative w-full h-40 sm:h-48 flex items-end bg-white/[0.02]">
                   <motion.div
                     initial={{ height: 0 }}
                     whileInView={{ height: `${heightPercent}%` }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    className={`w-full rounded-t-[6px] transition-all duration-200 ${
+                    className={`w-full transition-colors duration-200 ${
                       isPeak
-                        ? "bg-gradient-to-t from-[#00b042] to-[#00ff60] shadow-[0_0_16px_rgba(0,224,84,0.35)]"
+                        ? "bg-neutral-200"
                         : isHovered
-                        ? "bg-[#00E054] shadow-[0_0_12px_rgba(0,224,84,0.25)]"
-                        : "bg-[#00E054]/80 group-hover:bg-[#00E054]"
+                        ? "bg-white"
+                        : "bg-neutral-600 group-hover:bg-neutral-400"
                     }`}
                   />
                 </div>
 
                 {/* Rating Label (½★ to 5★) */}
                 <span
-                  className={`mt-3 text-[10px] sm:text-xs font-mono tracking-tight transition-colors duration-150 ${
+                  className={`mt-4 font-mono text-[9px] tracking-tight transition-colors duration-150 font-normal ${
                     isPeak
-                      ? "font-bold text-[#00E054]"
+                      ? "text-white"
                       : isHovered
                       ? "text-white"
-                      : "text-zinc-500 group-hover:text-zinc-300"
+                      : "text-neutral-500 group-hover:text-neutral-300"
                   }`}
                 >
                   {RATING_LABELS[key]}
@@ -193,19 +184,22 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
         </div>
       </div>
 
-      {/* Footer details */}
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.05] pt-4 text-[12px] text-zinc-400">
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-zinc-500">Most Awarded Rating:</span>
-          <span className="font-semibold text-white">
+      {/* Footer details: Movie titles feel like magazine headlines */}
+      <div className="mt-8 flex flex-wrap items-baseline justify-between gap-6 border-t border-white/[0.06] pt-6 font-mono text-xs">
+        <div className="flex items-baseline gap-2">
+          <span className="text-neutral-500 uppercase text-[9px] tracking-[0.24em] font-normal">Most Awarded:</span>
+          <span className="text-white font-normal">
             {RATING_LABELS[peakKey]} ({peakCount.toLocaleString()} {peakCount === 1 ? "film" : "films"})
           </span>
         </div>
-        <div className="flex items-center gap-3 text-xs">
+        <div>
           {ratings.highestRatedMovie && (
-            <span className="text-zinc-400">
-              Highest: <strong className="text-white font-medium">{ratings.highestRatedMovie.filmTitle}</strong>
-            </span>
+            <div className="flex items-baseline gap-3">
+              <span className="text-neutral-500 uppercase text-[9px] tracking-[0.24em] font-normal">Pinnacle Rating:</span>
+              <span className="font-display italic font-normal text-xl sm:text-2xl text-white tracking-tight">
+                {ratings.highestRatedMovie.filmTitle}
+              </span>
+            </div>
           )}
         </div>
       </div>

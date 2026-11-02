@@ -50,47 +50,43 @@ export default async function ReportPage({
 
   if (!profile || !analytics) {
     return (
-      <main className="relative min-h-screen overflow-hidden bg-[#070707] text-white">
-        {/* Ambient background glow */}
-        <div className="pointer-events-none absolute -left-32 top-20 h-96 w-96 rounded-full bg-red-500/[0.06] blur-[120px]" />
-        <div className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-[#F5B000]/[0.03] blur-[120px]" />
-
-        <div className="mx-auto flex w-full max-w-[1400px] flex-1 flex-col px-5 py-16 sm:px-8 lg:px-12">
+      <main className="relative min-h-screen bg-[#080808] text-white">
+        <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-20 sm:px-10">
           <Link
             href="/"
-            className="btn-base btn-outlined mb-10 w-fit"
+            className="btn-editorial btn-editorial-ghost mb-12 w-fit text-[11px]"
           >
-            ← Back to search
+            ← Return to Index
           </Link>
 
-          <section className="relative overflow-hidden rounded-2xl border border-red-500/15 bg-gradient-to-b from-red-500/[0.03] to-transparent p-8 sm:p-10">
-            <div className="inline-flex items-center gap-2 rounded-full border border-red-400/15 bg-red-400/[0.06] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-red-300/80">
-              {isNotFound ? "Profile Not Found" : "Connection Error"}
-            </div>
+          <section className="border-t border-b border-white/[0.08] py-16">
+            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block font-normal">
+              {isNotFound ? "404 // PROFILE UNRESOLVED" : "502 // LEDGER ERROR"}
+            </span>
 
-            <h1 className="mt-6 text-3xl font-black tracking-tight text-white sm:text-4xl">
-              {isNotFound ? "Letterboxd User Not Found" : "Unable to Load Profile"}
+            <h1 className="mt-4 font-display italic font-light text-4xl sm:text-5xl text-white">
+              {isNotFound ? "Dossier Not Found" : "Unable to Retrieve Archive"}
             </h1>
 
-            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-zinc-400">
+            <p className="mt-4 max-w-xl text-sm font-sans font-normal leading-relaxed text-neutral-400">
               {errorMessage}
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-10 flex flex-wrap items-center gap-4">
               <Link
                 href="/"
-                className="btn-base btn-filled"
+                className="btn-editorial btn-editorial-primary text-[10px] tracking-[0.18em] h-9 px-4 font-medium"
               >
-                Try Another Username
+                Search Another Handle
               </Link>
               <a
                 href={`https://letterboxd.com/${encodeURIComponent(decodedUsername)}/`}
                 target="_blank"
                 rel="noreferrer"
-                className="btn-base btn-outlined"
+                className="btn-editorial btn-editorial-ghost text-[10px] tracking-[0.18em] h-9 px-4 font-normal"
               >
-                <span>Check on Letterboxd</span>
-                <span className="text-[11px]">↗</span>
+                <span>Letterboxd Profile</span>
+                <span className="text-neutral-500">↗</span>
               </a>
             </div>
           </section>

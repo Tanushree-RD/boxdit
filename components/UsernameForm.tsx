@@ -7,19 +7,16 @@ const SAMPLE_USERS = [
   {
     username: "karsten",
     name: "Karsten",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
     archetype: "The Thoughtful Cinephile",
   },
   {
     username: "davidehrlich",
     name: "David Ehrlich",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80",
     archetype: "The Auteur Loyalist",
   },
   {
     username: "letterboxd",
     name: "Letterboxd Official",
-    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80",
     archetype: "The Canonical Archivist",
   },
 ];
@@ -50,30 +47,17 @@ export function UsernameForm() {
       <form
         id="launch"
         onSubmit={handleSubmit}
-        className={`relative w-full rounded-2xl border transition-all duration-300 ${
+        className={`relative w-full border transition-all duration-300 ${
           isFocused
-            ? "border-[#FF8000]/60 bg-[#12161B]/95 shadow-[0_0_40px_-5px_rgba(255,128,0,0.22)]"
-            : "border-white/[0.12] bg-[#101418]/80 hover:border-white/[0.22]"
-        } backdrop-blur-xl p-2 sm:p-2.5`}
+            ? "border-white/[0.3] bg-[#0E0E10]"
+            : "border-white/[0.1] bg-[#0A0A0B] hover:border-white/[0.18]"
+        } p-2`}
       >
-        <div className="flex items-center gap-3">
-          {/* Letterboxd Icon Prefix */}
-          <div className="flex items-center gap-2 pl-2 sm:pl-3 select-none text-zinc-400 font-mono text-xs">
-            <svg
-              className="h-4 w-4 text-[#FF8000]"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-              />
-            </svg>
-            <span className="hidden sm:inline text-zinc-400 font-mono text-[13px]">letterboxd.com/</span>
-            <span className="sm:hidden text-zinc-400 font-mono text-[13px]">@</span>
+        <div className="flex items-center gap-2">
+          {/* Prefix */}
+          <div className="flex items-center pl-3 select-none text-neutral-500 font-mono text-xs font-normal">
+            <span className="hidden sm:inline">letterboxd.com/</span>
+            <span className="sm:hidden">@</span>
           </div>
 
           {/* Input Field */}
@@ -84,24 +68,24 @@ export function UsernameForm() {
             onChange={(e) => setUsername(e.target.value)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            placeholder="username"
+            placeholder="handle"
             disabled={isLoading}
             autoComplete="off"
             spellCheck="false"
             aria-label="Letterboxd username"
-            className="h-11 flex-1 border-0 bg-transparent px-1 text-base font-normal tracking-tight text-white placeholder:text-zinc-500 focus:outline-none disabled:opacity-50"
+            className="h-10 flex-1 border-0 bg-transparent px-2 font-mono text-sm font-normal tracking-tight text-white placeholder:text-neutral-600 focus:outline-none disabled:opacity-40"
           />
 
           {/* Submit Button */}
           <button
             type="submit"
             disabled={!username.trim() || isLoading}
-            className="btn-base btn-filled px-5 py-2.5 h-11 text-xs font-semibold shrink-0 cursor-pointer shadow-lg hover:brightness-110 active:scale-95 transition-all"
+            className="btn-editorial btn-editorial-primary px-4 h-10 text-[10px] tracking-[0.2em] font-medium shrink-0 cursor-pointer"
           >
             {isLoading ? (
-              <span className="inline-flex items-center gap-2">
+              <span className="inline-flex items-center gap-2 font-normal">
                 <svg
-                  className="h-3.5 w-3.5 animate-spin text-current"
+                  className="h-3 w-3 animate-spin text-current"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -112,7 +96,7 @@ export function UsernameForm() {
                     cy="12"
                     r="10"
                     stroke="currentColor"
-                    strokeWidth="4"
+                    strokeWidth="3"
                   />
                   <path
                     className="opacity-75"
@@ -120,22 +104,22 @@ export function UsernameForm() {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   />
                 </svg>
-                <span>Analyzing</span>
+                <span>Accessing</span>
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5">
-                <span>Generate Dossier</span>
-                <span className="text-xs">→</span>
+              <span className="inline-flex items-center gap-1.5 font-normal">
+                <span>Inspect</span>
+                <span>→</span>
               </span>
             )}
           </button>
         </div>
       </form>
 
-      {/* Curated Cinephile Fast-Picks */}
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs">
-        <span className="text-zinc-400 font-mono text-[11px] uppercase tracking-wider mr-1">
-          Explore Examples:
+      {/* Curated Exemplar Fast-Picks */}
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs">
+        <span className="text-neutral-500 font-mono text-[9px] uppercase tracking-[0.28em] font-normal">
+          Specimens:
         </span>
         {SAMPLE_USERS.map((sample) => (
           <button
@@ -143,12 +127,11 @@ export function UsernameForm() {
             type="button"
             onClick={() => handleQuickFill(sample.username)}
             disabled={isLoading}
-            className="group flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-zinc-300 hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.06] hover:text-white transition-all cursor-pointer"
+            className="group flex items-center gap-2 border border-white/[0.08] bg-transparent px-3 py-1 text-neutral-400 hover:border-white/[0.2] hover:text-white transition-all cursor-pointer font-mono text-[10px] tracking-[0.14em] font-normal"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-[#00E054] group-hover:scale-125 transition-transform" />
-            <span className="font-mono text-xs">@{sample.username}</span>
-            <span className="text-[10px] text-zinc-400 font-serif italic hidden md:inline">
-              ({sample.archetype})
+            <span>@{sample.username}</span>
+            <span className="text-neutral-500 font-display italic font-light text-xs hidden md:inline">
+              / {sample.archetype}
             </span>
           </button>
         ))}

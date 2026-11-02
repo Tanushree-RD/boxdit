@@ -17,14 +17,14 @@ interface ReportPageClientProps {
 }
 
 const sectionVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 16 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
       duration: 0.7,
       ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-      delay: i * 0.12,
+      delay: i * 0.08,
     },
   }),
 };
@@ -37,41 +37,33 @@ export function ReportPageClient({
   const profileUrl = `https://letterboxd.com/${encodeURIComponent(profile.username)}/`;
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#090B0E] text-white selection:bg-[#FF8000]/30 selection:text-white">
-      {/* Subtle warm atmospheric spotlight */}
-      <div className="pointer-events-none fixed inset-0 z-0">
-        <div className="absolute left-1/2 -top-40 h-[650px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,_rgba(255,128,0,0.06),_transparent_70%)] blur-3xl" />
-        <div className="absolute right-0 top-1/3 h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(0,224,84,0.03),_transparent_70%)] blur-3xl" />
-        <div className="absolute -left-20 bottom-1/4 h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(64,188,244,0.03),_transparent_70%)] blur-3xl" />
-      </div>
+    <main className="relative min-h-screen bg-[#080808] text-white selection:bg-white/20 selection:text-white">
+      {/* Archival grain */}
+      <div className="film-grain fixed inset-0 opacity-[0.02] pointer-events-none" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-1 flex-col px-5 py-8 sm:px-8 lg:px-12">
-        {/* Navigation Bar */}
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 py-12 sm:px-12">
+        {/* Navigation Masthead */}
         <motion.header
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-10 sm:mb-12 flex items-center justify-between"
+          className="mb-16 sm:mb-24 flex items-center justify-between border-b border-white/[0.08] pb-6"
         >
           <Link
             href="/"
-            className="btn-base btn-outlined gap-2"
+            className="font-mono text-[10px] tracking-[0.2em] uppercase text-neutral-400 hover:text-white transition-colors"
           >
-            <span className="text-zinc-500">←</span>
-            <span>Search another cinephile</span>
+            ← Return to Index
           </Link>
 
-          <div className="flex items-center gap-2.5">
-            <span className="h-2 w-2 rounded-full bg-[#00E054] shadow-[0_0_8px_#00E054]" />
-            <span className="text-[11px] font-mono font-semibold uppercase tracking-[0.22em] text-zinc-400">
-              Boxdit Dossier // @{decodedUsername}
-            </span>
+          <div className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 font-normal">
+            DOSSIER ARCHIVE // @{decodedUsername}
           </div>
         </motion.header>
 
-        {/* Content Flow with Generous Spacing */}
-        <div className="space-y-16 sm:space-y-20 pb-24">
-          {/* 1. Top Hero Section */}
+        {/* Content Flow with Generous Whitespace */}
+        <div className="space-y-36 sm:space-y-48 pb-32">
+          {/* 1. Monograph Hero Section */}
           <motion.div
             variants={sectionVariants}
             custom={0}
@@ -90,7 +82,7 @@ export function ReportPageClient({
             />
           </motion.div>
 
-          {/* 2. Signature 10-Bar Letterboxd Rating Curve */}
+          {/* 2. Signature 10-Bar Rating Curve */}
           <motion.div
             variants={sectionVariants}
             custom={1}
@@ -101,7 +93,7 @@ export function ReportPageClient({
             <RatingHistogram ratings={analytics.ratings} />
           </motion.div>
 
-          {/* 3. Core Highlights Bento Grid */}
+          {/* 3. Core Highlights Grid */}
           <motion.div
             variants={sectionVariants}
             custom={2}
@@ -119,7 +111,7 @@ export function ReportPageClient({
             />
           </motion.div>
 
-          {/* 4. Deep-Dive Insights Cards */}
+          {/* 4. Deep-Dive Curatorial Insights */}
           <motion.div
             variants={sectionVariants}
             custom={3}
@@ -130,7 +122,7 @@ export function ReportPageClient({
             <InsightsSection insights={analytics.insights} />
           </motion.div>
 
-          {/* 5. Recent Diary & Activity */}
+          {/* 5. Recent Screening Journal */}
           <motion.div
             variants={sectionVariants}
             custom={4}
@@ -145,30 +137,29 @@ export function ReportPageClient({
           </motion.div>
         </div>
 
-        {/* Letterboxd Outro CTA */}
+        {/* Letterboxd Outro Section */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-3xl cinema-panel p-8 sm:p-12 text-center my-12 relative overflow-hidden shadow-2xl"
+          className="border-t border-b border-white/[0.08] py-16 sm:py-24 text-center my-12"
         >
-          <div className="pointer-events-none absolute left-1/2 top-0 h-40 w-80 -translate-x-1/2 rounded-full bg-[#00E054]/[0.08] blur-3xl" />
-          <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#00E054]">
+          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block font-normal">
             PRIMARY ARCHIVE
           </span>
-          <h3 className="mt-2 text-2xl sm:text-3xl font-bold text-white tracking-tight">
-            Continue exploring on Letterboxd
+          <h3 className="mt-4 font-display italic font-light text-3xl sm:text-5xl text-white leading-tight">
+            &ldquo;Continue exploring on Letterboxd&rdquo;
           </h3>
-          <p className="mt-2 max-w-md mx-auto text-xs sm:text-sm font-light text-zinc-400 leading-relaxed">
-            View @{profile.username}&apos;s complete diary, lists, review dispatches, and watchlist directly on Letterboxd.
+          <p className="mt-4 max-w-md mx-auto font-sans font-normal text-xs sm:text-sm text-neutral-400 leading-relaxed">
+            Inspect @{profile.username}&apos;s complete chronological diary, custom lists, review dispatches, and watchlist directly on Letterboxd.
           </p>
-          <div className="mt-6 flex justify-center">
+          <div className="mt-10 flex justify-center">
             <a
               href={profileUrl}
               target="_blank"
               rel="noreferrer"
-              className="btn-base btn-filled gap-2 px-6 py-2.5 text-xs font-semibold shadow-lg hover:brightness-110 active:scale-95 transition-all"
+              className="btn-editorial btn-editorial-primary px-6 h-10 text-[10px] tracking-[0.2em] font-medium"
             >
               <span>Open @{profile.username} on Letterboxd</span>
               <span>↗</span>
@@ -176,12 +167,12 @@ export function ReportPageClient({
           </div>
         </motion.div>
 
-        {/* Footer */}
-        <footer className="border-t border-white/[0.04] py-10 text-center">
-          <p className="text-[11px] font-light text-zinc-600">
-            Generated by Boxdit
+        {/* Footer Colophon */}
+        <footer className="border-t border-white/[0.08] py-16 text-center">
+          <p className="font-mono text-[9px] uppercase tracking-widest text-neutral-500 font-normal">
+            Dossier compiled by Boxdit
           </p>
-          <p className="mt-1 text-[10px] font-light text-zinc-700">
+          <p className="mt-2 font-mono text-[9px] uppercase tracking-widest text-neutral-600 font-normal">
             Data sourced from Letterboxd. Not affiliated with Letterboxd.
           </p>
         </footer>
@@ -189,4 +180,3 @@ export function ReportPageClient({
     </main>
   );
 }
-

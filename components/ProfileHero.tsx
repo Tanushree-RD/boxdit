@@ -38,160 +38,121 @@ export function ProfileHero({
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="relative overflow-hidden rounded-3xl cinema-panel p-7 sm:p-10 lg:p-12 shadow-2xl"
+        className="relative border-t border-b border-white/[0.08] py-12 sm:py-16"
       >
-        {/* Filmic Lighting Accents */}
-        <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-[#FF8000]/[0.08] blur-3xl" />
-        <div className="pointer-events-none absolute right-0 top-0 h-80 w-80 rounded-full bg-[#00E054]/[0.04] blur-3xl" />
-        
-        {/* Perforated Film Strip Detail Indicator in top-right */}
-        <div className="absolute right-6 top-6 hidden sm:flex items-center gap-1.5 opacity-30 select-none">
-          <span className="h-3 w-2 rounded-[1px] border border-white/40" />
-          <span className="h-3 w-2 rounded-[1px] border border-white/40" />
-          <span className="h-3 w-2 rounded-[1px] border border-white/40" />
-          <span className="text-[10px] font-mono tracking-widest uppercase ml-1">35MM CANON</span>
+        {/* Top Meta Line: Small Uppercase Tracked */}
+        <div className="flex flex-wrap items-baseline justify-between gap-4 pb-8 mb-10 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 font-normal">
+          <span>MONOGRAPH // @{username}</span>
+          <span>Index: {nerdScore.score}/100 · {nerdScore.label}</span>
         </div>
 
-        <div className="relative flex flex-col items-center text-center lg:flex-row lg:items-start lg:text-left lg:gap-10">
-          {/* Avatar with Festival Pass Ring */}
-          <div className="relative shrink-0 mb-6 lg:mb-0">
-            <div className="relative h-32 w-32 sm:h-36 sm:w-36 overflow-hidden rounded-full border-2 border-white/[0.12] bg-[#14181C] p-1 shadow-2xl">
-              <div className="relative h-full w-full overflow-hidden rounded-full">
-                <Image
-                  src={avatar || FALLBACK_AVATAR}
-                  alt={`${displayName} avatar`}
-                  fill
-                  sizes="(max-width: 640px) 128px, 144px"
-                  className="object-cover"
-                  unoptimized
-                />
-              </div>
-            </div>
-
-            {/* Nerd Score Stamp Badge */}
-            <div className="absolute -bottom-2 -right-2 flex items-center gap-1 rounded-full border border-[#FF8000]/30 bg-[#14181C] px-3 py-1 text-[11px] font-mono font-bold text-[#FF8000] shadow-lg">
-              <span>{nerdScore.score}</span>
-              <span className="text-[9px] text-zinc-500 font-normal">/100</span>
+        {/* Hero Identity Body */}
+        <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12">
+          {/* Avatar in Minimal Hairline Frame */}
+          <div className="relative shrink-0 mb-8 lg:mb-0">
+            <div className="relative h-28 w-28 sm:h-36 sm:w-36 overflow-hidden border border-white/[0.12] bg-[#101012]">
+              <Image
+                src={avatar || FALLBACK_AVATAR}
+                alt={`${displayName} avatar`}
+                fill
+                sizes="(max-width: 640px) 112px, 144px"
+                className="object-cover"
+                unoptimized
+              />
             </div>
           </div>
 
-          {/* User & Persona Details */}
-          <div className="flex-1 min-w-0 space-y-4">
-            {/* Header Badges */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#FF8000]/25 bg-[#FF8000]/[0.08] px-3.5 py-1 text-[11px] font-semibold tracking-wider text-[#FF9526] uppercase font-mono">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#FF8000] animate-pulse" />
-                Verified Dossier
-              </span>
-              <span className="inline-flex items-center rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 text-[11px] font-mono text-zinc-400">
-                {nerdScore.label}
-              </span>
-            </div>
-
-            {/* Display Name & Handle */}
+          {/* User Details & Archetype Synthesis */}
+          <div className="flex-1 min-w-0 space-y-8">
             <div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white">
-                {displayName}
-              </h1>
-              <div className="mt-2 flex flex-wrap items-center justify-center lg:justify-start gap-2 text-sm text-zinc-400">
-                <span className="font-mono text-zinc-300">@{username}</span>
-                <span className="text-zinc-600 select-none">·</span>
+              <div className="flex flex-wrap items-baseline gap-4">
+                <h1 className="text-4xl sm:text-6xl lg:text-7xl font-display font-light tracking-tight text-white leading-none">
+                  {displayName}
+                </h1>
+                <span className="font-mono text-xs text-neutral-500 font-normal">
+                  @{username}
+                </span>
                 <a
                   href={`https://letterboxd.com/${username}/`}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-[#00E054] hover:underline underline-offset-4 transition-colors"
+                  className="font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-400 hover:text-white transition-colors"
                 >
-                  <span>Letterboxd Profile</span>
-                  <span className="text-[10px]">↗</span>
+                  [ Letterboxd ↗ ]
                 </a>
               </div>
-            </div>
 
-            {/* Archetype Editorial Banner */}
-            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 sm:p-5 text-left">
-              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#FF8000]/80">
-                Cinematic Archetype
-              </span>
-              <h2 className="mt-1 text-xl sm:text-2xl font-serif italic font-normal text-white">
-                &ldquo;{persona.title}&rdquo;
-              </h2>
-              <p className="mt-1.5 text-xs sm:text-[13px] text-zinc-400 leading-relaxed max-w-2xl font-normal">
-                {persona.tagline}
-              </p>
+              {/* Archetype Editorial Headline */}
+              <div className="mt-8 pt-8 border-t border-white/[0.06]">
+                <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block mb-2 font-normal">
+                  Diagnosed Archetype
+                </span>
+                <h2 className="font-display italic font-light text-3xl sm:text-5xl text-white leading-tight">
+                  &ldquo;{persona.title}&rdquo;
+                </h2>
+                <p className="mt-4 max-w-2xl font-sans font-normal text-xs sm:text-sm text-neutral-400 leading-relaxed">
+                  {persona.tagline}
+                </p>
 
-              {/* Persona Traits */}
-              <div className="mt-3.5 flex flex-wrap items-center gap-1.5">
-                {persona.traits.map((trait) => (
-                  <span
-                    key={trait}
-                    className="rounded-full border border-white/[0.07] bg-white/[0.03] px-2.5 py-0.5 text-[11px] font-mono text-zinc-300"
-                  >
-                    #{trait}
-                  </span>
-                ))}
+                {/* Persona Traits */}
+                <div className="mt-6 flex flex-wrap gap-3 font-mono text-[9px] uppercase tracking-[0.2em] text-neutral-500">
+                  {persona.traits.map((trait, idx) => (
+                    <span key={trait}>
+                      {idx > 0 && <span className="mr-3 text-neutral-700">·</span>}
+                      #{trait}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Share Action Button */}
-          <div className="mt-6 lg:mt-0 shrink-0 self-center lg:self-start">
+          {/* Share Action */}
+          <div className="mt-8 lg:mt-0 shrink-0 self-start">
             <button
               onClick={() => setIsShareOpen(true)}
-              className="btn-base btn-filled gap-2 px-5 py-2.5 text-xs font-semibold cursor-pointer shadow-lg hover:brightness-110 active:scale-95 transition-all"
+              className="btn-editorial btn-editorial-ghost font-mono text-[9px] tracking-[0.2em] h-9 px-4 uppercase font-normal cursor-pointer"
             >
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-                />
-              </svg>
-              <span>Share Dossier</span>
+              <span>Export Pass</span>
+              <span>→</span>
             </button>
           </div>
         </div>
 
-        {/* Quick Ticker Ribbon */}
-        <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 border-t border-white/[0.06] pt-6">
-          <div className="rounded-xl bg-white/[0.02] border border-white/[0.04] p-3 text-center sm:text-left">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
+        {/* 4-Metric Grid Communicating via Typography */}
+        <div className="mt-14 grid grid-cols-2 sm:grid-cols-4 border-t border-white/[0.08] divide-y sm:divide-y-0 sm:divide-x divide-white/[0.08] pt-8 sm:pt-0">
+          <div className="py-6 sm:py-8 sm:px-8 sm:first:pl-0">
+            <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block font-normal">
               Films Logged
             </span>
-            <p className="text-xl font-bold text-white font-mono mt-0.5">
+            <p className="font-display font-light text-3xl sm:text-4xl text-white mt-2">
               {totalMovies.toLocaleString()}
             </p>
           </div>
 
-          <div className="rounded-xl bg-white/[0.02] border border-white/[0.04] p-3 text-center sm:text-left">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
+          <div className="py-6 sm:py-8 sm:px-8">
+            <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block font-normal">
               Mean Rating
             </span>
-            <p className="text-xl font-bold text-[#00E054] font-mono mt-0.5">
+            <p className="font-display font-light text-3xl sm:text-4xl text-white mt-2">
               {avgRating ? `${avgRating.toFixed(2)} ★` : "—"}
             </p>
           </div>
 
-          <div className="rounded-xl bg-white/[0.02] border border-white/[0.04] p-3 text-center sm:text-left">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
-              Peak Era
+          <div className="py-6 sm:py-8 sm:px-8">
+            <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block font-normal">
+              Dominant Era
             </span>
-            <p className="text-xl font-bold text-white font-mono mt-0.5">
+            <p className="font-display font-light text-3xl sm:text-4xl text-white mt-2">
               {favoriteDecade}
             </p>
           </div>
 
-          <div className="rounded-xl bg-white/[0.02] border border-white/[0.04] p-3 text-center sm:text-left">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500">
+          <div className="py-6 sm:py-8 sm:px-8">
+            <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-neutral-500 block font-normal">
               Percentile Rank
             </span>
-            <p className="text-xl font-bold text-[#FF8000] font-mono mt-0.5">
+            <p className="font-display font-light text-3xl sm:text-4xl text-white mt-2">
               {nerdScore.percentile || "Top 5%"}
             </p>
           </div>

@@ -35,30 +35,27 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="mb-6 sm:mb-8 px-1 flex flex-wrap items-end justify-between gap-4"
+        className="mb-14 flex flex-wrap items-baseline justify-between gap-4 border-b border-white/[0.08] pb-8"
       >
         <div>
-          <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#00E054]" />
-            <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-[#00E054]">
-              Taste Anomalies &amp; Milestones
-            </span>
-          </div>
-          <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-white">
+          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-neutral-500 block mb-2 font-normal">
+            CURATORIAL DISPATCHES // SUPERLATIVES
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-display font-light tracking-tight text-white">
             Editorial Superlatives
           </h2>
-          <p className="mt-1 text-xs sm:text-sm text-zinc-400">
+          <p className="mt-2 text-xs sm:text-sm text-neutral-400 font-sans font-normal">
             Curious patterns, polarities, and milestones uncovered in your logging behavior
           </p>
         </div>
 
-        <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-widest hidden sm:inline-block">
-          RECOGNIZED INSIGHTS
+        <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-widest hidden sm:inline-block font-normal">
+          Dispatches
         </span>
       </motion.div>
 
-      {/* Grid of Insight Artifacts */}
-      <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Grid of Curatorial Artifacts with Magazine Headline Titles */}
+      <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {insights.map((item, i) => {
           return (
             <motion.div
@@ -68,42 +65,51 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              className="group relative flex flex-col justify-between rounded-2xl cinema-panel cinema-panel-hover p-6 sm:p-7"
+              className="border-t border-b border-white/[0.08] py-8 flex flex-col justify-between"
             >
               <div>
-                {/* Header Badge */}
-                <div className="flex items-center justify-between border-b border-white/[0.06] pb-3.5">
-                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400">
-                    {item.title}
-                  </span>
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#FF8000]/60" />
+                {/* Category Label */}
+                <div className="flex items-baseline justify-between border-b border-white/[0.06] pb-4 font-mono text-[9px] uppercase tracking-[0.24em] text-neutral-500 font-normal">
+                  <span>{item.title}</span>
+                  <span>[ 0{i + 1} ]</span>
                 </div>
 
-                {/* Content: Poster + Title */}
-                <div className="my-5 flex items-start gap-3.5">
+                {/* Content: Poster + Magazine Headline Title */}
+                <div className="my-6 space-y-4">
                   {item.posterUrl ? (
-                    <div className="relative h-20 w-14 shrink-0 overflow-hidden rounded-md border border-white/[0.1] bg-[#14181C] shadow-md group-hover:border-white/[0.25] transition-colors">
+                    <div className="relative h-44 w-28 overflow-hidden border border-white/[0.1] bg-[#121214]">
                       <Image
                         src={item.posterUrl || FALLBACK_POSTER}
                         alt={item.value}
                         fill
-                        sizes="56px"
+                        sizes="112px"
                         className="object-cover"
                         unoptimized
                       />
                     </div>
                   ) : null}
 
-                  <div className="min-w-0 flex-1">
+                  <div>
                     <h3
                       title={item.value}
-                      className="text-base sm:text-lg font-bold text-white tracking-tight leading-snug line-clamp-2 group-hover:text-[#FF8000] transition-colors"
+                      className="font-display italic font-normal text-2xl sm:text-3xl text-white leading-tight tracking-tight"
                     >
-                      {item.value}
+                      {item.link ? (
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="hover:underline underline-offset-4 decoration-white/20"
+                        >
+                          {item.value}
+                        </a>
+                      ) : (
+                        item.value
+                      )}
                     </h3>
                     <p
                       title={item.subtitle}
-                      className="mt-1.5 text-xs text-zinc-400 leading-relaxed line-clamp-2"
+                      className="mt-2 font-sans font-normal text-xs text-neutral-400 leading-relaxed"
                     >
                       {item.subtitle}
                     </p>
@@ -112,20 +118,19 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
               </div>
 
               {/* Card Footer */}
-              <div className="pt-3.5 border-t border-white/[0.05] flex items-center justify-between text-[11px] font-mono text-zinc-500">
-                <span className="uppercase tracking-wider">VERIFIED SNAPSHOT</span>
+              <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between font-mono text-[9px] text-neutral-500 uppercase tracking-[0.2em] font-normal">
+                <span>Verified</span>
                 {item.link ? (
                   <a
                     href={item.link}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-[#00E054] hover:underline transition-colors"
+                    className="text-neutral-400 hover:text-white transition-colors"
                   >
-                    <span>View Film</span>
-                    <span className="text-[9px]">↗</span>
+                    Letterboxd ↗
                   </a>
                 ) : (
-                  <span className="text-zinc-500">CANONICAL</span>
+                  <span>Canonical</span>
                 )}
               </div>
             </motion.div>
