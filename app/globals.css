@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --background: #080808;
-  --foreground: #EDEDED;
-  --muted: #A1A1AA;
-  --faint: #52525B;
+  --background: #050505;
+  --foreground: #F5F5F5;
+  --muted: rgba(255, 255, 255, 0.55);
+  --faint: rgba(255, 255, 255, 0.35);
   
-  --surface-base: #0C0C0D;
-  --surface-raised: #121214;
-  --surface-subtle: rgba(255, 255, 255, 0.03);
+  --surface-base: #0D0D0D;
+  --surface-raised: #0D0D0D;
+  --surface-subtle: rgba(255, 255, 255, 0.02);
   
-  --hairline: rgba(255, 255, 255, 0.08);
-  --hairline-hover: rgba(255, 255, 255, 0.16);
-  --hairline-faint: rgba(255, 255, 255, 0.04);
+  --hairline: rgba(255, 255, 255, 0.06);
+  --hairline-hover: rgba(255, 255, 255, 0.12);
+  --hairline-faint: rgba(255, 255, 255, 0.03);
 }
 
 @theme inline {
@@ -49,8 +49,8 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: #080808;
-  color: var(--foreground);
+  background: #050505;
+  color: #F5F5F5;
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -61,8 +61,8 @@ body {
 }
 
 ::selection {
-  background: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.18);
+  color: #F5F5F5;
 }
 
 a {
@@ -76,15 +76,15 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-  background: #080808;
+  background: #050505;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* Minimalist Editorial Film Grain */
@@ -95,15 +95,15 @@ a {
 /* Editorial Plates and Surfaces - Crisp, Matte, Hairline */
 .editorial-plate,
 .cinema-panel {
-  background: #0C0C0D;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0D0D0D;
+  border: 1px solid rgba(255, 255, 255, 0.06);
   transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .editorial-plate-hover:hover,
 .cinema-panel-hover:hover {
-  border-color: rgba(255, 255, 255, 0.16);
-  background: #101012;
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #111111;
 }
 
 /* Restrained Editorial Button System */
@@ -140,9 +140,9 @@ a {
 /* Primary Button: Crisp ivory surface, deep dark text, calm hover */
 .btn-editorial-primary,
 .btn-filled {
-  background: #EDEDED;
-  color: #080808;
-  border: 1px solid #EDEDED;
+  background: #F5F5F5;
+  color: #050505;
+  border: 1px solid #F5F5F5;
   font-weight: 500;
 }
 
@@ -156,13 +156,13 @@ a {
 .btn-editorial-ghost,
 .btn-outlined {
   background: transparent;
-  color: #A1A1AA;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .btn-editorial-ghost:hover:not(:disabled),
 .btn-outlined:hover:not(:disabled) {
-  color: #EDEDED;
-  border-color: rgba(255, 255, 255, 0.28);
+  color: #F5F5F5;
+  border-color: rgba(255, 255, 255, 0.16);
   background: rgba(255, 255, 255, 0.02);
 }
