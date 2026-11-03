@@ -34,6 +34,8 @@ const RATING_LABELS: Record<RatingKey, string> = {
   "5.0": "5★",
 };
 
+const smoothEase = [0.16, 1, 0.3, 1] as const;
+
 export function RatingHistogram({ ratings }: RatingHistogramProps) {
   const [hoveredKey, setHoveredKey] = useState<RatingKey | null>(null);
 
@@ -75,7 +77,13 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
       {/* 12-Column Editorial Spread */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
         {/* Left Column (5 cols): Curatorial Commentary & Verdict */}
-        <div className="lg:col-span-5 space-y-8">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.7, ease: smoothEase }}
+          className="lg:col-span-5 space-y-8"
+        >
           <div>
             <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block mb-4 font-normal">
               EXHIBIT 01 // CRITICAL SPECTRUM
@@ -124,10 +132,16 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
               Derived from {totalRated.toLocaleString()} logged ratings across catalogue
             </p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Column (7 cols): The Architectural Histogram */}
-        <div className="lg:col-span-7 flex flex-col justify-end pt-4 lg:pt-0">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.7, ease: smoothEase, delay: 0.1 }}
+          className="lg:col-span-7 flex flex-col justify-end pt-4 lg:pt-0"
+        >
           <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-white/55 pb-4 border-b border-white/[0.06] mb-8 font-normal">
             <span>FREQUENCY SPECTRUM // 10 BINS</span>
             <span>HIGH WATER: {peakCount} FILMS</span>
@@ -135,7 +149,7 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
 
           {/* Bar Chart Area with Generous Height */}
           <div className="h-64 sm:h-72 flex items-end justify-between gap-2 sm:gap-4 px-1">
-            {RATING_KEYS.map((key) => {
+            {RATING_KEYS.map((key, idx) => {
               const count = distribution[key] || 0;
               const heightPercent = totalRated > 0 ? Math.max((count / effectiveMax) * 100, 3) : 3;
               const isPeak = key === peakKey && count > 0;
@@ -151,10 +165,10 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
                 >
                   {/* Floating Tooltip */}
                   <div
-                    className={`pointer-events-none absolute -top-12 z-20 flex flex-col items-center border border-white/[0.06] bg-[#0D0D0D] px-2.5 py-1.5 transition-all duration-150 ${
+                    className={`pointer-events-none absolute -top-12 z-20 flex flex-col items-center border border-white/[0.06] bg-[#0D0D0D] px-2.5 py-1.5 transition-all duration-200 ease-out ${
                       isHovered
                         ? "opacity-100 scale-100 translate-y-0"
-                        : "opacity-0 scale-95 translate-y-1"
+                        : "opacity-0 scale-98 translate-y-1"
                     }`}
                   >
                     <span className="font-mono text-[9px] text-[#F5F5F5] whitespace-nowrap font-normal">
@@ -164,7 +178,7 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
 
                   {/* Count above bar */}
                   <span
-                    className={`mb-2 font-mono text-[9px] tabular-nums transition-colors duration-150 font-normal ${
+                    className={`mb-2 font-mono text-[9px] tabular-nums transition-colors duration-200 font-normal ${
                       isPeak
                         ? "text-[#F5F5F5]"
                         : isHovered
@@ -175,14 +189,18 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
                     {count > 0 ? count : ""}
                   </span>
 
-                  {/* Bar Track & Fill */}
+                  {/* Bar Track & Fill with Staggered Cascading Entry */}
                   <div className="relative w-full h-48 sm:h-56 flex items-end bg-white/[0.02]">
                     <motion.div
                       initial={{ height: 0 }}
                       whileInView={{ height: `${heightPercent}%` }}
                       viewport={{ once: true }}
-                      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                      className={`w-full transition-colors duration-200 ${
+                      transition={{
+                        duration: 0.75,
+                        delay: 0.15 + idx * 0.035,
+                        ease: smoothEase,
+                      }}
+                      className={`w-full transition-colors duration-300 ease-out ${
                         isPeak
                           ? "bg-[#F5F5F5]"
                           : isHovered
@@ -194,7 +212,7 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
 
                   {/* Rating Label Below Baseline */}
                   <span
-                    className={`mt-3 font-mono text-[10px] tracking-tight transition-colors duration-150 font-normal ${
+                    className={`mt-3 font-mono text-[10px] tracking-tight transition-colors duration-200 font-normal ${
                       isPeak
                         ? "text-[#F5F5F5] font-medium"
                         : isHovered
@@ -213,7 +231,7 @@ export function RatingHistogram({ ratings }: RatingHistogramProps) {
             <span>LOW DISCRIMINATION (0.5★)</span>
             <span>HIGH ACCLAIM (5.0★)</span>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -3,14 +3,14 @@
 import { motion } from "framer-motion";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 10 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.7,
+      duration: 0.75,
       ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-      delay: i * 0.08,
+      delay: i * 0.07,
     },
   }),
 };
@@ -58,7 +58,7 @@ export function FeatureCards() {
           viewport={{ once: true, margin: "-40px" }}
           variants={fadeUp}
           custom={3}
-          className="py-10 md:py-0 md:px-10 first:pl-0 last:pr-0 flex flex-col justify-between"
+          className="py-10 md:py-0 md:px-10 first:pl-0 last:pr-0 flex flex-col justify-between group transition-transform duration-400 ease-out hover:-translate-y-1"
         >
           <div>
             <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block mb-6 font-normal">
@@ -72,18 +72,25 @@ export function FeatureCards() {
               An unvarnished look at your rating tendencies. Discover whether you skew toward generous 4-star adulation or austere critical skepticism.
             </p>
 
-            {/* Micro Chart */}
+            {/* Micro Chart with Staggered Bars */}
             <div className="mt-10 border-t border-b border-white/[0.06] py-5">
               <div className="flex h-14 items-end justify-between gap-1">
                 {[12, 24, 38, 62, 85, 100, 72, 45, 22, 10].map((h, idx) => {
                   const isPeak = idx === 5;
                   return (
-                    <div
+                    <motion.div
                       key={idx}
-                      className={`flex-1 transition-colors ${
+                      initial={{ height: 0 }}
+                      whileInView={{ height: `${h}%` }}
+                      viewport={{ once: true }}
+                      transition={{
+                        duration: 0.6,
+                        delay: 0.2 + idx * 0.025,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      className={`flex-1 transition-colors duration-200 ${
                         isPeak ? "bg-[#F5F5F5]" : "bg-white/20 hover:bg-white/40"
                       }`}
-                      style={{ height: `${h}%` }}
                     />
                   );
                 })}
@@ -109,7 +116,7 @@ export function FeatureCards() {
           viewport={{ once: true, margin: "-40px" }}
           variants={fadeUp}
           custom={4}
-          className="py-10 md:py-0 md:px-10 flex flex-col justify-between"
+          className="py-10 md:py-0 md:px-10 flex flex-col justify-between group transition-transform duration-400 ease-out hover:-translate-y-1"
         >
           <div>
             <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block mb-6 font-normal">
@@ -147,7 +154,7 @@ export function FeatureCards() {
           viewport={{ once: true, margin: "-40px" }}
           variants={fadeUp}
           custom={5}
-          className="py-10 md:py-0 md:px-10 last:pr-0 flex flex-col justify-between"
+          className="py-10 md:py-0 md:px-10 last:pr-0 flex flex-col justify-between group transition-transform duration-400 ease-out hover:-translate-y-1"
         >
           <div>
             <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block mb-6 font-normal">

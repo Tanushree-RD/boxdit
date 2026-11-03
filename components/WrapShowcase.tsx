@@ -3,14 +3,14 @@
 import { motion } from "framer-motion";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 10 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.7,
+      duration: 0.75,
       ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-      delay: i * 0.08,
+      delay: i * 0.07,
     },
   }),
 };
@@ -111,32 +111,35 @@ export function WrapShowcase() {
               </span>
             </div>
 
-            {/* List of Magazine Headline Films */}
-            <div className="divide-y divide-white/[0.06]">
-              {[
-                { title: "Blade Runner 2049", year: "2017", dir: "Denis Villeneuve", rating: "5.0 ★" },
-                { title: "Arrival", year: "2016", dir: "Denis Villeneuve", rating: "5.0 ★" },
-                { title: "Interstellar", year: "2014", dir: "Christopher Nolan", rating: "4.5 ★" },
-                { title: "Dune: Part Two", year: "2024", dir: "Denis Villeneuve", rating: "5.0 ★" },
-              ].map((film, idx) => (
-                <div key={film.title} className="py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 group">
-                  <div className="flex items-baseline gap-4">
-                    <span className="font-mono text-[10px] text-white/40">0{idx + 1}</span>
-                    <h4 className="font-display italic font-light text-2xl sm:text-3xl text-[#F5F5F5] tracking-tight leading-snug group-hover:underline underline-offset-4 decoration-white/20 transition-all">
-                      {film.title}
-                    </h4>
-                  </div>
+              {/* List of Magazine Headline Films */}
+              <div className="divide-y divide-white/[0.06]">
+                {[
+                  { title: "Blade Runner 2049", year: "2017", dir: "Denis Villeneuve", rating: "5.0 ★" },
+                  { title: "Arrival", year: "2016", dir: "Denis Villeneuve", rating: "5.0 ★" },
+                  { title: "Interstellar", year: "2014", dir: "Christopher Nolan", rating: "4.5 ★" },
+                  { title: "Dune: Part Two", year: "2024", dir: "Denis Villeneuve", rating: "5.0 ★" },
+                ].map((film, idx) => (
+                  <div
+                    key={film.title}
+                    className="py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 group transition-transform duration-300 ease-out hover:translate-x-1"
+                  >
+                    <div className="flex items-baseline gap-4">
+                      <span className="font-mono text-[10px] text-white/40">0{idx + 1}</span>
+                      <h4 className="font-display italic font-light text-2xl sm:text-3xl text-[#F5F5F5] tracking-tight leading-snug group-hover:underline underline-offset-4 decoration-white/20 transition-all duration-300">
+                        {film.title}
+                      </h4>
+                    </div>
 
-                  <div className="flex items-baseline gap-3 pl-8 sm:pl-0 font-mono text-xs text-white/55">
-                    <span>{film.year}</span>
-                    <span>·</span>
-                    <span className="text-white/40">{film.dir}</span>
-                    <span>·</span>
-                    <span className="text-[#F5F5F5] font-normal">{film.rating}</span>
+                    <div className="flex items-baseline gap-3 pl-8 sm:pl-0 font-mono text-xs text-white/55">
+                      <span>{film.year}</span>
+                      <span>·</span>
+                      <span className="text-white/40">{film.dir}</span>
+                      <span>·</span>
+                      <span className="text-[#F5F5F5] font-normal">{film.rating}</span>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
             <div className="pt-6 border-t border-white/[0.06] flex items-center justify-between font-mono text-[10px] text-white/55 uppercase tracking-wider">
               <span>Genre Alignment</span>

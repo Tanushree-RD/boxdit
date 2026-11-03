@@ -127,7 +127,7 @@ export function UsernameForm() {
             type="button"
             onClick={() => handleQuickFill(sample.username)}
             disabled={isLoading}
-            className="group flex items-center gap-2 border border-white/[0.06] bg-transparent px-3 py-1 text-white/55 hover:border-white/[0.16] hover:text-[#F5F5F5] transition-all cursor-pointer font-mono text-[10px] tracking-[0.14em] font-normal"
+            className="group flex items-center gap-2 border border-white/[0.06] bg-transparent px-3 py-1 text-white/55 hover:border-white/[0.16] hover:text-[#F5F5F5] hover:-translate-y-0.5 transition-all duration-300 ease-out cursor-pointer font-mono text-[10px] tracking-[0.14em] font-normal"
           >
             <span>@{sample.username}</span>
             <span className="text-white/40 font-display italic font-light text-xs hidden md:inline">

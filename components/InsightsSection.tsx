@@ -11,25 +11,39 @@ interface InsightsSectionProps {
 const FALLBACK_POSTER =
   "https://s.ltrbxd.com/static/img/empty-poster-70-BSf-Pjrh.png";
 
+const smoothEase = [0.16, 1, 0.3, 1] as const;
+
 export function InsightsSection({ insights }: InsightsSectionProps) {
   if (!insights || insights.length === 0) return null;
 
   return (
     <section className="relative border-t border-white/[0.06] pt-20 sm:pt-28">
       {/* Section Header */}
-      <div className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 sm:mb-20 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal">
+      <motion.div
+        initial={{ opacity: 0, y: -6 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.6, ease: smoothEase }}
+        className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 sm:mb-20 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal"
+      >
         <span>EXHIBIT 06 // CURATORIAL SUPERLATIVES</span>
         <span>Dispatches 01—0{insights.length}</span>
-      </div>
+      </motion.div>
 
-      <div className="mb-14 max-w-xl">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.7, ease: smoothEase }}
+        className="mb-14 max-w-xl"
+      >
         <h2 className="font-display font-light text-4xl sm:text-5xl lg:text-6xl text-[#F5F5F5] tracking-tight leading-[0.98]">
           Editorial Superlatives
         </h2>
         <p className="mt-4 font-sans font-normal text-xs sm:text-sm text-white/55 leading-relaxed">
           Curious polarities, outlying obsessions, and definitive milestones uncovered within your historical viewing pattern.
         </p>
-      </div>
+      </motion.div>
 
       {/* Asymmetric Portfolio Gallery Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-16 sm:gap-y-24 items-start">
@@ -53,10 +67,10 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
           return (
             <motion.div
               key={item.id}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.08 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.7, delay: i * 0.07, ease: smoothEase }}
               className={`${colSpan} group`}
             >
               {/* Dispatch Meta */}
@@ -70,13 +84,13 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                 /* Feature Layout: Side-by-Side on sm+ */
                 <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-8">
                   {item.posterUrl && (
-                    <div className="relative w-28 sm:w-36 aspect-[2/3] shrink-0 overflow-hidden border border-white/[0.06] bg-[#0D0D0D]">
+                    <div className="relative w-28 sm:w-36 aspect-[2/3] shrink-0 overflow-hidden border border-white/[0.06] bg-[#0D0D0D] transition-transform duration-500 ease-out group-hover:-translate-y-0.5">
                       <Image
                         src={item.posterUrl || FALLBACK_POSTER}
                         alt={item.value}
                         fill
                         sizes="(max-width: 640px) 112px, 144px"
-                        className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
                         unoptimized
                       />
                     </div>
@@ -89,7 +103,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                           href={item.link}
                           target="_blank"
                           rel="noreferrer"
-                          className="hover:underline underline-offset-4 decoration-white/20"
+                          className="hover:underline underline-offset-4 decoration-white/20 transition-all"
                         >
                           {item.value}
                         </a>
@@ -107,7 +121,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                           href={item.link}
                           target="_blank"
                           rel="noreferrer"
-                          className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/55 hover:text-[#F5F5F5] transition-colors font-normal inline-block"
+                          className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/55 hover:text-[#F5F5F5] transition-colors duration-300 font-normal inline-block"
                         >
                           View Film on Letterboxd ↗
                         </a>
@@ -119,13 +133,13 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                 /* Companion Layout: Vertical Flow */
                 <div className="space-y-4">
                   {item.posterUrl && (
-                    <div className="relative w-24 sm:w-28 aspect-[2/3] overflow-hidden border border-white/[0.06] bg-[#0D0D0D]">
+                    <div className="relative w-24 sm:w-28 aspect-[2/3] overflow-hidden border border-white/[0.06] bg-[#0D0D0D] transition-transform duration-500 ease-out group-hover:-translate-y-0.5">
                       <Image
                         src={item.posterUrl || FALLBACK_POSTER}
                         alt={item.value}
                         fill
                         sizes="112px"
-                        className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
                         unoptimized
                       />
                     </div>
@@ -137,7 +151,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                         href={item.link}
                         target="_blank"
                         rel="noreferrer"
-                        className="hover:underline underline-offset-4 decoration-white/20"
+                        className="hover:underline underline-offset-4 decoration-white/20 transition-all"
                       >
                         {item.value}
                       </a>
@@ -156,7 +170,7 @@ export function InsightsSection({ insights }: InsightsSectionProps) {
                         href={item.link}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/55 hover:text-[#F5F5F5] transition-colors font-normal inline-block"
+                        className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/55 hover:text-[#F5F5F5] transition-colors duration-300 font-normal inline-block"
                       >
                         View Film on Letterboxd ↗
                       </a>

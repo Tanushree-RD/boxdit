@@ -30,6 +30,8 @@ function formatDate(dateStr: string | null): string {
 const FALLBACK_POSTER =
   "https://s.ltrbxd.com/static/img/empty-poster-70-BSf-Pjrh.png";
 
+const smoothEase = [0.16, 1, 0.3, 1] as const;
+
 export function RecentActivity({ entries, username }: RecentActivityProps) {
   const latestFive = entries.slice(0, 5);
 
@@ -55,35 +57,47 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
   return (
     <section className="relative border-t border-white/[0.06] pt-20 sm:pt-28">
       {/* Section Header */}
-      <div className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 sm:mb-20 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal">
+      <motion.div
+        initial={{ opacity: 0, y: -6 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.6, ease: smoothEase }}
+        className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 sm:mb-20 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal"
+      >
         <span>EXHIBIT 07 // SCREENING JOURNAL</span>
         <a
           href={diaryUrl}
           target="_blank"
           rel="noreferrer"
-          className="text-white/55 hover:text-[#F5F5F5] transition-colors tracking-[0.2em]"
+          className="text-white/55 hover:text-[#F5F5F5] transition-colors duration-300 tracking-[0.2em]"
         >
           Letterboxd Diary Index ↗
         </a>
-      </div>
+      </motion.div>
 
-      <div className="mb-14 max-w-xl">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.7, ease: smoothEase }}
+        className="mb-14 max-w-xl"
+      >
         <h2 className="font-display font-light text-4xl sm:text-5xl lg:text-6xl text-[#F5F5F5] tracking-tight leading-[0.98]">
           Recent Diary &amp; Reviews
         </h2>
         <p className="mt-4 font-sans font-normal text-xs sm:text-sm text-white/55 leading-relaxed">
           Chronological record of recent theatrical screenings, critical verdicts, and review commentary.
         </p>
-      </div>
+      </motion.div>
 
       {/* LEAD FEATURE DISPATCH: Most Recent Screening */}
       {leadEntry && (
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="pb-16 sm:pb-20 border-b border-white/[0.06]"
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.75, ease: smoothEase }}
+          className="pb-16 sm:pb-20 border-b border-white/[0.06] group"
         >
           <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-white/55 pb-3 border-b border-white/[0.06] mb-8 font-normal">
             <span>LEAD DISPATCH 01 // LATEST LOGGED SCREENING</span>
@@ -91,14 +105,14 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
           </div>
 
           <div className="flex flex-col md:flex-row items-start gap-8 lg:gap-12">
-            {/* Large Lead Poster */}
-            <div className="relative w-36 sm:w-44 aspect-[2/3] shrink-0 overflow-hidden border border-white/[0.06] bg-[#0D0D0D]">
+            {/* Large Lead Poster with Soft Scaling & Gentle Elevation */}
+            <div className="relative w-36 sm:w-44 aspect-[2/3] shrink-0 overflow-hidden border border-white/[0.06] bg-[#0D0D0D] transition-transform duration-500 ease-out group-hover:-translate-y-0.5">
               <Image
                 src={leadEntry.posterUrl || FALLBACK_POSTER}
                 alt={leadEntry.filmTitle || leadEntry.title}
                 fill
                 sizes="(max-width: 640px) 144px, 176px"
-                className="object-cover"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
                 unoptimized
               />
             </div>
@@ -130,7 +144,7 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
                   href={leadEntry.link}
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:underline underline-offset-4 decoration-white/20 transition-all"
+                  className="hover:underline underline-offset-4 decoration-white/20 transition-all duration-300"
                 >
                   {leadEntry.filmTitle || leadEntry.title}
                 </a>
@@ -149,7 +163,7 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
                   href={leadEntry.link}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/55 hover:text-[#F5F5F5] transition-colors font-normal inline-block"
+                  className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/55 hover:text-[#F5F5F5] transition-colors duration-300 font-normal inline-block"
                 >
                   Read Review Dispatch on Letterboxd ↗
                 </a>
@@ -169,10 +183,10 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
             return (
               <motion.div
                 key={`${entry.link}-${idx}`}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 8 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.05 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.6, delay: idx * 0.05, ease: smoothEase }}
                 className="py-10 sm:py-12 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start group"
               >
                 {/* Meta Column (3 cols) */}
@@ -208,7 +222,7 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
                       href={entry.link}
                       target="_blank"
                       rel="noreferrer"
-                      className="hover:underline underline-offset-4 decoration-white/20 transition-all"
+                      className="hover:underline underline-offset-4 decoration-white/20 transition-all duration-300"
                     >
                       {entry.filmTitle || entry.title}
                     </a>
@@ -221,15 +235,15 @@ export function RecentActivity({ entries, username }: RecentActivityProps) {
                   )}
                 </div>
 
-                {/* Thumbnail Column (2 cols) */}
+                {/* Thumbnail Column (2 cols) with Soft Scale */}
                 <div className="md:col-span-2 flex md:justify-end">
-                  <div className="relative w-16 sm:w-20 aspect-[2/3] overflow-hidden border border-white/[0.06] bg-[#0D0D0D] shrink-0">
+                  <div className="relative w-16 sm:w-20 aspect-[2/3] overflow-hidden border border-white/[0.06] bg-[#0D0D0D] shrink-0 transition-transform duration-500 ease-out group-hover:-translate-y-0.5">
                     <Image
                       src={entry.posterUrl || FALLBACK_POSTER}
                       alt={entry.filmTitle || entry.title}
                       fill
                       sizes="80px"
-                      className="object-cover"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                       unoptimized
                     />
                   </div>

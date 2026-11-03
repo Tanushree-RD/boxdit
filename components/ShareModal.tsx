@@ -126,12 +126,12 @@ export function ShareModal({
               {/* Pass Header */}
               <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="relative h-11 w-11 overflow-hidden border border-white/[0.06] bg-[#0D0D0D]">
+                  <div className="group relative h-11 w-11 overflow-hidden border border-white/[0.06] bg-[#0D0D0D]">
                     <Image
                       src={avatar || FALLBACK_AVATAR}
                       alt={displayName}
                       fill
-                      className="object-cover grayscale"
+                      className="object-cover grayscale transition-transform duration-500 ease-out group-hover:scale-[1.04]"
                       unoptimized
                     />
                   </div>

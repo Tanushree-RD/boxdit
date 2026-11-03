@@ -5,14 +5,14 @@ import { motion } from "framer-motion";
 import { UsernameForm } from "./UsernameForm";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 10 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.8,
+      duration: 0.75,
       ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-      delay: i * 0.08,
+      delay: i * 0.07,
     },
   }),
 };
@@ -136,7 +136,7 @@ export function Hero() {
                   <span className="text-[10px] text-white/40">Peak at 4.0 ★</span>
                 </div>
 
-                {/* 10 Architectural Bars */}
+                {/* 10 Architectural Bars with Cascading Animation */}
                 <div className="flex h-28 items-end justify-between gap-2 px-1">
                   {[8, 14, 22, 38, 52, 78, 96, 120, 82, 48].map((val, idx) => {
                     const isPeak = idx === 7;
@@ -146,13 +146,19 @@ export function Hero() {
                         key={idx}
                         className="flex-1 flex flex-col items-center justify-end h-full"
                       >
-                        <div
-                          className={`w-full transition-colors duration-200 ${
+                        <motion.div
+                          initial={{ height: 0 }}
+                          animate={{ height: `${(val / 120) * 100}%` }}
+                          transition={{
+                            duration: 0.7,
+                            delay: 0.35 + idx * 0.03,
+                            ease: [0.16, 1, 0.3, 1],
+                          }}
+                          className={`w-full transition-colors duration-250 ${
                             isPeak
                               ? "bg-[#F5F5F5]"
                               : "bg-white/20 hover:bg-white/40"
                           }`}
-                          style={{ height: `${(val / 120) * 100}%` }}
                         />
                         <span className="mt-3 font-mono text-[8px] text-white/40">
                           {labels[idx]}★

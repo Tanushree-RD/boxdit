@@ -27,14 +27,14 @@ const steps = [
 ];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 10 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.7,
+      duration: 0.75,
       ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-      delay: i * 0.08,
+      delay: i * 0.07,
     },
   }),
 };
@@ -83,7 +83,7 @@ export function HowItWorks() {
             viewport={{ once: true, margin: "-40px" }}
             variants={fadeUp}
             custom={i + 3}
-            className="py-10 md:py-0 md:px-10 first:pl-0 last:pr-0 flex flex-col justify-between"
+            className="py-10 md:py-0 md:px-10 first:pl-0 last:pr-0 flex flex-col justify-between group transition-transform duration-400 ease-out hover:-translate-y-1"
           >
             <div>
               <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block mb-6 font-normal">

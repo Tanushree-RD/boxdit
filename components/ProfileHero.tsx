@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { PersonaInfo, FilmNerdScore } from "@/lib/analytics";
 import { ShareModal } from "./ShareModal";
 
@@ -19,6 +20,8 @@ interface ProfileHeroProps {
 const FALLBACK_AVATAR =
   "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80";
 
+const smoothEase = [0.16, 1, 0.3, 1] as const;
+
 export function ProfileHero({
   displayName,
   username,
@@ -35,10 +38,15 @@ export function ProfileHero({
     <>
       <section className="relative pb-16 sm:pb-24">
         {/* Monograph Top Meta Ledger */}
-        <div className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-14 sm:mb-20 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal">
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: smoothEase }}
+          className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-14 sm:mb-20 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal"
+        >
           <span>MONOGRAPH 001 // ARCHIVAL DOSSIER</span>
           <span>Index: {nerdScore.score}/100 · {nerdScore.label}</span>
-        </div>
+        </motion.div>
 
         {/* 12-Column Asymmetric Monograph Spread */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
@@ -46,7 +54,12 @@ export function ProfileHero({
           <div className="lg:col-span-8 flex flex-col justify-between">
             <div>
               {/* User Identity */}
-              <div className="space-y-4">
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: smoothEase, delay: 0.05 }}
+                className="space-y-4"
+              >
                 <div className="flex items-center gap-3 font-mono text-xs text-white/55 font-normal">
                   <span>@{username}</span>
                   <span className="text-white/20">/</span>
@@ -54,7 +67,7 @@ export function ProfileHero({
                     href={`https://letterboxd.com/${username}/`}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-white/55 hover:text-[#F5F5F5] transition-colors text-[10px] tracking-[0.2em] uppercase"
+                    className="text-white/55 hover:text-[#F5F5F5] transition-colors duration-300 text-[10px] tracking-[0.2em] uppercase"
                   >
                     Letterboxd Profile ↗
                   </a>
@@ -63,10 +76,15 @@ export function ProfileHero({
                 <h1 className="text-5xl sm:text-7xl lg:text-8xl font-display font-light tracking-tight text-[#F5F5F5] leading-[0.92]">
                   {displayName}
                 </h1>
-              </div>
+              </motion.div>
 
               {/* Archetype Pull-Quote */}
-              <div className="mt-12 sm:mt-16 pt-10 border-t border-white/[0.06]">
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: smoothEase, delay: 0.12 }}
+                className="mt-12 sm:mt-16 pt-10 border-t border-white/[0.06]"
+              >
                 <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block mb-4 font-normal">
                   DIAGNOSED ARCHETYPE
                 </span>
@@ -86,20 +104,25 @@ export function ProfileHero({
                     </span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
 
           {/* Right Column (4 cols): Archival Photographic Portrait & Export */}
-          <div className="lg:col-span-4 flex flex-col items-start lg:items-end">
-            <div className="w-full max-w-xs space-y-4">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: smoothEase, delay: 0.18 }}
+            className="lg:col-span-4 flex flex-col items-start lg:items-end"
+          >
+            <div className="group w-full max-w-xs space-y-4">
               <div className="relative aspect-[4/5] w-full overflow-hidden border border-white/[0.06] bg-[#0D0D0D]">
                 <Image
                   src={avatar || FALLBACK_AVATAR}
                   alt={`${displayName} portrait`}
                   fill
                   sizes="(max-width: 640px) 100vw, 320px"
-                  className="object-cover grayscale contrast-[1.05]"
+                  className="object-cover grayscale contrast-[1.05] transition-transform duration-700 ease-out group-hover:scale-[1.025]"
                   unoptimized
                 />
               </div>
@@ -119,61 +142,58 @@ export function ProfileHero({
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
-        {/* Archival Baseline Specimen Ledger (No Card Enclosures) */}
-        <div className="mt-20 sm:mt-28 border-t border-white/[0.06] pt-12 sm:pt-16">
+        {/* Archival Baseline Specimen Ledger with Staggered Metrics */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: smoothEase, delay: 0.24 }}
+          className="mt-20 sm:mt-28 border-t border-white/[0.06] pt-12 sm:pt-16"
+        >
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-            <div>
-              <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/55 block font-normal">
-                Films Logged
-              </span>
-              <p className="font-display font-light text-4xl sm:text-5xl text-[#F5F5F5] mt-2">
-                {totalMovies.toLocaleString()}
-              </p>
-              <p className="mt-1 font-mono text-[10px] text-white/40 font-normal">
-                Catalogued total
-              </p>
-            </div>
-
-            <div>
-              <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/55 block font-normal">
-                Mean Rating
-              </span>
-              <p className="font-display font-light text-4xl sm:text-5xl text-[#F5F5F5] mt-2">
-                {avgRating ? `${avgRating.toFixed(2)} ★` : "—"}
-              </p>
-              <p className="mt-1 font-mono text-[10px] text-white/40 font-normal">
-                Critical baseline
-              </p>
-            </div>
-
-            <div>
-              <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/55 block font-normal">
-                Dominant Era
-              </span>
-              <p className="font-display font-light text-4xl sm:text-5xl text-[#F5F5F5] mt-2">
-                {favoriteDecade}
-              </p>
-              <p className="mt-1 font-mono text-[10px] text-white/40 font-normal">
-                Temporal center
-              </p>
-            </div>
-
-            <div>
-              <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/55 block font-normal">
-                Percentile Rank
-              </span>
-              <p className="font-display font-light text-4xl sm:text-5xl text-[#F5F5F5] mt-2">
-                {nerdScore.percentile || "Top 5%"}
-              </p>
-              <p className="mt-1 font-mono text-[10px] text-white/40 font-normal">
-                Letterboxd cohort
-              </p>
-            </div>
+            {[
+              {
+                label: "Films Logged",
+                value: totalMovies.toLocaleString(),
+                caption: "Catalogued total",
+              },
+              {
+                label: "Mean Rating",
+                value: avgRating ? `${avgRating.toFixed(2)} ★` : "—",
+                caption: "Critical baseline",
+              },
+              {
+                label: "Dominant Era",
+                value: favoriteDecade,
+                caption: "Temporal center",
+              },
+              {
+                label: "Percentile Rank",
+                value: nerdScore.percentile || "Top 5%",
+                caption: "Letterboxd cohort",
+              },
+            ].map((metric, i) => (
+              <motion.div
+                key={metric.label}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: smoothEase, delay: 0.28 + i * 0.05 }}
+              >
+                <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/55 block font-normal">
+                  {metric.label}
+                </span>
+                <p className="font-display font-light text-4xl sm:text-5xl text-[#F5F5F5] mt-2">
+                  {metric.value}
+                </p>
+                <p className="mt-1 font-mono text-[10px] text-white/40 font-normal">
+                  {metric.caption}
+                </p>
+              </motion.div>
+            ))}
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Share Modal Dialog */}

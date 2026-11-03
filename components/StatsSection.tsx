@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import {
   ActorStatsResult,
   FilmNerdScore,
@@ -16,6 +17,8 @@ interface StatsSectionProps {
   genreStats?: GenreStatsResult;
   actorStats?: ActorStatsResult;
 }
+
+const smoothEase = [0.16, 1, 0.3, 1] as const;
 
 export function StatsSection({
   totalMovies,
@@ -36,25 +39,42 @@ export function StatsSection({
           MOVEMENT I: SCALE & IMMERSION (Monumental Typographic Spread)
           ──────────────────────────────────────────────────────────── */}
       <section className="relative border-t border-white/[0.06] pt-20 sm:pt-28">
-        <div className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal">
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.6, ease: smoothEase }}
+          className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal"
+        >
           <span>EXHIBIT 02 // SCALE &amp; IMMERSION</span>
           <span>Ledger: Continuous</span>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Section Kicker */}
-          <div className="lg:col-span-4">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.7, ease: smoothEase }}
+            className="lg:col-span-4"
+          >
             <h2 className="font-display font-light text-4xl sm:text-5xl lg:text-6xl text-[#F5F5F5] tracking-tight leading-[0.98]">
               The Weight of Cinema
             </h2>
             <p className="mt-4 font-sans font-normal text-xs sm:text-sm text-white/55 leading-relaxed max-w-sm">
               An accounting of hours surrendered to the silver screen. Reflects physical devotion to viewing, logging, and critical reflection.
             </p>
-          </div>
+          </motion.div>
 
           {/* Monumental Dual Numbers */}
           <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-12 sm:gap-16 pt-2 lg:pt-0">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.7, ease: smoothEase, delay: 0.08 }}
+            >
               <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/55 block font-normal">
                 Titles Catalogued
               </span>
@@ -64,9 +84,14 @@ export function StatsSection({
               <p className="mt-4 font-sans font-normal text-xs sm:text-sm text-white/55 leading-relaxed">
                 Total titles archived in Letterboxd, including {ratings.totalRated.toLocaleString()} accompanied by star ratings.
               </p>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.7, ease: smoothEase, delay: 0.16 }}
+            >
               <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/55 block font-normal">
                 Projection Time
               </span>
@@ -77,7 +102,7 @@ export function StatsSection({
               <p className="mt-4 font-sans font-normal text-xs sm:text-sm text-white/55 leading-relaxed">
                 Equivalent to {(approxHours / 24).toFixed(1)} consecutive days and nights immersed in projected narratives.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -86,14 +111,26 @@ export function StatsSection({
           MOVEMENT II: CINEMATIC CHRONOLOGY (Asymmetric Era Odyssey)
           ──────────────────────────────────────────────────────────── */}
       <section className="relative border-t border-white/[0.06] pt-20 sm:pt-28">
-        <div className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal">
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.6, ease: smoothEase }}
+          className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal"
+        >
           <span>EXHIBIT 03 // CHRONOLOGY &amp; DECADES</span>
           <span>Temporal Horizon: 1920s—Present</span>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Left Column (5 cols): Dominant Era Feature */}
-          <div className="lg:col-span-5 space-y-8">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.7, ease: smoothEase }}
+            className="lg:col-span-5 space-y-8"
+          >
             <div>
               <h2 className="font-display font-light text-4xl sm:text-5xl lg:text-6xl text-[#F5F5F5] tracking-tight leading-[0.98]">
                 The Era Odyssey
@@ -135,36 +172,49 @@ export function StatsSection({
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column (7 cols): Ruled Decade Timeline Ledger */}
-          <div className="lg:col-span-7 space-y-5 pt-2 lg:pt-0">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.7, ease: smoothEase, delay: 0.1 }}
+            className="lg:col-span-7 space-y-5 pt-2 lg:pt-0"
+          >
             <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.24em] text-white/55 pb-3 border-b border-white/[0.06] font-normal">
               <span>DECADE</span>
               <span>VOLUME / PROPORTION</span>
             </div>
 
             <div className="space-y-4">
-              {decades.map((dec) => (
-                <div key={dec.decade} className="group py-2">
+              {decades.map((dec, idx) => (
+                <div key={dec.decade} className="group py-2 transition-all duration-300">
                   <div className="flex items-baseline justify-between font-mono text-xs font-normal mb-2">
-                    <span className="text-[#F5F5F5] text-sm group-hover:text-white transition-colors">
+                    <span className="text-[#F5F5F5] text-sm group-hover:text-white transition-colors duration-200">
                       {dec.decade}
                     </span>
-                    <span className="text-white/55 group-hover:text-white/80 transition-colors">
+                    <span className="text-white/55 group-hover:text-white/80 transition-colors duration-200">
                       {dec.count} {dec.count === 1 ? "film" : "films"} ({dec.percentage}%)
                     </span>
                   </div>
                   <div className="h-0.5 w-full bg-white/[0.04]">
-                    <div
-                      className="h-full bg-white/40 group-hover:bg-[#F5F5F5] transition-all duration-500"
-                      style={{ width: `${Math.min(dec.percentage, 100)}%` }}
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${Math.min(dec.percentage, 100)}%` }}
+                      viewport={{ once: true }}
+                      transition={{
+                        duration: 0.75,
+                        delay: 0.15 + idx * 0.04,
+                        ease: smoothEase,
+                      }}
+                      className="h-full bg-white/40 group-hover:bg-[#F5F5F5] transition-colors duration-300"
                     />
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -172,14 +222,26 @@ export function StatsSection({
           MOVEMENT III: THE CURATORIAL MATRIX (Genres & Dramatis Personae)
           ──────────────────────────────────────────────────────────── */}
       <section className="relative border-t border-white/[0.06] pt-20 sm:pt-28">
-        <div className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal">
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.6, ease: smoothEase }}
+          className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal"
+        >
           <span>EXHIBIT 04 // TASTE MATRIX &amp; DRAMATIS PERSONAE</span>
           <span>Index: Thematic &amp; Ensemble</span>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20 items-start">
           {/* Column A (6 cols): Primary Predilections (Genres) */}
-          <div className="lg:col-span-6 space-y-8">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.7, ease: smoothEase }}
+            className="lg:col-span-6 space-y-8"
+          >
             <div>
               <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/55 block mb-3 font-normal">
                 THEMATIC MATRIX
@@ -201,27 +263,33 @@ export function StatsSection({
               </p>
             </div>
 
-            {/* Ruled Genre Index */}
+            {/* Ruled Genre Index with Gentle Hover Shift */}
             <div className="pt-4 space-y-3 border-t border-white/[0.03]">
               {topGenres.map((g, idx) => (
                 <div
                   key={g.genre}
-                  className="flex items-baseline justify-between font-mono text-xs pb-3 border-b border-white/[0.03] font-normal group"
+                  className="flex items-baseline justify-between font-mono text-xs pb-3 border-b border-white/[0.03] font-normal group transition-transform duration-300 ease-out hover:translate-x-1"
                 >
-                  <span className="text-white/70 group-hover:text-[#F5F5F5] transition-colors">
+                  <span className="text-white/70 group-hover:text-[#F5F5F5] transition-colors duration-200">
                     <span className="text-white/30 mr-3">0{idx + 1}</span>
                     {g.genre}
                   </span>
-                  <span className="text-white/55 group-hover:text-white/80 transition-colors">
+                  <span className="text-white/55 group-hover:text-white/80 transition-colors duration-200">
                     {g.count} films ({g.percentage}%)
                   </span>
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Column B (6 cols): Dramatis Personae (Ensemble Cast) */}
-          <div className="lg:col-span-6 space-y-8">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.7, ease: smoothEase, delay: 0.1 }}
+            className="lg:col-span-6 space-y-8"
+          >
             <div>
               <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/55 block mb-3 font-normal">
                 DRAMATIS PERSONAE
@@ -243,24 +311,24 @@ export function StatsSection({
               </p>
             </div>
 
-            {/* Ruled Actor Index */}
+            {/* Ruled Actor Index with Gentle Hover Shift */}
             <div className="pt-4 space-y-3 border-t border-white/[0.03]">
               {topActors.map((actor, idx) => (
                 <div
                   key={actor.name}
-                  className="flex items-baseline justify-between font-mono text-xs pb-3 border-b border-white/[0.03] font-normal group"
+                  className="flex items-baseline justify-between font-mono text-xs pb-3 border-b border-white/[0.03] font-normal group transition-transform duration-300 ease-out hover:translate-x-1"
                 >
-                  <span className="text-white/70 group-hover:text-[#F5F5F5] transition-colors">
+                  <span className="text-white/70 group-hover:text-[#F5F5F5] transition-colors duration-200">
                     <span className="text-white/30 mr-3">0{idx + 1}</span>
                     {actor.name}
                   </span>
-                  <span className="text-white/55 group-hover:text-white/80 transition-colors">
+                  <span className="text-white/55 group-hover:text-white/80 transition-colors duration-200">
                     {actor.count} {actor.count === 1 ? "appearance" : "appearances"}
                   </span>
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -268,14 +336,26 @@ export function StatsSection({
           MOVEMENT IV: THE CINEPHILE INDEX (Curatorial Appraisal)
           ──────────────────────────────────────────────────────────── */}
       <section className="relative border-t border-white/[0.06] pt-20 sm:pt-28">
-        <div className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal">
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.6, ease: smoothEase }}
+          className="flex flex-wrap items-baseline justify-between gap-4 pb-6 mb-16 border-b border-white/[0.06] font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 font-normal"
+        >
           <span>EXHIBIT 05 // CURATORIAL APPRAISAL</span>
           <span>Cohort Benchmark: Top Decile</span>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Left Column (5 cols): Sculptural Score */}
-          <div className="lg:col-span-5 space-y-8">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.7, ease: smoothEase }}
+            className="lg:col-span-5 space-y-8"
+          >
             <div>
               <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/55 block mb-3 font-normal">
                 COMPOSITE QUOTIENT
@@ -299,10 +379,16 @@ export function StatsSection({
                 Relative Standing: {nerdScore.percentile || "Top 2%"} of global Letterboxd users
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column (7 cols): Rationale & Architectural Benchmarks */}
-          <div className="lg:col-span-7 space-y-8 pt-2 lg:pt-0">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.7, ease: smoothEase, delay: 0.1 }}
+            className="lg:col-span-7 space-y-8 pt-2 lg:pt-0"
+          >
             <div>
               <span className="font-mono text-[9px] uppercase tracking-[0.28em] text-white/55 block mb-3 font-normal">
                 RANK DESIGNATION
@@ -317,20 +403,20 @@ export function StatsSection({
 
             {/* Benchmarks Ledger */}
             <div className="pt-6 border-t border-white/[0.06] space-y-3 font-mono text-xs">
-              <div className="flex items-baseline justify-between py-2 border-b border-white/[0.03]">
+              <div className="flex items-baseline justify-between py-2 border-b border-white/[0.03] transition-transform duration-300 ease-out hover:translate-x-1">
                 <span className="text-white/55">Library Volume</span>
                 <span className="text-[#F5F5F5]">{totalMovies.toLocaleString()} Films Recorded</span>
               </div>
-              <div className="flex items-baseline justify-between py-2 border-b border-white/[0.03]">
+              <div className="flex items-baseline justify-between py-2 border-b border-white/[0.03] transition-transform duration-300 ease-out hover:translate-x-1">
                 <span className="text-white/55">Chronological Span</span>
                 <span className="text-[#F5F5F5]">{decades.length} Decades Represented</span>
               </div>
-              <div className="flex items-baseline justify-between py-2 border-b border-white/[0.03]">
+              <div className="flex items-baseline justify-between py-2 border-b border-white/[0.03] transition-transform duration-300 ease-out hover:translate-x-1">
                 <span className="text-white/55">Critical Discipline</span>
                 <span className="text-[#F5F5F5]">{ratings.totalRated.toLocaleString()} Graded Reviews</span>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>

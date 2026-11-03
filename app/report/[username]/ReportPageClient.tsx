@@ -17,14 +17,14 @@ interface ReportPageClientProps {
 }
 
 const sectionVariants = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 10 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.7,
+      duration: 0.75,
       ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-      delay: i * 0.08,
+      delay: i * 0.07,
     },
   }),
 };
@@ -139,10 +139,10 @@ export function ReportPageClient({
 
         {/* Primary Archive Outro */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
           className="border-t border-white/[0.06] pt-24 sm:pt-32 pb-20 text-center"
         >
           <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block font-normal">
