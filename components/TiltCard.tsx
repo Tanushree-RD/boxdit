@@ -14,9 +14,9 @@ interface TiltCardProps {
 export function TiltCard({
   children,
   className = "",
-  glowColor = "rgba(59, 130, 246, 0.15)",
-  borderColor = "hover:border-white/20",
-  maxTilt = 8,
+  glowColor = "rgba(255, 255, 255, 0.025)",
+  borderColor = "hover:border-white/[0.1]",
+  maxTilt = 2,
 }: TiltCardProps) {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -60,11 +60,11 @@ export function TiltCard({
           rotateY,
           transformStyle: "preserve-3d",
         }}
-        className={`group relative h-full w-full overflow-hidden rounded-3xl border border-white/[0.08] bg-[#0c0e14]/75 p-7 backdrop-blur-2xl transition-colors duration-300 ${borderColor} ${className}`}
+        className={`group relative h-full w-full overflow-hidden rounded-md border border-white/[0.06] bg-white/[0.01] p-8 sm:p-10 transition-colors duration-300 ${borderColor} ${className}`}
       >
         {/* Dynamic Specular Sheen Glare */}
         <motion.div
-          className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          className="pointer-events-none absolute -inset-px rounded-md opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           style={{
             background: `radial-gradient(450px circle at ${smoothMouseX.get() * 100}% ${
               smoothMouseY.get() * 100
@@ -74,12 +74,12 @@ export function TiltCard({
 
         {/* Ambient Corner Light */}
         <div
-          className="pointer-events-none absolute -right-20 -top-20 h-44 w-44 rounded-full blur-3xl opacity-20 transition-opacity duration-500 group-hover:opacity-40"
+          className="pointer-events-none absolute -right-20 -top-20 h-44 w-44 rounded-full blur-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-10"
           style={{ backgroundColor: glowColor }}
         />
 
         {/* Inner Content with slight 3D elevation */}
-        <div style={{ transform: "translateZ(20px)" }} className="relative z-10 h-full flex flex-col justify-between">
+        <div style={{ transform: "translateZ(4px)" }} className="relative z-10 h-full flex flex-col justify-between">
           {children}
         </div>
       </motion.div>

@@ -58,7 +58,7 @@ export function FeatureCards() {
           viewport={{ once: true, margin: "-40px" }}
           variants={fadeUp}
           custom={3}
-          className="py-10 md:py-0 md:px-10 first:pl-0 last:pr-0 flex flex-col justify-between group transition-transform duration-400 ease-out hover:-translate-y-1"
+          className="py-10 md:py-0 md:px-10 first:pl-0 last:pr-0 flex flex-col justify-between group transition-transform duration-400 ease-out hover:-translate-y-0.5"
         >
           <div>
             <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block mb-6 font-normal">
@@ -116,7 +116,7 @@ export function FeatureCards() {
           viewport={{ once: true, margin: "-40px" }}
           variants={fadeUp}
           custom={4}
-          className="py-10 md:py-0 md:px-10 flex flex-col justify-between group transition-transform duration-400 ease-out hover:-translate-y-1"
+          className="py-10 md:py-0 md:px-10 flex flex-col justify-between group transition-transform duration-400 ease-out hover:-translate-y-0.5"
         >
           <div>
             <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block mb-6 font-normal">
@@ -154,7 +154,7 @@ export function FeatureCards() {
           viewport={{ once: true, margin: "-40px" }}
           variants={fadeUp}
           custom={5}
-          className="py-10 md:py-0 md:px-10 last:pr-0 flex flex-col justify-between group transition-transform duration-400 ease-out hover:-translate-y-1"
+          className="py-10 md:py-0 md:px-10 last:pr-0 flex flex-col justify-between group transition-transform duration-400 ease-out hover:-translate-y-0.5"
         >
           <div>
             <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 block mb-6 font-normal">

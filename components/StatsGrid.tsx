@@ -83,18 +83,18 @@ export function StatsGrid({
   ];
 
   return (
-    <div className="grid gap-4 sm:gap-5 sm:grid-cols-3">
+    <div className="grid gap-0 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/[0.07] border-y border-white/[0.07]">
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className="group relative flex h-full min-h-[220px] sm:min-h-[230px] lg:min-h-[240px] flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-7 sm:p-8 lg:p-9 transition-all duration-300 hover:border-white/20 hover:bg-white/[0.06]"
+          className="group relative flex h-full min-h-[210px] sm:min-h-[220px] flex-col justify-between px-5 py-8 sm:px-8 sm:py-9 lg:px-10 transition-colors duration-300 hover:bg-white/[0.015] first:pl-0 last:pr-0"
         >
           {/* Header */}
           <div className="flex h-6 items-center justify-between">
             <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-white/30">
               {stat.label}
             </p>
-            <div className="rounded-lg border border-white/[0.05] bg-white/[0.02] p-1.5 text-white/25 transition-colors duration-200 group-hover:text-zinc-300">
+            <div className="p-1 text-white/25 transition-colors duration-200 group-hover:text-white/45">
               {stat.icon}
             </div>
           </div>
