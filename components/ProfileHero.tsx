@@ -114,31 +114,34 @@ export function ProfileHero({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, ease: smoothEase, delay: 0.24 }}
-          className="grid grid-cols-2 gap-x-8 gap-y-8 pt-8 sm:grid-cols-4 sm:gap-8 sm:pt-10"
+          className="flex flex-wrap items-baseline gap-x-7 gap-y-5 border-b border-white/[0.07] py-7 sm:gap-x-10 sm:py-8"
         >
-          <div className="col-span-2 sm:col-span-1">
-            <p className="font-mono text-[9px] uppercase tracking-[0.23em] text-white/40">Cinematic signature</p>
-            <p className="mt-2 font-display text-xl italic font-light text-white/85 sm:text-2xl">{persona.title}</p>
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/35">Signature</span>
+            <span className="font-display text-lg italic font-light text-white/80 sm:text-xl">{persona.title}</span>
           </div>
-          <div>
-            <p className="font-mono text-[9px] uppercase tracking-[0.23em] text-white/40">Average rating</p>
-            <p className="mt-2 font-display text-xl font-light text-white/85 sm:text-2xl">
+          <span aria-hidden="true" className="hidden h-5 w-px bg-white/10 sm:block" />
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/35">Mean rating</span>
+            <span className="font-display text-lg font-light text-white/75 sm:text-xl">
               {avgRating ? `${avgRating.toFixed(2)} / 5` : "—"}
-            </p>
+            </span>
           </div>
-          <div>
-            <p className="font-mono text-[9px] uppercase tracking-[0.23em] text-white/40">Favorite decade</p>
-            <p className="mt-2 font-display text-xl font-light text-white/85 sm:text-2xl">{favoriteDecade}</p>
+          <span aria-hidden="true" className="hidden h-5 w-px bg-white/10 sm:block" />
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/35">Favorite era</span>
+            <span className="font-display text-lg font-light text-white/75 sm:text-xl">{favoriteDecade}</span>
           </div>
-          <div>
-            <p className="font-mono text-[9px] uppercase tracking-[0.23em] text-white/40">Cinephile index</p>
-            <p className="mt-2 font-display text-xl font-light text-white/85 sm:text-2xl">
-              {nerdScore.score}<span className="ml-1 text-sm text-white/40">/ 100</span>
-            </p>
+          <span aria-hidden="true" className="hidden h-5 w-px bg-white/10 sm:block" />
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/35">Index</span>
+            <span className="font-display text-lg font-light text-white/75 sm:text-xl">
+              {nerdScore.score}<span className="ml-1 text-xs text-white/35">/ 100</span>
+            </span>
           </div>
         </motion.div>
 
-        <p className="mt-9 max-w-2xl font-sans text-sm leading-relaxed text-white/45 sm:mt-12 sm:text-base">
+        <p className="mt-8 max-w-2xl font-sans text-sm leading-relaxed text-white/45 sm:mt-10 sm:text-base">
           {persona.tagline}
         </p>
       </section>
